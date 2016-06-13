@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AIMind>
+  <Root id="0"/>
+  <Features>
+    <Feature data="Heavy metal music" zh-data="" id="1" uri="http://dbpedia.org/resource/Heavy_metal_music">
+      <neighbors>
+        <neighbor dest="2" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="3" relationship="instruments" weight="0"/>
+        <neighbor dest="4" relationship="music subgenre" weight="0"/>
+        <neighbor dest="5" relationship="instruments" weight="0"/>
+        <neighbor dest="6" relationship="instruments" weight="0"/>
+      </neighbors>
+      <speak>Heavy metal is a genre of rock music that developed in the late 1960s and early 1970s, largely in the United Kingdom and the United States.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Blues rock" zh-data="" id="2" uri="http://dbpedia.org/resource/Blues_rock">
+      <neighbors>
+        <neighbor dest="1" relationship="derivatives" weight="0"/>
+        <neighbor dest="3" relationship="instruments" weight="0"/>
+        <neighbor dest="5" relationship="instruments" weight="0"/>
+        <neighbor dest="6" relationship="instruments" weight="0"/>
+        <neighbor dest="7" relationship="derivatives" weight="0"/>
+        <neighbor dest="13" relationship="derivatives" weight="0"/>
+      </neighbors>
+      <speak>Blues rock is a musical genre combining elements of blues and rock.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Singing" zh-data="" id="3" uri="http://dbpedia.org/resource/Singing">
+      <neighbors/>
+      <speak>Singing is the act of producing musical sounds with the voice, and augments regular speech by the use of both tonality and rhythm.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Extreme metal" zh-data="" id="4" uri="http://dbpedia.org/resource/Extreme_metal">
+      <neighbors>
+        <neighbor dest="3" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="5" relationship="instruments" weight="0"/>
+        <neighbor dest="6" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="music fusion genre" weight="0"/>
+      </neighbors>
+      <speak>Extreme metal is a loosely defined umbrella term for a number of related heavy metal music subgenres that have developed since the early 1980s. The term usually refers to a more abrasive, harsher, underground, non-commercialized style or sound associated with the doom metal, speed metal, thrash metal, black metal, and death metal genres.Though many extreme sub-styles are not very well known to mainstream music fans, extreme metal has influenced an array of musical performers inside and outside of heavy metal.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Bass guitar" zh-data="" id="5" uri="http://dbpedia.org/resource/Bass_guitar">
+      <neighbors/>
+      <speak>The bass guitar  to avoid excessive ledger lines.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Drum kit" zh-data="" id="6" uri="http://dbpedia.org/resource/Drum_kit">
+      <neighbors/>
+      <speak>A drum kit, drum set, trap set, or just drums  is a collection of drums and other percussion instruments set up to be played/struck by a single player.The traditional drum kit consists of a mix of drums Many drummers extend their kits from this basic pattern, adding more drums, more cymbals, and many other instruments including pitched percussion.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Stoner rock" zh-data="" id="7" uri="http://dbpedia.org/resource/Stoner_rock">
+      <neighbors>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="3" relationship="instrument" weight="0"/>
+        <neighbor dest="5" relationship="instrument" weight="0"/>
+        <neighbor dest="6" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Stoner rock or stoner metal is a musical subgenre which combines elements of heavy metal, psychedelic rock, blues rock, acid rock, and doom metal.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk music" zh-data="" id="8" uri="http://dbpedia.org/resource/Folk_music">
+      <neighbors>
+        <neighbor dest="10" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="11" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="14" relationship="music fusion genre" weight="0"/>
+      </neighbors>
+      <speak>Folk music includes both traditional music and the genre that evolved from it during the 20th century folk revival.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Rock music" zh-data="" id="9" uri="http://dbpedia.org/resource/Rock_music">
+      <neighbors>
+        <neighbor dest="7" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="2" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="3" relationship="instruments" weight="0"/>
+        <neighbor dest="5" relationship="instruments" weight="0"/>
+        <neighbor dest="6" relationship="instruments" weight="0"/>
+        <neighbor dest="8" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="1" relationship="music subgenre" weight="0"/>
+        <neighbor dest="13" relationship="music subgenre" weight="0"/>
+        <neighbor dest="14" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="16" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Rock music is a genre of popular music that originated as "rock and roll" in the United States in the 1950s, and developed into a range of different styles in the 1960s and later, particularly in the United Kingdom and the United States.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Electric folk" zh-data="" id="10" uri="http://dbpedia.org/resource/Electric_folk">
+      <neighbors>
+        <neighbor dest="5" relationship="instrument" weight="0"/>
+        <neighbor dest="6" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="9" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="12" relationship="fusiongenres" weight="0"/>
+        <neighbor dest="14" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Electric folk is the name given to the form of folk rock pioneered in England from the late 1960s, and most significant in the 1970s, which then was taken up and developed in the surrounding Celtic cultures of Brittany, Ireland, Scotland, Wales and the Isle of Man, to produce Celtic rock and its derivatives.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk instrument" zh-data="" id="11" uri="http://dbpedia.org/resource/Folk_instrument">
+      <neighbors/>
+      <speak>A folk instrument is an instrument that developed among common people and usually doesn't have a known inventor.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk metal" zh-data="" id="12" uri="http://dbpedia.org/resource/Folk_metal">
+      <neighbors>
+        <neighbor dest="11" relationship="instrument" weight="0"/>
+        <neighbor dest="3" relationship="instrument" weight="0"/>
+        <neighbor dest="5" relationship="instrument" weight="0"/>
+        <neighbor dest="6" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="14" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Folk metal is a fusion genre of heavy metal music and traditional folk music that developed in Europe during the 1990s. It is characterised by the widespread use of folk instruments and, to a lesser extent, traditional singing styles . It also sometimes features soft instrumentation influenced by folk rock.The earliest folk metal band was Skyclad from England.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hard rock" zh-data="" id="13" uri="http://dbpedia.org/resource/Hard_rock">
+      <neighbors>
+        <neighbor dest="2" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="3" relationship="instrument" weight="0"/>
+        <neighbor dest="5" relationship="instrument" weight="0"/>
+        <neighbor dest="6" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Hard rock is a loosely defined subgenre of rock music which began in the mid-1960s, with the garage, psychedelic and blues rock movements.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk rock" zh-data="" id="14" uri="http://dbpedia.org/resource/Folk_rock">
+      <neighbors>
+        <neighbor dest="10" relationship="music subgenre" weight="0"/>
+        <neighbor dest="12" relationship="music subgenre" weight="0"/>
+        <neighbor dest="3" relationship="instrument" weight="0"/>
+        <neighbor dest="5" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="9" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Folk rock is a musical genre combining elements of folk music and rock music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Country music" zh-data="" id="16" uri="http://dbpedia.org/resource/Country_music">
+      <neighbors>
+        <neighbor dest="3" relationship="instruments" weight="0"/>
+        <neighbor dest="5" relationship="instruments" weight="0"/>
+      </neighbors>
+      <speak>Country music is a genre of American popular music that originated in the Southern United States in the 1920s. It takes its roots from the southeastern genre of American folk music and Western music.</speak>
+      <zh-speak/>
+    </Feature>
+  </Features>
+</AIMind>

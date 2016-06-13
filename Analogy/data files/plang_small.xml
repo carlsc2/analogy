@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AIMind>
+  <Root id="0"/>
+  <Features>
+    <Feature data="C++" zh-data="" id="1" uri="http://dbpedia.org/resource/C++">
+      <neighbors>
+        <neighbor dest="4" relationship="paradigm" weight="0"/>
+        <neighbor dest="5" relationship="influenced by" weight="0"/>
+        <neighbor dest="7" relationship="influenced" weight="0"/>
+        <neighbor dest="8" relationship="paradigm" weight="0"/>
+        <neighbor dest="9" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>C++ .</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Python (programming language)" zh-data="" id="2" uri="http://dbpedia.org/resource/Python_(programming_language)">
+      <neighbors>
+        <neighbor dest="1" relationship="influenced by" weight="0"/>
+        <neighbor dest="3" relationship="influenced by" weight="0"/>
+        <neighbor dest="4" relationship="paradigm" weight="0"/>
+        <neighbor dest="5" relationship="influenced by" weight="0"/>
+        <neighbor dest="6" relationship="influenced by" weight="0"/>
+        <neighbor dest="7" relationship="influenced by" weight="0"/>
+        <neighbor dest="8" relationship="paradigm" weight="0"/>
+        <neighbor dest="9" relationship="influenced by" weight="0"/>
+        <neighbor dest="12" relationship="influenced by" weight="0"/>
+      </neighbors>
+      <speak>Python is a widely used general-purpose, high-level programming language.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Dylan (programming language)" zh-data="" id="3" uri="http://dbpedia.org/resource/Dylan_(programming_language)">
+      <neighbors>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+        <neighbor dest="4" relationship="paradigm" weight="0"/>
+      </neighbors>
+      <speak>Dylan /ˈdɪlən/ is a multi-paradigm programming language that includes support for functional and object-oriented programming, and is dynamic and reflective while providing a programming model designed to support efficient machine code generation, including fine-grained control over dynamic and static behaviors.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Functional programming" zh-data="" id="4" uri="http://dbpedia.org/resource/Functional_programming">
+      <neighbors/>
+      <speak>In computer science, functional programming is a programming paradigm—a style of building the structure and elements of computer programs—that treats computation as the evaluation of mathematical functions and avoids changing-state and mutable data.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="C (programming language)" zh-data="" id="5" uri="http://dbpedia.org/resource/C_(programming_language)">
+      <neighbors>
+        <neighbor dest="1" relationship="influenced" weight="0"/>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+        <neighbor dest="7" relationship="influenced" weight="0"/>
+        <neighbor dest="9" relationship="influenced" weight="0"/>
+        <neighbor dest="10" relationship="developer" weight="0"/>
+        <neighbor dest="11" relationship="influenced" weight="0"/>
+        <neighbor dest="13" relationship="influenced by" weight="0"/>
+        <neighbor dest="14" relationship="influenced by" weight="0"/>
+      </neighbors>
+      <speak>C , and Unix's C shell.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Icon (programming language)" zh-data="" id="6" uri="http://dbpedia.org/resource/Icon_(programming_language)">
+      <neighbors>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>Icon is a very high-level programming language featuring goal directed execution and many facilities for managing strings and textual patterns.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Perl" zh-data="" id="7" uri="http://dbpedia.org/resource/Perl">
+      <neighbors>
+        <neighbor dest="1" relationship="influenced by" weight="0"/>
+        <neighbor dest="5" relationship="influenced by" weight="0"/>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+        <neighbor dest="11" relationship="influenced by" weight="0"/>
+        <neighbor dest="12" relationship="influenced by" weight="0"/>
+      </neighbors>
+      <speak>Perl is a family of high-level, general-purpose, interpreted, dynamic programming languages.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Procedural programming" zh-data="" id="8" uri="http://dbpedia.org/resource/Procedural_programming">
+      <neighbors/>
+      <speak>Procedural programming is a programming paradigm, derived from structured programming, based upon the concept of the procedure call.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Java (programming language)" zh-data="" id="9" uri="http://dbpedia.org/resource/Java_(programming_language)">
+      <neighbors>
+        <neighbor dest="1" relationship="influenced by" weight="0"/>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>Java is a general-purpose computer programming language that is concurrent, class-based, object-oriented, and specifically designed to have as few implementation dependencies as possible.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="ANSI C" zh-data="" id="10" uri="http://dbpedia.org/resource/ANSI_C">
+      <neighbors/>
+      <speak>ANSI C, ISO C and Standard C refer to the successive standards for the C programming language published by the American National Standards Institute .  Software developers writing in C are encouraged to conform to the standards, as doing so aids portability between compilers.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="AWK" zh-data="" id="11" uri="http://dbpedia.org/resource/AWK">
+      <neighbors>
+        <neighbor dest="5" relationship="influenced by" weight="0"/>
+        <neighbor dest="7" relationship="influenced" weight="0"/>
+        <neighbor dest="8" relationship="paradigm" weight="0"/>
+      </neighbors>
+      <speak>AWK is an interpreted programming language designed for text processing and typically used as a data extraction and reporting tool.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Lisp (programming language)" zh-data="" id="12" uri="http://dbpedia.org/resource/Lisp_(programming_language)">
+      <neighbors>
+        <neighbor dest="3" relationship="influenced" weight="0"/>
+        <neighbor dest="4" relationship="paradigm" weight="0"/>
+        <neighbor dest="7" relationship="influenced" weight="0"/>
+        <neighbor dest="8" relationship="paradigm" weight="0"/>
+        <neighbor dest="2" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>Lisp .</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Assembly language" zh-data="" id="13" uri="http://dbpedia.org/resource/Assembly_language">
+      <neighbors/>
+      <speak>An assembly language  assembly language text can be represented by a name, and that name can be used to insert the expanded text into other code.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="B (programming language)" zh-data="" id="14" uri="http://dbpedia.org/resource/B_(programming_language)">
+      <neighbors>
+        <neighbor dest="5" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>B is a programming language developed at Bell Labs circa 1969.  It is the work of Ken Thompson with Dennis Ritchie.B was derived from BCPL, and its name may be a contraction of BCPL.  Thompson's coworker Dennis Ritchie speculated that the name might be based on Bon, an earlier, but unrelated, programming language that Thompson designed for use on Multics.B was designed for recursive, non-numeric, machine independent applications, such as system and language software.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Cyclone (programming language)" zh-data="" id="16" uri="http://dbpedia.org/resource/Cyclone_(programming_language)">
+      <neighbors>
+        <neighbor dest="5" relationship="influenced by" weight="0"/>
+      </neighbors>
+      <speak>The Cyclone programming language is intended to be a safe dialect of the C language.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Fortran" zh-data="" id="17" uri="http://dbpedia.org/resource/Fortran">
+      <neighbors>
+        <neighbor dest="5" relationship="influenced" weight="0"/>
+      </neighbors>
+      <speak>Fortran .</speak>
+      <zh-speak/>
+    </Feature>
+  </Features>
+</AIMind>

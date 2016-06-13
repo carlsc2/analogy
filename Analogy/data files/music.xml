@@ -1,0 +1,2540 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AIMind>
+  <Root id="0"/>
+  <Features>
+    <Feature data="Heavy metal music" zh-data="重金属音乐" id="1" uri="http://dbpedia.org/resource/Heavy_metal_music">
+      <neighbors>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="47" relationship="music subgenre" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="52" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="53" relationship="music fusion genre" weight="0"/>
+      </neighbors>
+      <speak>Heavy metal  is a genre of rock music that developed in the late 1960s and early 1970s, largely in the Midlands of the United Kingdom and in the United States.</speak>
+      <zh-speak>重金属音乐（英語：Heavy Metal）是一种应用强烈的旋律与失真（distortion）吉他音效的摇滚乐分类音乐。</zh-speak>
+    </Feature>
+    <Feature data="Rock music" zh-data="摇滚乐" id="2" uri="http://dbpedia.org/resource/Rock_music">
+      <neighbors>
+        <neighbor dest="1" relationship="music subgenre" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="15" relationship="instrument" weight="0"/>
+        <neighbor dest="16" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="50" relationship="music subgenre" weight="0"/>
+        <neighbor dest="51" relationship="music subgenre" weight="0"/>
+        <neighbor dest="52" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="55" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="56" relationship="music subgenre" weight="0"/>
+        <neighbor dest="57" relationship="music subgenre" weight="0"/>
+        <neighbor dest="58" relationship="music subgenre" weight="0"/>
+        <neighbor dest="71" relationship="music subgenre" weight="0"/>
+        <neighbor dest="84" relationship="music subgenre" weight="0"/>
+        <neighbor dest="86" relationship="music subgenre" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="89" relationship="music subgenre" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="92" relationship="music subgenre" weight="0"/>
+        <neighbor dest="93" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="225" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Rock music is a genre of popular music that developed during and after the 1960s, particularly in the United Kingdom and the United States.</speak>
+      <zh-speak>摇滚乐（英语：Rock Music／Rock and Roll／Rock n' Roll）是流行音乐的一种形式，通常由顯著的人聲伴以吉他、鼓和贝斯演出，很多形態的摇滚乐也使用键盘乐器，如风琴、钢琴、电子琴或合成器。其他乐器，比如萨克斯管、口琴、小提琴、笛、班卓琴、口风琴或定音鼓有时也被应用在摇滚乐之中。此外，不太出名的曼陀铃或锡塔琴等弦乐器也被使用过。摇滚乐经常有强劲的强拍，围绕电吉他，空心电吉他，以及木吉他展开。摇滚乐源自於1940和1950年代的“rock and roll”运动及洛卡比里(rockabilly)，此二者是由布鲁斯音乐，乡村音乐及其他音乐形式演进而来。All Music Guide杂志认为，“最纯粹的摇滚乐形式有三个和弦层次，一段有力而连贯的背景节奏，及吸引人的旋律。早期摇滚乐师从颇多，主要是布鲁斯乐，R&amp;B，乡村音乐；同时也被宗教福音，传统流行乐，爵士乐和民间音乐影响。所有的这些影响都汇集到一个简单的、基于布鲁斯的歌曲结构中，它节奏快，引人起舞，引人陶醉。”在20世纪60年代晚期，摇滚乐与民间音乐的融合产生出民谣摇滚，与布鲁斯的融合产生了布鲁斯摇滚乐，还与爵士乐融合产生出融合爵士乐。在某个不确定的时期又产生了迷幻摇滚。在70年代，摇滚乐吸纳了来自灵魂乐，放克以及拉丁音乐的元素。与此同时，摇滚乐产生出许多下属类型，比如软性摇滚，重金屬，硬摇滚，前卫摇滚及朋克摇滚。20世纪80年代产生的摇滚类型包括合成器流行乐，硬核朋克以及另类摇滚。在90年代，这些类型中又加入了油渍摇滚，英伦搖滾，独立摇滚和新金属。专门演奏摇滚乐的艺人团体被称为摇滚乐队或摇滚乐手。大部分摇滚乐团包括吉他手，主唱，贝斯手和鼓手，组成一个四人阵容。部分乐队取消了这其中的一个或几个角色或者让主唱同时担负起演奏乐器的任务，由此成为一个二人或三人组合。另外的乐团会增补一个或两个节奏吉他手或者一个键盘手。在比较罕见的情况下，乐队会使用诸如小提琴或大提琴这样的弦乐器，或者萨克斯管，小号，长号这样的管乐器。摇滚乐不仅唱出人们对爱情，美好生活的追求，还发泄出对现实世界的不满，涉及到战争与和平，民主与政治等方面。其种类、风格繁杂，从几个大的方面来看，现代摇滚的发展主要基于黑人音乐、地下文化、现代科技以及“后现代”浪潮，形成以“金属”、“朋克”、“歌德”、“迷幻”、“说唱”、“黑色氛围”为主要风格的非主流音乐。</zh-speak>
+    </Feature>
+    <Feature data="Post-rock" zh-data="後搖滾" id="3" uri="http://dbpedia.org/resource/Post-rock">
+      <neighbors>
+        <neighbor dest="4" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="5" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="86" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="126" relationship="instrument" weight="0"/>
+        <neighbor dest="144" relationship="instrument" weight="0"/>
+        <neighbor dest="160" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Post-rock is a subgenre of rock music characterized by the influence and use of instruments commonly associated with rock, but using rhythms and "guitars as facilitators of timbre and textures" not traditionally found in rock.</speak>
+      <zh-speak>後搖滾（Post-rock）在分类上尚有争议，有些人将其看作摇滚乐的一种。后摇的一个特点是，所用乐器一般与摇滚乐相同，但节奏、和声、旋律、音色及和弦进行（Chord progression）都有别于传统摇滚。後搖滾於1980年中期，在歐美音樂界開始被提出。在後搖滾音樂裡，許多常見的音樂產業傳統現象都被顛覆改寫，例如吉他不再是主要角色；沒有歌詞或主唱；打破傳統歌曲長度，有些樂曲甚至長達二、三十分鐘...，後搖滾甚至想打破唱片工業創造一首膾炙人口單曲的願望。后摇滚体现了很多流派的特点，比如氛围音乐、爵士、电子（electronica）和实验音乐。后摇中人声很少见，且当有人声的时候，它也不是像传统的那样作为主旋律并且有清晰的歌词，而更像一种乐器。在后摇中，人声多为很轻柔的哼唱，不规律地分布在整首歌中。</zh-speak>
+    </Feature>
+    <Feature data="Shoegazing" zh-data="瞪鞋搖滾" id="4" uri="http://dbpedia.org/resource/Shoegazing">
+      <neighbors>
+        <neighbor dest="3" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="5" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Shoegazing  is a subgenre of alternative rock that emerged from the United Kingdom in the late 1980s. It lasted there until the mid 1990s, with a critical zenith reached in 1990 and 1991. The British music press—particularly NME and Melody Maker—named this style shoegazing because the musicians in these bands stood relatively still during live performances in a detached, introspective, non-confrontational state, hence the idea that they were gazing at their shoes.</speak>
+      <zh-speak>瞪鞋搖滾（中國大陸一般譯作盯鞋搖滾）或低頭搖滾、自賞搖滾（英语：Shoegazing，或簡短的Shoegaze），是一種另類搖滾支派，出現於1980年代晚期的英國，並於1990年及1991年達到顛峰。英國音樂刊物——特別是NME與Melody Maker——將此風格命名為「瞪鞋搖滾」，是因為這些樂團在現場演出時經常站著不動，全神貫注於在地上的效果器，貌似盯著他們的鞋子一樣。瞪鞋搖滾常在音樂中玩弄吉他效果，加上不清楚的聲線旋律，融入吉他富有創意的噪音背景中。人們將瞪鞋搖滾與倫敦其他相關樂團形容是「自賞」或「自娛」。1990年代，瞪鞋搖滾樂團被美國的油漬搖滾風潮蓋過，進而促使相對較不知名的瞪鞋搖滾樂團解散或改換其他樂風。</zh-speak>
+    </Feature>
+    <Feature data="Post-metal" zh-data="" id="5" uri="http://dbpedia.org/resource/Post-metal">
+      <neighbors>
+        <neighbor dest="3" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="4" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Post-metal is a fusion music genre, a mixture between the genres of post-rock and heavy metal.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Doom metal" zh-data="末日金屬" id="6" uri="http://dbpedia.org/resource/Doom_metal">
+      <neighbors>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="6" relationship="music subgenre" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="129" relationship="derivative" weight="0"/>
+      </neighbors>
+      <speak>Doom metal is an extreme form of heavy metal music that typically uses slower tempos, low-tuned guitars and a much "thicker" or "heavier" sound than other metal genres.</speak>
+      <zh-speak>末日金屬（英语：Doom Metal），又稱毀滅金屬、厄运金屬，是一種曲速非常緩慢的重金屬音樂，不管是歌詞、唱腔、吉他即興的展現上，都給人異常沉重絕望的氛圍。</zh-speak>
+    </Feature>
+    <Feature data="Black metal" zh-data="黑金屬音樂" id="7" uri="http://dbpedia.org/resource/Black_metal">
+      <neighbors>
+        <neighbor dest="7" relationship="music subgenre" weight="0"/>
+        <neighbor dest="6" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="10" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="14" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="25" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="26" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="28" relationship="music subgenre" weight="0"/>
+        <neighbor dest="29" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Black metal is an extreme subgenre of heavy metal music.</speak>
+      <zh-speak>黑金屬（英语：Black metal）是在重金屬音樂中一個分支流派。黑金屬的曲風特色總體來説，運用尖叫式的黑腔、強烈失真的吉他、猛烈卻陰沉的雙大鼓、快速行進的節奏和旋律，給人冷冽、黑暗、帶有絕望的感受。</zh-speak>
+    </Feature>
+    <Feature data="Electric guitar" zh-data="电吉他" id="8" uri="http://dbpedia.org/resource/Electric_guitar">
+      <neighbors/>
+      <speak>An electric guitar is a guitar that uses a pickup to convert the vibration of its strings into electrical impulses.</speak>
+      <zh-speak>電吉他，是一種撥弦樂器，發明者為萊斯‧保羅。发声原理与傳統吉他不同，不是以箱体的振动发声，而是运用了电磁学原理，它的琴身是实体的木头而非空的音箱。在琴身上装有線圈。它们被称做拾音器。当吉他弦振动时，切割了拾音器的磁感线，从而使琴身中的导线中产生不同频率的电流，当这些电流通过电子音箱还原时，就成了电吉他的声音。因为它不是原声乐器而是以电流发声的，所以一些电子仪器被制造出来通过改变，添加电流等方法来改变电吉他的声音。这些仪器被称做效果器。電吉他為了追求美感或是需求性，而開發出各式各樣的琴形。</zh-speak>
+    </Feature>
+    <Feature data="String instrument" zh-data="弦樂器" id="9" uri="http://dbpedia.org/resource/String_instrument">
+      <neighbors/>
+      <speak>String instruments are musical instruments that produce sound from vibrating strings.</speak>
+      <zh-speak>弦樂器是指以弦振動而發出聲音的樂器之總稱。</zh-speak>
+    </Feature>
+    <Feature data="Viking metal" zh-data="維京金屬" id="10" uri="http://dbpedia.org/resource/Viking_metal">
+      <neighbors>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="11" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="14" relationship="derivative" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="75" relationship="instruments" weight="0"/>
+      </neighbors>
+      <speak>Viking metal is a subgenre of black metal characterized by its chaotic and noisy sound, slow pace, use of keyboards, dark and violent imagery, and lyrical themes of Norse mythology, Norse paganism, and the Viking Age.</speak>
+      <zh-speak>維京金屬是黑金屬音樂的另一個分支流派。此種樂風是以黑金屬為架構，一樣使用失真吉他、雙踏、黑腔、鍵盤等等的演奏方式，不過編曲上比黑金屬要注重旋律，曲風也比較沒有那麼凶狠、肅殺、反而多了一些較為抒情的感覺。有些樂團甚至完全沒有黑金屬的樣子，乍聽之下反而像是旋律金屬一樣，歌詞則較關注於祖先情懷等等。</zh-speak>
+    </Feature>
+    <Feature data="Folk metal" zh-data="民谣金属" id="11" uri="http://dbpedia.org/resource/Folk_metal">
+      <neighbors>
+        <neighbor dest="10" relationship="derivative" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="14" relationship="derivative" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="66" relationship="music subgenre" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="133" relationship="music subgenre" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="135" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Folk metal is a sub-genre of heavy metal music that developed in Europe during the 1990s. As the name suggests, the genre is a fusion of heavy metal with traditional folk music.</speak>
+      <zh-speak>民謠金屬 是重金屬音樂的其中一個分支。它的演奏特色主要是加入了民謠用到的樂器，如小提琴、中提琴、豎琴等。</zh-speak>
+    </Feature>
+    <Feature data="Drum kit" zh-data="爵士鼓" id="12" uri="http://dbpedia.org/resource/Drum_kit">
+      <neighbors/>
+      <speak>A drum kit, drum set or , as used in popular music, taught in many music schools, and for which qualifications are available from Trinity College London consists of: A snare drum, mounted on a specialised stand, placed between the player's knees and played with drum sticks.</speak>
+      <zh-speak>爵士鼓（英语：Drum kit、Drum set），是一套各種不同類型、不同音色的手擊樂器和腳擊樂器集結為一體由單人利用踏板、鼓棒或鼓刷來演奏。主要用在搖滾樂和爵士樂中，抑揚頓挫的立體鼓點配上鼓手投入演出的神情，演奏起來十分神氣。因從外觀上看去就像一排架子上掛著很多鼓，又名「架子鼓」。</zh-speak>
+    </Feature>
+    <Feature data="Bass guitar" zh-data="電貝斯" id="13" uri="http://dbpedia.org/resource/Bass_guitar">
+      <neighbors/>
+      <speak>The bass guitar is a stringed instrument played primarily with the fingers or thumb , or by using a pick.</speak>
+      <zh-speak>電貝斯（英语：electric bass），又稱為貝斯吉他、低音吉他（英语：bass guitar），簡称貝斯，現代搖滾樂團組合的主要樂器。一般樂隊中除了電貝斯手以外，還有一位吉他手、一位鍵盤手、一位鼓手、及一位主音歌手。電貝斯是從低音提琴演變出來的，空弦由粗至細為E、A、D、G。而且在樂隊中，電貝斯在節奏上扮演一個重要的角色。電貝斯的彈奏主要是撥弦、slapping和使用撥片。形狀上和構造上都和電吉他相似，但是本體大一點、頸部更長，還有更寬闊的音域。四弦電貝斯最低音的弦比吉他最低音的弦低完全八度。自1950年始，電貝斯在流行曲中很大程度上取代了低音提琴，適用於很多不同的風格，包括搖滾樂、重金屬音樂、藍調、爵士樂中的低音部。也可在爵士樂、fusion、拉丁音樂、funk和一些搖滾樂風格的歌曲中進行獨奏。因應現在樂團的需要，電貝斯已經不僅只有基本的4弦，也有5弦和6弦之別，而5弦的電貝斯，從第一弦到第五弦（由細到粗）的空弦音分別為：G、D、A、E、B，也有的空弦音分別為：C、G、D、A、E，依各大廠商自訂；至於6弦的電貝斯，從第一弦到第六弦的空弦音分別為：C、G、D、A、E、B；因為現在搖滾樂的發達，多弦的電貝斯也因應需求而一一誕生。</zh-speak>
+    </Feature>
+    <Feature data="Pagan metal" zh-data="" id="14" uri="http://dbpedia.org/resource/Pagan_metal">
+      <neighbors>
+        <neighbor dest="11" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="10" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="47" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Pagan metal is an umbrella term for heavy metal music which fuses extreme metal with "the pre-Christian traditions of a specific culture or region through thematic concept, rustic melodies, unusual instruments or archaic languages", usually referring to folk metal or black metal.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Acoustic guitar" zh-data="原聲吉他" id="15" uri="http://dbpedia.org/resource/Acoustic_guitar">
+      <neighbors/>
+      <speak>An acoustic guitar is a guitar that uses only an acoustic sound board.</speak>
+      <zh-speak>原聲吉他（acoustic guitar）是吉他的一種類型。</zh-speak>
+    </Feature>
+    <Feature data="Country music" zh-data="乡村音乐" id="16" uri="http://dbpedia.org/resource/Country_music">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="18" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="135" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="218" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Country music is a popular American musical style that began in the rural Southern United States in the 1920s. It takes its roots from Western cowboy and southeastern American folk music.</speak>
+      <zh-speak>鄉村音樂（Country music），也稱鄉村與西部（Country and Western），是一種當代的流行音樂，起源於美國南部與阿帕拉契山區。鄉村音樂的根源可追溯至1920年代，融合了傳統民謠音樂、凱爾特音樂、福音音樂及古時音樂。1940年代，當鄉土音樂（hillbilly music）地位漸衰時，人們開始以統一的術語「鄉村音樂」作為稱呼，1970年代更大大普及，並在世界各地（除了美國及愛爾蘭）取代了「鄉村與西部」的稱呼。鄉村音樂出了兩位十分知名的暢銷歌手。一位是艾維斯·普利斯萊，人稱貓王，同時也是新音樂類型「搖滾樂」的代表人物。另一位，當代音樂家葛司·布魯克斯（Garth Brooks），擁有一億兩千八百萬專輯銷售量，則是美國史上最暢銷的歌手。</zh-speak>
+    </Feature>
+    <Feature data="Electronic organ" zh-data="電風琴" id="17" uri="http://dbpedia.org/resource/Electronic_organ">
+      <neighbors/>
+      <speak>An electronic organ is an electronic keyboard instrument which was derived from the harmonium, pipe organ and theatre organ.</speak>
+      <zh-speak>電風琴（Electronic organ）是一種源自簧風琴、管風琴和劇場風琴的電子鍵盤。最初設計用作模仿管風琴、劇場風琴、樂團音效、或者管絃樂團音效。今天他發展為三種以上的樂器： 流行音樂的哈蒙德式教堂風琴； 模仿管風琴的數位教堂風琴，主要用於教堂； 其他各種類型，譬如組合風琴、家用風琴、軟體風琴。</zh-speak>
+    </Feature>
+    <Feature data="Fiddle" zh-data="" id="18" uri="http://dbpedia.org/resource/Fiddle">
+      <neighbors/>
+      <speak>The term fiddle may refer to any bowed string musical instrument, most often the violin.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Celtic music" zh-data="凱爾特音樂" id="19" uri="http://dbpedia.org/resource/Celtic_music">
+      <neighbors/>
+      <speak>This article is about the modern folkloristic genre and its history.</speak>
+      <zh-speak>凯尔特音乐（英文：Celtic music）是一个被艺术家、唱片公司、音像店和音乐杂志用来描述一种宽泛的音乐类型的名词，这些音乐类型均自西欧凯尔特人的民间音乐传统发展而成。就概念本身而言，没有任何真正的音乐主体可以被精确地描述为凯尔特音乐，但这个名称依然被确定下来，既指口头传播的传统音乐，也包含被录制下来的流行音乐。而后者有时与相关于某种凯尔特文化的民间音乐勉强仅有一些表面的相似之处；但另一方面，它有时也代表那些为使凯尔特传统更适合于现代世界文化所做的真诚付出。 凯尔特音乐主要意味两方面的内容：首先，它是那些自称凯尔特人的音乐（一个无关音乐的，最初的国家定义），以此相对于“法国音乐”或“英国音乐”；其次，它包含每一种能使音乐作品具有独特性的凯尔特民族的元素。一些人坚持认为外表不同的凯尔特音乐作品实际上也无任何共同之处，例如Geoff Wallis和Sue Wilson在他们共同著有的《爱尔兰音乐简要指南》（The Rough Guide to Irish Music）中的观点，而有些人（如Alan stivell）则说有。 通常，凯尔特音乐这个名称用来指爱尔兰和苏格兰音乐，因为这两个地方都产生了闻名于世的与众不同的音乐风格，而这兩种风格实际上有着名副其实的共同特征和明显的相互影响。但值得注意的是，爱尔兰和苏格兰的传统音乐人自己却回避使用“凯尔特音乐”这个名称，除非迫于市场的需要。他们的音乐形式被世人所知是因为爱尔兰人和苏格兰人在英语世界的重要作用，尤其在美国，这种作用给美国音乐带来了意义深远的冲击，特别是蓝草和乡村音乐。威尔士、康沃尔、马恩岛、布列塔尼、加利西亚、坎塔布里亚和阿斯图里亚及葡萄牙北部的音乐也被认为是凯尔特音乐。布列塔尼的传统格外强烈，在那里，大小凯尔特节会贯穿全年。在威尔士，古老的诗歌音乐比赛年会仍然存在。另外，海外的凯尔特人文化群体的音乐作品也充满生气，特别是在加拿大和美国。</zh-speak>
+    </Feature>
+    <Feature data="Virtu Foundation" zh-data="" id="20" uri="http://dbpedia.org/resource/Virtu_Foundation">
+      <neighbors>
+        <neighbor dest="9" relationship="focus" weight="0"/>
+        <neighbor dest="35" relationship="focus" weight="0"/>
+      </neighbors>
+      <speak>The Virtu Foundation is a non-profit organization that supports higher level music education with a particular focus on string instruments.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Infinity Luthiers" zh-data="" id="21" uri="http://dbpedia.org/resource/Infinity_Luthiers">
+      <neighbors>
+        <neighbor dest="9" relationship="industry" weight="0"/>
+        <neighbor dest="184" relationship="państwo" weight="0"/>
+      </neighbors>
+      <speak>Infinity Luthiers is an American manufacturer of handmade custom high-end steel stringed guitars and mandolins headquartered in Springfield, Illinois.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Steinway Musical Instruments" zh-data="" id="22" uri="http://dbpedia.org/resource/Steinway_Musical_Instruments">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="24" relationship="subsidiary" weight="0"/>
+        <neighbor dest="90" relationship="product" weight="0"/>
+        <neighbor dest="125" relationship="product" weight="0"/>
+        <neighbor dest="144" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+        <neighbor dest="184" relationship="division" weight="0"/>
+      </neighbors>
+      <speak>Steinway Musical Instruments, Inc. is an American worldwide musical instrument manufacturing conglomerate.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Samick" zh-data="" id="23" uri="http://dbpedia.org/resource/Samick">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+      </neighbors>
+      <speak>Samick Musical Instrument Co., Ltd.  and other instruments.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Conn-Selmer" zh-data="" id="24" uri="http://dbpedia.org/resource/Conn-Selmer">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="22" relationship="parent company" weight="0"/>
+        <neighbor dest="90" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+        <neighbor dest="184" relationship="location" weight="0"/>
+      </neighbors>
+      <speak>Conn-Selmer, Inc. is a manufacturer of musical instruments for concert bands, marching bands and orchestras.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Thrash metal" zh-data="敲击金属" id="25" uri="http://dbpedia.org/resource/Thrash_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="derivative" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="26" relationship="derivative" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="29" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="76" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="84" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Thrash metal is an extreme subgenre of heavy metal music characterized by its fast tempo and overall aggression.</speak>
+      <zh-speak>敲击金属（Thrash Metal，或称激流金属，台灣稱為鞭笞金屬）属于重金属音乐中之一分支。最原始的敲击金属可以追溯到1970年代末80年代初。</zh-speak>
+    </Feature>
+    <Feature data="Death metal" zh-data="死亡金屬音樂" id="26" uri="http://dbpedia.org/resource/Death_metal">
+      <neighbors>
+        <neighbor dest="25" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="26" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="29" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="82" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Death metal is an extreme subgenre of heavy metal music.</speak>
+      <zh-speak>死亡金屬（Death Metal）樂風以「鞭擊金屬」為其背景演化而成（受鞭擊金屬中Slayer樂團影響）。特点是充斥電吉他快速的反復，幾無旋律的和絃，速擊狂踩的雙大鼓，主唱咬牙不清的低吟狂吼（死腔），歌詞以死亡仇恨為主題，充滿了屍體、內臟、肢解、分屍、姦屍、戀屍癖、食屍、虐待等字眼。“死亡金屬”以來自佛羅里達州的重金屬樂隊最具代表性。代表性樂隊：Death、Carcass、Cannibal Corpse、Suffocation等。</zh-speak>
+    </Feature>
+    <Feature data="Singing" zh-data="歌唱" id="27" uri="http://dbpedia.org/resource/Singing">
+      <neighbors/>
+      <speak>Singing is the act of producing musical sounds with the voice, and augments regular speech by the use of both tonality and rhythm.</speak>
+      <zh-speak>歌唱，或唱歌，是指人类通过发声器官产生音乐性声音的过程，与说话相似。歌唱产生的音乐称为声乐。专业从事歌唱的人为歌手。歌唱通过对唱腔、音高、音色、音程、音量、旋律、节奏、表现力等方面，来阐释作品和艺术性地表达情感。</zh-speak>
+    </Feature>
+    <Feature data="Symphonic black metal" zh-data="交响黑金属" id="28" uri="http://dbpedia.org/resource/Symphonic_black_metal">
+      <neighbors>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="46" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Symphonic black metal is a subgenre of black metal that emerged in the mid to late 1990s, and incorporates symphonic and orchestral elements.</speak>
+      <zh-speak>交响黑金属是黑金属的一个分支流派，产生于20世纪90年代中后期。 该流派因其所包含的交响和管弦元素而闻名，该类乐团主要集中在欧洲。</zh-speak>
+    </Feature>
+    <Feature data="Hardcore punk" zh-data="硬核朋克" id="29" uri="http://dbpedia.org/resource/Hardcore_punk">
+      <neighbors>
+        <neighbor dest="25" relationship="derivative" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="derivative" weight="0"/>
+        <neighbor dest="26" relationship="derivative" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="53" relationship="derivative" weight="0"/>
+        <neighbor dest="76" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="84" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="146" relationship="derivative" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>Hardcore punk  is a punk rock music genre and subculture that originated in the late 1970s. Hardcore punk music is generally faster, heavier, and more abrasive than regular punk rock.</speak>
+      <zh-speak>硬核朋克（Hardcore Punk，通常簡稱為硬核）是朋克摇滚的一个分支，起源于1970年代的英国和北美。 硬核朋克比最初的朋克更重，更噪，更快，旋律更加简单更加混乱。 硬核朋克风格的歌曲一般比较短、快、响，内容常常涉及激进的反社会、反规则的思想。原先「硬核龐克」這個用詞不是那麼固定，一直到加拿大溫哥華樂團D.O.A.透過他們1981年發行的專輯《Hardcore '81》，使得這個詞被廣泛使用。硬核更引發直刃族（Straight Edge）的文化運動以及強硬派（Hardline）與Youth Crew等等運動。這種音樂類型在80年代的地下音樂，隨著獨立音樂的推廣、DIY精神，更加蓬勃發展，從美國華盛頓哥倫比亞特區到紐約、新澤西甚至是加拿大、英國。他影響數種音樂類型，更成功打入主流市場，諸如金屬核、油漬搖滾、鞭撻金屬、Emo與後硬核。傳統的硬核從未經歷過主流商業化的成功，但隨著時間推移，部分早期的先鋒樂團獲得了讚賞。樂團Black Flag的專輯《Damaged》更在2003年被列入滾石唱片史上最佳500張專輯中。</zh-speak>
+    </Feature>
+    <Feature data="Anthem (band)" zh-data="" id="30" uri="http://dbpedia.org/resource/Anthem_(band)">
+      <neighbors>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="8" relationship="former band member" weight="0"/>
+        <neighbor dest="1" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="former band member" weight="0"/>
+        <neighbor dest="48" relationship="former band member" weight="0"/>
+      </neighbors>
+      <speak>Anthem  is a Japanese heavy metal band that was formed during the early 1980s in Tokyo.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Zuno Men" zh-data="" id="31" uri="http://dbpedia.org/resource/Zuno_Men">
+      <neighbors>
+        <neighbor dest="13" relationship="former band member" weight="0"/>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="8" relationship="former band member" weight="0"/>
+        <neighbor dest="48" relationship="former band member" weight="0"/>
+        <neighbor dest="149" relationship="former band member" weight="0"/>
+      </neighbors>
+      <speak>Zuno Men were an English indie rock band, fronted by Keith John Adams, active between 1992 and 1999.Zuno Men released two albums and several singles in the 1990s on the Black &amp; White Indians label and Coop Records.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Becker guitars" zh-data="" id="32" uri="http://dbpedia.org/resource/Becker_guitars">
+      <neighbors>
+        <neighbor dest="8" relationship="industry" weight="0"/>
+      </neighbors>
+      <speak>Becker Guitars is a boutique guitar manufacturer located in Attleboro, Massachusetts.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Habeas Corpus (band)" zh-data="" id="33" uri="http://dbpedia.org/resource/Habeas_Corpus_(band)">
+      <neighbors>
+        <neighbor dest="13" relationship="former band member" weight="0"/>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="8" relationship="former band member" weight="0"/>
+        <neighbor dest="27" relationship="former band member" weight="0"/>
+        <neighbor dest="29" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Habeas Corpus was a hardcore punk band that emerged from the Nardcore scene of Oxnard, California in the early 1980s.  One of the region's first straight edge bands, Habeas Corpus combined Misfits-style horror punk with the early 80s Southern California surf/skate sound.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ipso Facto (English band)" zh-data="" id="34" uri="http://dbpedia.org/resource/Ipso_Facto_(English_band)">
+      <neighbors>
+        <neighbor dest="13" relationship="former band member" weight="0"/>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="8" relationship="former band member" weight="0"/>
+      </neighbors>
+      <speak>Ipso Facto were an English goth-inflected, melodramatic psychedelic rock band.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Classical music" zh-data="古典音乐" id="35" uri="http://dbpedia.org/resource/Classical_music">
+      <neighbors/>
+      <speak>Classical music is the art music produced in, or rooted in, the traditions of Western liturgical and secular music, encompassing a broad period from roughly the 11th century to present times.</speak>
+      <zh-speak>古典音乐是指根植于西方音乐传统（包括宗教音乐和世俗音乐）的艺术音乐，包含了从大约11世纪直到到当代的广大时间范围。这一艺术传统的中坚时期通常被划定为从1550年到1900年的这段时间，又称共晓时期。西方音乐由于其特有的记谱法，而同其它任何非西方音乐和流行音乐都有极大的区别。西方作曲家使用的记谱法为演奏者预设了一段音乐的音高、速度、拍子、节奏以及准确的处理方法。这就大大压缩了演奏者即兴发挥和自由修饰的空间，而这些行为在非西方的艺术音乐和流行音乐中是非常常见的。古典音乐的另一大特征是其发展出的高度复杂的器乐形式，这与以歌曲为主的流行音乐形成鲜明对比。“古典音乐（classcal music）”一词最早见于19早期初期，最初是用于凸显从巴赫到贝多芬的这一段黄金时期。牛津英语词典中“古典音乐（classcal music）”一词最早出现在1836年。</zh-speak>
+    </Feature>
+    <Feature data="The Musical Times" zh-data="" id="36" uri="http://dbpedia.org/resource/The_Musical_Times">
+      <neighbors>
+        <neighbor dest="35" relationship="academic discipline" weight="0"/>
+      </neighbors>
+      <speak>The Musical Times is an academic journal of classical music edited and produced in the United Kingdom and currently the oldest such journal still being published in that country.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="St Peter's, Notting Hill" zh-data="" id="37" uri="http://dbpedia.org/resource/St_Peter's,_Notting_Hill">
+      <neighbors>
+        <neighbor dest="35" relationship="architectural style" weight="0"/>
+      </neighbors>
+      <speak>St Peter's Notting Hill is a Victorian Anglican church in Kensington Park Road, Notting Hill, London.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Piano Lessons (book)" zh-data="" id="38" uri="http://dbpedia.org/resource/Piano_Lessons_(book)">
+      <neighbors>
+        <neighbor dest="35" relationship="non-fiction subject" weight="0"/>
+      </neighbors>
+      <speak>Piano Lessons is a 2009 award-winning non-fiction book by Australian classical pianist Anna Goldsworthy, Artist in Residence of Janet Clarke Hall , and Artistic Director of the Port Fairy Spring Music Festival.In Piano Lessons, Goldsworthy documents her piano study from a young age under the Russian emigre Eleanora Sivan.Originally published in Australia in October 2009 by Black Inc., the US rights were sold to American publisher St. Martin's PressThe film rights to the book have been sold to director Ana Kokkinos.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="International Record Review" zh-data="" id="39" uri="http://dbpedia.org/resource/International_Record_Review">
+      <neighbors>
+        <neighbor dest="35" relationship="category" weight="0"/>
+      </neighbors>
+      <speak>International Record Review is an independent British monthly classical music magazine.First published in March 2000, the magazine reviews classical music CDs, DVDs and books.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Gramophone (magazine)" zh-data="" id="40" uri="http://dbpedia.org/resource/Gramophone_(magazine)">
+      <neighbors>
+        <neighbor dest="35" relationship="category" weight="0"/>
+      </neighbors>
+      <speak>Gramophone is a magazine published monthly in London devoted to classical music, particularly recordings.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="DWCS" zh-data="" id="41" uri="http://dbpedia.org/resource/DWCS">
+      <neighbors>
+        <neighbor dest="35" relationship="callsign meaning" weight="0"/>
+      </neighbors>
+      <speak>103.5 CS  was a music FM station from 1986 until 1995 and it was owned and operated by Global Broadcasting System in the Philippines.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Fanfare (magazine)" zh-data="" id="42" uri="http://dbpedia.org/resource/Fanfare_(magazine)">
+      <neighbors>
+        <neighbor dest="35" relationship="category" weight="0"/>
+        <neighbor dest="184" relationship="country" weight="0"/>
+      </neighbors>
+      <speak>Fanfare is an American bimonthly magazine devoted to reviewing recorded music in all playback formats.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="American Classical Music Hall of Fame and Museum" zh-data="" id="43" uri="http://dbpedia.org/resource/American_Classical_Music_Hall_of_Fame_and_Museum">
+      <neighbors>
+        <neighbor dest="35" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>The American Classical Music Hall of Fame and Museum is a non-profit organization celebrating past and present individuals and institutions that have made significant contributions to classical music—"people who have contributed to American music and music in America", according to Samuel Adler . The project was founded in 1996 by Cincinnati businessman and civic leader David A. Klingshirm and inducted its first honorees in 1998.The organization's offices and exhibits are housed in the Hamilton County Memorial Building, next door to the Cincinnati Music Hall in the Over-the-Rhine neighborhood of Cincinnati, Ohio.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Luc Ferrari" zh-data="" id="44" uri="http://dbpedia.org/resource/Luc_Ferrari">
+      <neighbors>
+        <neighbor dest="35" relationship="geNoe" weight="0"/>
+        <neighbor dest="153" relationship="geNoe" weight="0"/>
+      </neighbors>
+      <speak>Luc Ferrari  was a French composer of Italian heritage, particularly noted for his tape music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hawaii Public Radio" zh-data="" id="45" uri="http://dbpedia.org/resource/Hawaii_Public_Radio">
+      <neighbors>
+        <neighbor dest="35" relationship="notes" weight="0"/>
+        <neighbor dest="88" relationship="notes" weight="0"/>
+      </neighbors>
+      <speak>Hawaii Public Radio .  The stations originate from the studios of The Hawaii Public Radio Plaza on Kaheka Street, near the Ala Moana Shopping Center in Honolulu.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Symphonic metal" zh-data="交響金屬" id="46" uri="http://dbpedia.org/resource/Symphonic_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="28" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="49" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="50" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="76" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="124" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="126" relationship="instrument" weight="0"/>
+        <neighbor dest="127" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="128" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="129" relationship="music fusion genre" weight="0"/>
+      </neighbors>
+      <speak>Symphonic metal is a subgenre of metal music which combines the characteristics of this genre, such as heavy drums and guitars, with different elements of classical music including  symphonic instruments, choirs and on occasion, a full symphony orchestra.</speak>
+      <zh-speak>交響金屬（Symphonic Metal），亦稱劇院金屬（Opera Metal）是哥德金屬和力量金屬演化出來的另一個支流。交響金屬往往以歌劇女高音作為主音，當然有時亦會採用低沉的男聲作主音。經一雄一雌的主音配合下，就如歌劇美女與野獸一樣。而一部分交響金屬樂團均仿傚美女與野獸的特色。另外，樂團使用了歌劇式／交響樂式的主題，製造出宛如交響樂般的感覺。</zh-speak>
+    </Feature>
+    <Feature data="Extreme metal" zh-data="" id="47" uri="http://dbpedia.org/resource/Extreme_metal">
+      <neighbors>
+        <neighbor dest="25" relationship="music subgenre" weight="0"/>
+        <neighbor dest="10" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="music subgenre" weight="0"/>
+        <neighbor dest="26" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="6" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="28" relationship="music subgenre" weight="0"/>
+        <neighbor dest="14" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="82" relationship="music subgenre" weight="0"/>
+        <neighbor dest="129" relationship="derivative" weight="0"/>
+      </neighbors>
+      <speak>Extreme metal is a loosely defined umbrella term for a number of related heavy metal music subgenres that have developed since the early 1980s. The term usually refers to a more abrasive, harsher, underground, non-commercialized style or sound associated with the thrash metal, black metal, death metal and doom metal genres.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Keyboard instrument" zh-data="鍵盤樂器" id="48" uri="http://dbpedia.org/resource/Keyboard_instrument">
+      <neighbors/>
+      <speak>A keyboard instrument is a musical instrument played using a keyboard.</speak>
+      <zh-speak>鍵盤樂器是有排列如鋼琴鍵盤的琴鍵之樂器總稱。這些樂器上每個琴鍵都有固定的音高，因此皆可以用以演奏任何符合其音域範圍內的樂曲。琴鍵下常有共鳴管或其他可供共鳴之裝置。演奏家在使用键盘乐器时不是直接打击乐器的弦来产生震荡，而是使用琴键，通过乐器内的机械机构或电子元件来产生音响。一般琴键是黑色和白色的，排列在键盘上。少数例外有手摇风琴、手风琴等，在这些琴上也有按钮。鍵盤樂器的一个缺点在于音乐家无法直接控制发音器，而且大多数鍵盤樂器的音高是固定的，演奏家无法更改，因此对演奏有一定限制，如无法产生滑音。有些乐器使用特殊构造、结构使得演奏家可以在一定程度上更改乐器的发音性能。鍵盤樂器的优点在于大多数鍵盤樂器可以同时多声部演奏、能演奏多个音的和弦，且音域相对比较宽阔。</zh-speak>
+    </Feature>
+    <Feature data="Progressive metal" zh-data="前衛金屬" id="49" uri="http://dbpedia.org/resource/Progressive_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="86" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="90" relationship="instrument" weight="0"/>
+        <neighbor dest="127" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Progressive metal  is a subgenre of both progressive rock and heavy metal, originating in the United Kingdom and the United States In the 1970s. Progressive metal blended elements of heavy metal and progressive rock music, taking the loud "aggression" and amplified electric guitar-driven sound of the former, with the more experimental, complex and "pseudo-classical" compositions of the latter.</speak>
+      <zh-speak>前衛金屬（Progressive metal，有時簡寫為Prog Metal）是重金屬音樂的一個分支，融合前衛搖滾與重金屬的音樂風格。前衛金屬結合了強大的、吉他主導的金屬音樂、複雜的編曲結構、奇特的拍子記號、與前衛搖滾中錯綜複雜的樂器演奏。部分前衛金屬樂團也受到了融合爵士樂與西洋古典音樂的影響。如同前衛搖滾的歌曲，前衛金屬歌曲常常比一般的金屬歌曲還要長，並時常結合概念專輯的方式。因此，前衛金屬很少出現在主流電台或節目中。</zh-speak>
+    </Feature>
+    <Feature data="Symphonic rock" zh-data="" id="50" uri="http://dbpedia.org/resource/Symphonic_rock">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="9" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="46" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="86" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="92" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="126" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Symphonic rock is a subgenre of progressive rock.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Psychedelic rock" zh-data="迷幻搖滾" id="51" uri="http://dbpedia.org/resource/Psychedelic_rock">
+      <neighbors>
+        <neighbor dest="4" relationship="derivative" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="17" relationship="instrument" weight="0"/>
+        <neighbor dest="52" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="54" relationship="music subgenre" weight="0"/>
+        <neighbor dest="56" relationship="derivative" weight="0"/>
+        <neighbor dest="57" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="85" relationship="instrument" weight="0"/>
+        <neighbor dest="86" relationship="derivative" weight="0"/>
+        <neighbor dest="87" relationship="instrument" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="89" relationship="derivative" weight="0"/>
+        <neighbor dest="90" relationship="instrument" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="92" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="94" relationship="music fusion genre" weight="0"/>
+      </neighbors>
+      <speak>Psychedelic rock is a style of rock music that is inspired or influenced by psychedelic culture and attempts to replicate and enhance the mind-altering experiences of psychedelic drugs.</speak>
+      <zh-speak>迷幻搖滾（英语：Psychedelic rock）是一種搖滾樂流派，其源自迷幻文化及使用迷幻藥而產生的思維驟變。迷幻搖滾湧現於1960年代的英美，與車庫搖滾及民謠搖滾樂團屬同一時期。迷幻搖滾介於早期以藍調為基礎的搖滾音樂，至前衛搖滾、藝術搖滾、實驗搖滾、硬搖滾，甚至重金屬間的過渡時期。迷幻搖滾同時並融入了非西方的音樂元素，如印度音樂的拉加（ragas）與西塔爾琴（sitars）。</zh-speak>
+    </Feature>
+    <Feature data="Blues rock" zh-data="藍調搖滾" id="52" uri="http://dbpedia.org/resource/Blues_rock">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="51" relationship="derivative" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="55" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="56" relationship="derivative" weight="0"/>
+        <neighbor dest="57" relationship="derivative" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Blues rock is a musical genre combining bluesy improvisations, commonly over the twelve-bar blues, with rock styles.</speak>
+      <zh-speak>藍調搖滾是一種兼具12小節藍調、藍調即興演奏，並融合了布吉即興爵士與搖滾樂風格的音樂流派。藍調搖滾主要是以電吉他、貝斯與爵士鼓等樂器作演奏。</zh-speak>
+    </Feature>
+    <Feature data="Alternative metal" zh-data="另類金屬" id="53" uri="http://dbpedia.org/resource/Alternative_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="135" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Alternative metal  is a style of heavy metal.</speak>
+      <zh-speak>另類金屬（Alternative metal）是一個以另類搖滾為基礎混入其他樂風，形成的一種新金屬樂，流行於在20世紀90年代初。最值得注意的是，另類金屬樂隊的特點是不尋常的拍值和一些不常用的技巧，重型音樂沉重的吉他即興，,和傳統金屬樂相較之下，較少的吉他獨奏和實驗方法。</zh-speak>
+    </Feature>
+    <Feature data="Acid rock" zh-data="" id="54" uri="http://dbpedia.org/resource/Acid_rock">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="17" relationship="instrument" weight="0"/>
+        <neighbor dest="57" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Acid rock is a genre of "heavy" or hard psychedelic rock, which is characterized by long instrumental solos, few  lyrics, and musical improvisation.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Electric blues" zh-data="" id="55" uri="http://dbpedia.org/resource/Electric_blues">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="2" relationship="fusiongenres" weight="0"/>
+        <neighbor dest="52" relationship="derivative" weight="0"/>
+        <neighbor dest="56" relationship="derivative" weight="0"/>
+        <neighbor dest="91" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Electric blues is a type of blues music distinguished by the amplification of the guitar, bass guitar, drums, and often the harmonica.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hard rock" zh-data="硬式搖滾" id="56" uri="http://dbpedia.org/resource/Hard_rock">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="52" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="57" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="84" relationship="derivative" weight="0"/>
+        <neighbor dest="86" relationship="other topics" weight="0"/>
+        <neighbor dest="89" relationship="derivative" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Hard rock  is a loosely defined subgenre of rock music which has its earliest roots in mid-1960s garage rock, blues rock and psychedelic rock.</speak>
+      <zh-speak>硬式搖滾（英语：hard rock），或稱重搖滾（heavy rock），是一種搖滾樂流派，最早發源於1960年代中期的油漬搖滾與迷幻搖滾，比以往的搖滾樂更為猛烈。硬式搖滾主要使用失真效果的電吉他、貝斯、鼓及鋼琴等鍵盤樂器。</zh-speak>
+    </Feature>
+    <Feature data="Garage rock" zh-data="車庫搖滾" id="57" uri="http://dbpedia.org/resource/Garage_rock">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="51" relationship="derivative" weight="0"/>
+        <neighbor dest="54" relationship="music subgenre" weight="0"/>
+        <neighbor dest="56" relationship="derivative" weight="0"/>
+        <neighbor dest="57" relationship="derivative" weight="0"/>
+        <neighbor dest="58" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="71" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="84" relationship="derivative" weight="0"/>
+        <neighbor dest="89" relationship="derivative" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="225" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Garage rock is a term retrospectively applied to a style of pop music that emerged in the United States and Canada in the mid 1960s. During the 1960s it was not recognized as a separate music genre and had no specific name.</speak>
+      <zh-speak>车库摇滚（Garage rock）是早期摇滚乐的一种风格。指一种创作未经太多的加工或是修饰、充满激情和活力的摇滚乐，简单粗糙却更显纯粹。1963年至1967年间车库摇滚开始风靡美国和加拿大。在20世纪60年代，车库摇滚还没有被定义为一种单独的音乐风格，因此没有具体名称。在1970年代早期，一些摇滚评论家追溯称它为早期的朋克摇滚。然而，这种音乐风格后来被称为车库摇滚或60年代朋克，以免与20世纪70年代晚期的朋克摇滚乐队，如性手枪（the Sex Pistols）和冲撞乐队（The Clash）等相混淆。</zh-speak>
+    </Feature>
+    <Feature data="Surf music" zh-data="" id="58" uri="http://dbpedia.org/resource/Surf_music">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="16" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="derivative" weight="0"/>
+        <neighbor dest="57" relationship="derivative" weight="0"/>
+        <neighbor dest="84" relationship="derivative" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="194" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Surf music is a genre of popular music associated with surf culture, particularly as found in Orange County and other areas of Southern California.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Wish I Could" zh-data="" id="59" uri="http://dbpedia.org/resource/Wish_I_Could">
+      <neighbors>
+        <neighbor dest="1" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>"Wish I Could" is a single of the Italian melodic metal band Dimmi Argus, published by Tanzan Music and released digitally by FreeMood Promotion.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="That Metal Show" zh-data="" id="60" uri="http://dbpedia.org/resource/That_Metal_Show">
+      <neighbors>
+        <neighbor dest="1" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>That Metal Show is a talk show hosted by Eddie Trunk with co-hosts Jim Florentine and Don Jamieson.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Blowzabella" zh-data="" id="61" uri="http://dbpedia.org/resource/Blowzabella">
+      <neighbors>
+        <neighbor dest="13" relationship="band member" weight="0"/>
+        <neighbor dest="18" relationship="band member" weight="0"/>
+        <neighbor dest="134" relationship="genre" weight="0"/>
+        <neighbor dest="140" relationship="band member" weight="0"/>
+        <neighbor dest="145" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Blowzabella is an English band who play bagpipes, hurdy-gurdy and an array of acoustic instruments to produce an inimitable, driving, drone-based sound influenced by British and European traditional dance music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Dervish (band)" zh-data="" id="62" uri="http://dbpedia.org/resource/Dervish_(band)">
+      <neighbors>
+        <neighbor dest="62" relationship="band member" weight="0"/>
+        <neighbor dest="18" relationship="band member" weight="0"/>
+        <neighbor dest="134" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Dervish are an Irish traditional music group from County Sligo, Ireland who have been described by BBC Radio 3 as "an icon of Irish music". They were formed in 1989 by Liam Kelly, Shane Mitchell, Martin McGinley, Brian McDonagh, and Michael Holmes and have been fronted by singer Cathy Jordan since 1991. They represented Ireland in the final of the Eurovision Song Contest 2007, singing a song written by John Waters and Tommy Moran, finishing in last place.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Last Orders (band)" zh-data="" id="63" uri="http://dbpedia.org/resource/Last_Orders_(band)">
+      <neighbors>
+        <neighbor dest="18" relationship="band member" weight="0"/>
+        <neighbor dest="134" relationship="genre" weight="0"/>
+        <neighbor dest="185" relationship="current members" weight="0"/>
+      </neighbors>
+      <speak>Last Orders is a four piece folk band originating from Newcastle upon Tyne and Cumbria.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="The Hackensaw Boys" zh-data="" id="64" uri="http://dbpedia.org/resource/The_Hackensaw_Boys">
+      <neighbors>
+        <neighbor dest="18" relationship="band member" weight="0"/>
+        <neighbor dest="90" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>The Hackensaw Boys are a string band formed in 1999 and based in central Virginia.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="The Baltimore Consort" zh-data="" id="65" uri="http://dbpedia.org/resource/The_Baltimore_Consort">
+      <neighbors>
+        <neighbor dest="18" relationship="band member" weight="0"/>
+        <neighbor dest="35" relationship="genre" weight="0"/>
+        <neighbor dest="134" relationship="genre" weight="0"/>
+        <neighbor dest="210" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>The Baltimore Consort is a musical ensemble that performs a wide variety of early music, Renaissance music and music from later periods.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Celtic metal" zh-data="" id="66" uri="http://dbpedia.org/resource/Celtic_metal">
+      <neighbors>
+        <neighbor dest="11" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="19" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="74" relationship="regional scenes" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Celtic metal is a subgenre of folk metal that developed in the 1990s in Ireland.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Pipesdrums Magazine" zh-data="" id="67" uri="http://dbpedia.org/resource/Pipesdrums_Magazine">
+      <neighbors>
+        <neighbor dest="19" relationship="category" weight="0"/>
+        <neighbor dest="140" relationship="category" weight="0"/>
+      </neighbors>
+      <speak>Pipesdrums Magazine pipes|drums is an independent, not-for-profit publication for Highland pipers and pipe band drummers.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="The Thistle &amp; Shamrock" zh-data="" id="68" uri="http://dbpedia.org/resource/The_Thistle_&amp;_Shamrock">
+      <neighbors>
+        <neighbor dest="19" relationship="format" weight="0"/>
+        <neighbor dest="134" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>The Thistle &amp; Shamrock is a weekly American syndicated radio program, named after the national emblems of Scotland and Ireland, specializing in Celtic music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="An Irish Evening" zh-data="" id="69" uri="http://dbpedia.org/resource/An_Irish_Evening">
+      <neighbors>
+        <neighbor dest="19" relationship="recorded in" weight="0"/>
+      </neighbors>
+      <speak>An Irish Evening: Live at the Grand Opera House, Belfast is an album by The Chieftains.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Celtic fusion" zh-data="" id="70" uri="http://dbpedia.org/resource/Celtic_fusion">
+      <neighbors>
+        <neighbor dest="66" relationship="music subgenre" weight="0"/>
+        <neighbor dest="19" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="70" relationship="music subgenre" weight="0"/>
+        <neighbor dest="72" relationship="music subgenre" weight="0"/>
+        <neighbor dest="73" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Celtic fusion is any modern music which incorporates influences considered "Celtic," or Celtic music which incorporates modern music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Beat music" zh-data="节拍音乐" id="71" uri="http://dbpedia.org/resource/Beat_music">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="19" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="51" relationship="derivative" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="57" relationship="derivative" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="123" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="135" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Beat music, British beat, or Merseybeat , doo-wop, skiffle and R&amp;B. The genre provided many of the bands responsible for the British Invasion of the American pop charts starting in 1964, and provided the model for many important developments in pop and rock music, including the format of the rock group around lead, rhythm and bass guitars with drums.</speak>
+      <zh-speak>节拍音乐（英语：Beat Music）、英国节拍乐（英语：British Beat）或默西之声（英语：Merseybeat）（特指来自默西河畔的利物浦和曼彻斯特的乐队）是一种属于流行乐和摇滚乐的音乐流派，形成于1960年代早期的英国。节拍音乐是摇滚（rock and roll）、嘟-喔普、噪音爵士乐和节奏布鲁斯这几种类型的融合。这一流派中诞生了制造“英國入侵”风潮的许多乐队，他们从1964年起占领了美国流行乐榜单，并对日后流行乐和摇滚乐的发展有重要影响，包括树立了摇滚乐队的典型形态——由主音吉他、节奏吉他、贝斯和架子鼓组成。</zh-speak>
+    </Feature>
+    <Feature data="Celtic rock" zh-data="" id="72" uri="http://dbpedia.org/resource/Celtic_rock">
+      <neighbors>
+        <neighbor dest="66" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="19" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="18" relationship="instrument" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="70" relationship="other topics" weight="0"/>
+        <neighbor dest="73" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="138" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="140" relationship="instrument" weight="0"/>
+        <neighbor dest="141" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Celtic rock is a genre of folk rock and a form of Celtic fusion which incorporates Celtic music, instrumentation and themes into a rock music context.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Celtic punk" zh-data="" id="73" uri="http://dbpedia.org/resource/Celtic_punk">
+      <neighbors>
+        <neighbor dest="13" relationship="instruments" weight="0"/>
+        <neighbor dest="19" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="12" relationship="instruments" weight="0"/>
+        <neighbor dest="8" relationship="instruments" weight="0"/>
+        <neighbor dest="18" relationship="instruments" weight="0"/>
+        <neighbor dest="70" relationship="other topics" weight="0"/>
+        <neighbor dest="27" relationship="instruments" weight="0"/>
+        <neighbor dest="72" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="74" relationship="regional scenes" weight="0"/>
+        <neighbor dest="84" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="138" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="140" relationship="instruments" weight="0"/>
+        <neighbor dest="184" relationship="regional scenes" weight="0"/>
+      </neighbors>
+      <speak>Celtic punk is punk rock mixed with traditional Celtic music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ireland" zh-data="爱尔兰岛" id="74" uri="http://dbpedia.org/resource/Ireland">
+      <neighbors/>
+      <speak>Ireland  is an island in the North Atlantic to the west of Great Britain, from which it is separated by the North Channel, the Irish Sea, and St Georges Channel, and after which it is the largest island of the British Isles archipelago.</speak>
+      <zh-speak>爱尔兰岛（英語：Ireland 愛爾蘭語：Éire），简称爱尔兰，是位於欧洲西北部的島嶼，以面積計算是歐洲第三大岛。島上大部分區域屬於爱尔兰共和国的領土，但位於島上東北部的北愛爾蘭地區，其主權屬於聯合王國。整個愛爾蘭島的人口大約為620萬人。其中居住在愛爾蘭共和國的人口有445萬人（包括居住在都柏林都會區約166萬的人口），177萬人居住在北愛爾蘭地區（包括居住在貝爾法斯特都會區約57萬的人口）。政治上，愛爾蘭島上分為愛爾蘭共和國，包括島上的六分之五，北愛爾蘭只涵蓋了其餘在島的東北部的一部分。相對低矮的山與，周圍有幾個河流通往島嶼內。島上有茂密的植被，溫和但多變的海洋氣候。直至17世紀還有茂密的森林地覆蓋島上。今天，它是歐洲伐木量最高的地區之一。現存二十六種愛爾蘭原生動植物。13世紀時中世紀的諾曼入侵給了蓋爾族復甦的機會。1603年後超過60年在16世紀的間歇戰導致英國的主導地位。在1690年間，英國對愛爾蘭實行新教統治制度，新教徒與天主教徒的鬥爭延長至18世紀。1801年，愛爾蘭成為英國的一部分。20世紀初的獨立戰爭導致島上的分裂，並建立了愛爾蘭自由邦。北愛爾蘭仍是英國的一部分，90年代鬥爭突然蔓延，進而發生北愛爾蘭問題。北愛衝突後簽訂和平協議。1973年，愛爾蘭共和國與北愛爾蘭共同加入歐洲經濟共同體。愛爾蘭文化有一個對其他文化的顯著的影響，特別是在文學領域，在較小的程度，科學和教育。還有傳統的凱爾特文化，如：蓋爾運動、愛爾蘭音樂和愛爾蘭語，並承襲西方主流文化，以及當代音樂和戲劇，並與英國共同分享的文化，共通的運動，如：足球、橄欖球、賽馬、高爾夫球、和英語。</zh-speak>
+    </Feature>
+    <Feature data="Folk instrument" zh-data="" id="75" uri="http://dbpedia.org/resource/Folk_instrument">
+      <neighbors/>
+      <speak>A folk instrument is an instrument that developed among common people and usually doesn't have a known inventor.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="New Wave of British Heavy Metal" zh-data="英国重金属新浪潮" id="76" uri="http://dbpedia.org/resource/New_Wave_of_British_Heavy_Metal">
+      <neighbors>
+        <neighbor dest="49" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="25" relationship="derivative" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="derivative" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="46" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="6" relationship="derivative" weight="0"/>
+        <neighbor dest="47" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="56" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="29" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="82" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="84" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="127" relationship="derivative" weight="0"/>
+      </neighbors>
+      <speak>The New Wave of British Heavy Metal , increased the tempo, and adopted a "tougher" sound, taking a harder approach to its music.</speak>
+      <zh-speak>英国重金属新浪潮（New Wave of British Heavy Metal，缩写NWOBHM）：1970年代末、80年代初，为了应对深紫、齐柏林飞船和黑色安息日等早期重金属乐团的沉寂，英国金属乐队剔除了所有蓝调成分，融合了朋克音乐，加快了速度、增强了音效，只剩下一个快速、猛烈且普通的金属核。</zh-speak>
+    </Feature>
+    <Feature data="Blood Duster" zh-data="" id="77" uri="http://dbpedia.org/resource/Blood_Duster">
+      <neighbors>
+        <neighbor dest="7" relationship="Name" weight="0"/>
+      </neighbors>
+      <speak>Blood Duster is an extreme metal and stoner rock band from Melbourne, Australia.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="National Socialist black metal" zh-data="" id="78" uri="http://dbpedia.org/resource/National_Socialist_black_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>National Socialist black metal . However, some bands meld neo-Nazism with Satanism or occultism, rather than paganism.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Swedish death metal" zh-data="" id="79" uri="http://dbpedia.org/resource/Swedish_death_metal">
+      <neighbors>
+        <neighbor dest="25" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="26" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="82" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="84" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Swedish death metal is a death metal music scene developed in Sweden.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Unblack metal" zh-data="" id="80" uri="http://dbpedia.org/resource/Unblack_metal">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>Unblack metal  to media attention, while the Norwegian band Antestor was already formed in 1990 as a death/doom act and released its demo The Defeat of Satan in 1991, before they began shifting towards black metal on their 1994 album Martyrium.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Amerind metal" zh-data="" id="81" uri="http://dbpedia.org/resource/Amerind_metal">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="26" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="46" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+        <neighbor dest="127" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="184" relationship="regional scenes" weight="0"/>
+      </neighbors>
+      <speak>Amerind metal . It combines aspects of Native American music and languages with Heavy metal, Black metal, or Death metal.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Melodic death metal" zh-data="死亡旋律金屬" id="82" uri="http://dbpedia.org/resource/Melodic_death_metal">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="25" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="7" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="26" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="15" relationship="instrument" weight="0"/>
+        <neighbor dest="76" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="127" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Melodic death metal  during the early and mid-1990s. The Swedish death metal scene did much to popularize the style, which soon centered in the "Gothenburg metal" scene in Gothenburg, Sweden.</speak>
+      <zh-speak>旋律死亡金屬（Melodic Death Metal） 被認為是一種從死亡金屬分支出來的樂風。此類音樂含大量有旋律吉它複式和單獨演奏，有時是木吉他，亦有時以清晰的唱法取代慣性用的傳統低沈咆哮聲線（俗稱「死腔」），有時亦會加入女聲。音樂結構較死亡金屬明顯，主旋律較強，比死亡金屬少用變拍與變速等編曲技巧，而且有時也會出現吉他獨奏（Solo），音樂概念也用不同的主題（歌詞）演繹出來。</zh-speak>
+    </Feature>
+    <Feature data="Demons of the Night EP" zh-data="" id="83" uri="http://dbpedia.org/resource/Demons_of_the_Night_EP">
+      <neighbors>
+        <neighbor dest="7" relationship="genres" weight="0"/>
+        <neighbor dest="127" relationship="genres" weight="0"/>
+      </neighbors>
+      <speak>Demons of the Night is the first EP and second single from New Zealand metal band, Demoniac.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Punk rock" zh-data="朋克搖滾" id="84" uri="http://dbpedia.org/resource/Punk_rock">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="56" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="57" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="58" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="73" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="29" relationship="music subgenre" weight="0"/>
+        <neighbor dest="76" relationship="derivative" weight="0"/>
+        <neighbor dest="89" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Punk rock  had become the predominant mode of punk rock.</speak>
+      <zh-speak>朋克搖滾（英语：Punk Rock）是起源於1974－1976年的美國、英國、澳洲，是搖滾樂的分支音樂類型，有「反社會原則」（antiestablishment）的特色。倫敦的性手槍（Sex Pistols）、衝擊合唱團；紐約的雷蒙斯合唱團（Ramones）被視為朋克搖滾的先鋒。</zh-speak>
+    </Feature>
+    <Feature data="Mellotron" zh-data="" id="85" uri="http://dbpedia.org/resource/Mellotron">
+      <neighbors>
+        <neighbor dest="48" relationship="classification" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>The Mellotron is an electro-mechanical, polyphonic tape replay keyboard originally developed and built in Birmingham, England, in 1963. It evolved from a similar instrument, the Chamberlin, but could be mass-produced more effectively.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Progressive rock" zh-data="前衛搖滾" id="86" uri="http://dbpedia.org/resource/Progressive_rock">
+      <neighbors>
+        <neighbor dest="3" relationship="derivative" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="49" relationship="music subgenre" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="50" relationship="music subgenre" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="56" relationship="other topics" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="92" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="126" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Progressive rock, also known as prog rock or prog, is a rock music subgenre that originated in the United Kingdom with further developments in Germany, Italy, and France, throughout the mid-to-late 1960s and 1970s.  It developed from psychedelic rock, and originated, similarly to art rock, as an attempt to give greater artistic weight and credibility to rock music.</speak>
+      <zh-speak>前衛搖滾（Progressive rock），有時簡稱為 prog rock，是在1960年晚期興起的搖滾樂分支之一，它的內涵十分複雜並且吸納眾多其他樂派精神，因此並不能明確地定義出其精確範圍。前衛搖滾最熱門最顛峰的時期是在1970年代的早期，並繼續流傳至今日。前衛搖滾起源自英國，大多數的團體多出現於歐洲大陸，只有少數幾支樂團是來自於美國加拿大的。此種樂風通常結合了爵士樂、古典音樂、民間音樂和世界音樂等元素，不同於美國搖滾是受到R&amp;B以及鄉村音樂的影響。經由多年累積的發展，在前衛搖滾中也出現了例如交響搖滾、藝術搖滾、數學搖滾以及前衛金屬等類型。前衛搖滾樂手意圖擺脫流行音樂的公式化及束縛，並亟力提升自身的音樂成就另外一種音樂類型，即便時常令人嗅到不小的古典與爵士影響。前衛搖滾最獨特的地方便是「複雜」而不只是技術的出眾，因為在流行音樂中技巧十分出眾但卻演奏單調樂章的樂手亦大有人在。前衛搖滾並無絕對定義，名團克里遜王的領袖羅伯特·弗利普（Robert Fripp）就十分厭惡這個音樂分類上的術語。而構築出前衛搖滾的作品多集中在1970年代，例如傑思羅土爾（Jethro Tull）、Yes、創世紀合唱團、平克·弗洛伊德、愛默生、雷克與帕瑪、匆促樂團與克里遜王等等，音樂各有不同特色，無法同一而論。這些樂手與樂評家們（如：比爾·馬丁）對自身是否真的屬於前衛搖滾感到疑問（不過在此我們必須要做如此假設，至少是70年代的他們）。同時也有人在爭辯例如富蘭克·察帕（Frank Zappa）、深紫、Phish、電台司令和Tool這類活躍於其他樂種的樂手是否隸屬於前衛搖滾之下。</zh-speak>
+    </Feature>
+    <Feature data="Sitar" zh-data="锡塔琴" id="87" uri="http://dbpedia.org/resource/Sitar">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>The sitar English pronunciation: /ˈsɪtɑr/ or /sɪˈtɑr/ is a plucked stringed instrument used mainly in Hindustani music and Indian classical music.</speak>
+      <zh-speak>西塔琴（印地语：सितार；孟加拉语：সেতার；乌尔都语：ستار；波斯语：سی تار）又称锡塔尔琴、錫塔琴，是印度一种长颈诗琴，形似吉他，用作印度古典音乐乐器，1950年代起也开始作为流行音乐中乐器使用。锡塔琴是印度最具代表性的印度古典乐器。</zh-speak>
+    </Feature>
+    <Feature data="Jazz" zh-data="爵士乐" id="88" uri="http://dbpedia.org/resource/Jazz">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="91" relationship="derivative" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Jazz is a genre of music that originated in African-American communities during the late 19th and early 20th century.</speak>
+      <zh-speak>爵士樂（英语：jazz）是一種起源於非洲形成於美國的音樂形式。誕生於19世纪末的美國密西西比河畔港埠新奥爾良，在它之前是一些更早出现的美國黑人音樂（如藍調、福音歌曲等），而這些音樂是美國黑人根植於其非洲音樂傳統的基礎上，結合他們在現實中的遭遇創作出來的。早期藍調主要表現黑人的悲慘境遇和底層生活狀態（藍調的英文原字Blue除了指『藍色』之外亦有『憂鬱』之意），大多比較凄苦。福音歌曲主要是（向上帝）祈求平安，希望得到救贖。爵士樂在其發展過程中除了有黑人音樂的根源外，還吸收了如古典音樂、民族音樂等諸多音樂元素，逐漸形成了今天多門多類的爵士樂，所傳遞的内容也更為多樣，不只是早期的“黑人風格”。</zh-speak>
+    </Feature>
+    <Feature data="Glam rock" zh-data="華麗搖滾" id="89" uri="http://dbpedia.org/resource/Glam_rock">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="84" relationship="derivative" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="56" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="57" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Glam rock  is a style of rock and pop music that developed in the United Kingdom in the early 1970s, which was performed by singers and musicians who wore outrageous clothes, makeup and hairstyles, particularly platform-soled boots and glitter.</speak>
+      <zh-speak>華麗搖滾（英语：Glam Rock），又稱閃爍搖滾（Glitter Rock），是搖滾樂和流行音樂的一個流派，起源於20世紀70年代初的英國，在70年代中期達到高峰。華麗搖滾特點是主唱及樂手都擁有性別模糊的裝扮、華麗戲劇化的臺風。高峰時期的代表人物包括英國的大衛·鮑伊、皇后樂隊（70年代）、暴龍樂隊、羅西音樂、加里·格利特及美國的盧·里德、布魯斯·韋恩·坎貝爾（Jobriath）、紐約娃娃等。</zh-speak>
+    </Feature>
+    <Feature data="Percussion instrument" zh-data="打击乐器" id="90" uri="http://dbpedia.org/resource/Percussion_instrument">
+      <neighbors/>
+      <speak>A percussion instrument is a musical instrument that is sounded by being struck or scraped by a beater  are included.Percussion instruments are most commonly divided into two classes: Pitched percussion instruments, which produce notes with an identifiable pitch, and unpitched percussion instruments, which produce notes without an identifiable pitch.</speak>
+      <zh-speak>打擊樂器，又名敲擊樂器，是一種以打、搖動、摩擦、刮等方式產生效果的樂器族群。打擊樂器可能是最古老的樂器。有些打擊樂器不僅僅能產生節奏，還能作出旋律和合聲的效果。</zh-speak>
+    </Feature>
+    <Feature data="Rhythm and blues" zh-data="节奏布鲁斯" id="91" uri="http://dbpedia.org/resource/Rhythm_and_blues">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="51" relationship="derivative" weight="0"/>
+        <neighbor dest="57" relationship="derivative" weight="0"/>
+        <neighbor dest="71" relationship="derivative" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="182" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Rhythm and blues, often abbreviated as R&amp;B or RnB, is a genre of popular African-American music that originated in the 1940s. The term was originally used by record companies to describe recordings marketed predominantly to urban African Americans, at a time when "urbane, rocking, jazz based music with a heavy, insistent beat" was becoming more popular.In the commercial rhythm and blues music typical of the 1950s through the 1970s, the bands usually consisted of piano, one or two guitars, bass, drums, saxophone, and sometimes background vocalists.</speak>
+      <zh-speak>节奏布鲁斯（英文：Rhythm and Blues，簡稱：R&amp;B或RnB，中国大陆作节奏布鲁斯，台湾、港澳、马新作节奏蓝调 ），又稱節奏怨曲。是一种美国非裔艺术家首先采用，并融合了爵士乐、福音音乐和蓝调音乐的音乐形式。这个音乐术语由是美国告示牌（Billboard）于1940年代末所提出。这个术语最初在1947年的美国被公告牌杂志的Jerry Wexler创造为一个音乐的市场营销术语，取代了种族音乐（英語：Race Music，又譯黑人音樂；最初来源于黑人社群，但是被战后的社会认为是会令人很不愉快的词语）而Billboard在1949年將其分類為Harlem暢銷排行榜。这个词最初被用于定义包含了12种布鲁斯格式和一种带有节拍背景爵士乐的摇滚音乐，后来这种音乐转变成了一种摇滚乐的基本元素。在《Rock &amp; Roll: An Unruly History》（1995）中 Robert Palmer 把节奏布鲁斯定义为那些約定俗成、用来意指任何一种美国黑人创造的音乐。在他1981年出版的《Deep Blues》中， Palmer 用「R&amp;B」作为跳跃布鲁斯的缩写。Lawrence Cohn是《Nothing But the Blues》的作者，写到节奏布鲁斯是一个宣传人员为了产业便利所发明的, 除了古典音乐和宗教音乐，节奏布鲁斯包括了所有的黑人音乐，除了那是一首福音歌並且其銷售足以打入流行榜。在1960年代，节奏布鲁斯被用于总括靈魂樂和放克音樂的术语。而现在R&amp;B的缩写差不多一直被用于代替全寫「节奏布鲁斯」，而主流則用它來表示由迪斯科逐步變得不那麼流行而发展出来的Contemporary R&amp;B──一種现代灵魂乐和受放克音樂影响的流行音樂。</zh-speak>
+    </Feature>
+    <Feature data="Baroque pop" zh-data="" id="92" uri="http://dbpedia.org/resource/Baroque_pop">
+      <neighbors>
+        <neighbor dest="86" relationship="derivative" weight="0"/>
+        <neighbor dest="9" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="50" relationship="derivative" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="58" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="94" relationship="derivative" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Baroque pop, baroque rock, or English baroque, often used interchangeably with chamber pop/rock, is a pop rock music subgenre that originated in the United States and United Kingdom.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk rock" zh-data="民谣摇滚" id="93" uri="http://dbpedia.org/resource/Folk_rock">
+      <neighbors>
+        <neighbor dest="11" relationship="music subgenre" weight="0"/>
+        <neighbor dest="10" relationship="music subgenre" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="18" relationship="instrument" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="15" relationship="instrument" weight="0"/>
+        <neighbor dest="72" relationship="music subgenre" weight="0"/>
+        <neighbor dest="123" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="138" relationship="music subgenre" weight="0"/>
+        <neighbor dest="147" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Folk rock is a musical genre combining elements of folk music and rock music.</speak>
+      <zh-speak>民谣摇滚（英语：Folk rock）是一种把民谣与摇滚乐相结合形成的音乐流派。这个名称最初在狭义上是指1960年代中期在美国和英国产生的那种音乐类型。该流派的开创者为洛杉矶的飞鸟乐队与鲍勃·迪伦，前者开始演奏传统民谣音乐，后者受披头士乐队及其他英国乐队的风格影响，加入了摇滚乐器。</zh-speak>
+    </Feature>
+    <Feature data="Psychedelic pop" zh-data="" id="94" uri="http://dbpedia.org/resource/Psychedelic_pop">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="51" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="92" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="123" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Psychedelic pop  is a psychedelic musical style inspired by the sounds of psychedelic folk and psychedelic rock, but applied to a pop music setting.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Josu de Solaun Soto" zh-data="" id="95" uri="http://dbpedia.org/resource/Josu_de_Solaun_Soto">
+      <neighbors>
+        <neighbor dest="35" relationship="music genre" weight="0"/>
+        <neighbor dest="184" relationship="PLACE OF RESIDENCE" weight="0"/>
+      </neighbors>
+      <speak>Josu De Solaun , Mexico City Philharmonic Orchestra, RTVE Symphony Orchestra, Real Filharmonia de Galicia, Orquesta de Valencia, Orchestra Sinfonica della Provincia di Bari in Italy, Sioux City Symphony Orchestra, Monterey Symphony Orchestra of California, Virginia Symphony Orchestra, Orquesta Sinfónica de Euskadi, American Ballet Theatre Orchestra, and under conductors such as Justus Frantz, JoAnn Falletta, Constantine Orbelian, Ovidiu Bălan, Ryan Haskins, Theodore Kuchar, Paul Daniel, Yaron Traub, Ormsby Wilkins, Francesco Angelico, Alexis Soriano, Miguel Ángel Gómez Martínez, Ramón Tébar, Max Bragado-Darman, and Yuri Krasnapolsky.He has recorded for Naxos Records.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Anna Fedorova" zh-data="" id="96" uri="http://dbpedia.org/resource/Anna_Fedorova">
+      <neighbors>
+        <neighbor dest="35" relationship="SHORT DESCRIPTION" weight="0"/>
+      </neighbors>
+      <speak>Anna Fedorova  is a Ukrainian concert pianist.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Krystian Zimerman" zh-data="克里斯蒂安·齐默尔曼" id="97" uri="http://dbpedia.org/resource/Krystian_Zimerman">
+      <neighbors>
+        <neighbor dest="35" relationship="SHORT DESCRIPTION" weight="0"/>
+      </neighbors>
+      <speak>Krystian Zimerman  is a Polish classical pianist who has been hailed as one of the finest living pianists.</speak>
+      <zh-speak>克里斯提安·齊瑪曼（Krystian Zimerman，1956年12月5日－），出生於波蘭扎布热，曾於1975年獲得第九屆蕭邦國際鋼琴大賽首獎，是現今公認世界上最傑出的鋼琴家之一。</zh-speak>
+    </Feature>
+    <Feature data="Britain's Got Talent (series 1)" zh-data="" id="98" uri="http://dbpedia.org/resource/Britain's_Got_Talent_(series_1)">
+      <neighbors>
+        <neighbor dest="35" relationship="winner-genre" weight="0"/>
+      </neighbors>
+      <speak>The first series of Britain's Got Talent began on ITV on 9 June 2007 and ended on 17 June 2007. It was won by opera singer Paul Potts.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Joe Atlan" zh-data="" id="99" uri="http://dbpedia.org/resource/Joe_Atlan">
+      <neighbors>
+        <neighbor dest="49" relationship="genres" weight="0"/>
+        <neighbor dest="35" relationship="genres" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Joe Atlan  is a Spanish Keyboardist, Composer, YouTube Partner, and Speaker.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Su-a Lee" zh-data="" id="100" uri="http://dbpedia.org/resource/Su-a_Lee">
+      <neighbors>
+        <neighbor dest="35" relationship="genres" weight="0"/>
+      </neighbors>
+      <speak>Su-a Lee is a classical musician born in Seoul, South Korea, married to Gordon Davidson in 2013 and resident in Edinburgh, Scotland.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Adagio for Strings" zh-data="" id="101" uri="http://dbpedia.org/resource/Adagio_for_Strings">
+      <neighbors>
+        <neighbor dest="35" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>Adagio for Strings is a work by Samuel Barber, arguably his most well known, arranged for string orchestra from the second movement of his String Quartet, Op. 11. Barber finished the arrangement in 1936, the same year that he wrote the quartet.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Touched (Michael Sweet album)" zh-data="" id="102" uri="http://dbpedia.org/resource/Touched_(Michael_Sweet_album)">
+      <neighbors>
+        <neighbor dest="35" relationship="gerne" weight="0"/>
+      </neighbors>
+      <speak>Touched is a Michael Sweet solo album released in 2007. Unlike most of Sweet's previous albums, the album is derived in a Classical sound rather than his usual rock or metal sound.The album was dedicated to his wife, Kyle, who was suffering from stage-four ovarian cancer.Touched has a collection of covers from other musicians including Billy Preston, and Billy Joel, as well as some classical versions of some of Stryper's songs, and a song written by Michael called "My Love, My Life, My Flame".</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="List of musical instruments by Hornbostel-Sachs number: 321.321" zh-data="" id="103" uri="http://dbpedia.org/resource/List_of_musical_instruments_by_Hornbostel-Sachs_number:_321.321">
+      <neighbors>
+        <neighbor dest="87" relationship="Drum" weight="0"/>
+        <neighbor dest="35" relationship="tradition" weight="0"/>
+      </neighbors>
+      <speak>This is a list of instruments by Hornbostel-Sachs number, covering those instruments that are classified under 321.321 under that system.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Conservatoire national supérieur de musique et de danse de Lyon" zh-data="" id="104" uri="http://dbpedia.org/resource/Conservatoire_national_sup%C3%A9rieur_de_musique_et_de_danse_de_Lyon">
+      <neighbors>
+        <neighbor dest="35" relationship="classes offered" weight="0"/>
+      </neighbors>
+      <speak>The Conservatoire national supérieur de musique et de danse de Lyon, sometimes referred to as the Conservatoire de Lyon, is a conservatory for the study of music and dance, located in Lyon, France.It is one of the two existing Conservatoire national supérieur de musique et de danse in France, the other being the Conservatoire de Paris in Paris.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Nosound" zh-data="" id="105" uri="http://dbpedia.org/resource/Nosound">
+      <neighbors>
+        <neighbor dest="48" relationship="band member" weight="0"/>
+        <neighbor dest="86" relationship="genre" weight="0"/>
+        <neighbor dest="13" relationship="band member" weight="0"/>
+        <neighbor dest="90" relationship="former band member" weight="0"/>
+        <neighbor dest="51" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="band member" weight="0"/>
+        <neighbor dest="185" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Nosound is an Italian progressive rock band that started as a vision by Giancarlo Erra.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Lafayette Afro Rock Band" zh-data="" id="106" uri="http://dbpedia.org/resource/Lafayette_Afro_Rock_Band">
+      <neighbors>
+        <neighbor dest="13" relationship="former band member" weight="0"/>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="90" relationship="former band member" weight="0"/>
+        <neighbor dest="15" relationship="former band member" weight="0"/>
+        <neighbor dest="135" relationship="former band member" weight="0"/>
+      </neighbors>
+      <speak>Lafayette Afro Rock Band was a French funk rock band formed in Roosevelt, Long Island, New York in 1970. Though almost unknown in their native United States, they are now universally celebrated as one of the standout funk bands of the 1970s and admired for their use of break beats.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Rhythm-Time: World Percussion" zh-data="" id="107" uri="http://dbpedia.org/resource/Rhythm-Time:_World_Percussion">
+      <neighbors>
+        <neighbor dest="90" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Rhythm-Time: World Percussion is a world music compilation album originally released in 1999. Part of the World Music Network Rough Guides series, the release features percussion, ranging from Brazilian batucada to Japanese taiko music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Irritant (band)" zh-data="" id="108" uri="http://dbpedia.org/resource/Irritant_(band)">
+      <neighbors>
+        <neighbor dest="86" relationship="genre" weight="0"/>
+        <neighbor dest="13" relationship="band member" weight="0"/>
+        <neighbor dest="12" relationship="band member" weight="0"/>
+        <neighbor dest="1" relationship="genre" weight="0"/>
+        <neighbor dest="90" relationship="former band member" weight="0"/>
+        <neighbor dest="27" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Irritant were a progressive rock / heavy metal band from Gloucester, England, UK, formed in 2002. They originally described  themselves as an "independent hard rock band", and flirted with rap, but developed a blend of progressive metal and hard rock.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Batagraf" zh-data="" id="109" uri="http://dbpedia.org/resource/Batagraf">
+      <neighbors>
+        <neighbor dest="88" relationship="genre" weight="0"/>
+        <neighbor dest="90" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Batagraf  is a Norwegian jazz orchestra, created and led by Jon Balke.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Orkestra Rumpilezz" zh-data="" id="110" uri="http://dbpedia.org/resource/Orkestra_Rumpilezz">
+      <neighbors>
+        <neighbor dest="88" relationship="genre" weight="0"/>
+        <neighbor dest="90" relationship="genre" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="203" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>The Orkestra Rumpilezz is an orchestra of percussion and brass created in 2006 by Letieres Leite.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="The Last Goodnight" zh-data="" id="111" uri="http://dbpedia.org/resource/The_Last_Goodnight">
+      <neighbors>
+        <neighbor dest="48" relationship="former band member" weight="0"/>
+        <neighbor dest="13" relationship="former band member" weight="0"/>
+        <neighbor dest="12" relationship="former band member" weight="0"/>
+        <neighbor dest="90" relationship="former band member" weight="0"/>
+        <neighbor dest="125" relationship="former band member" weight="0"/>
+        <neighbor dest="184" relationship="home town" weight="0"/>
+      </neighbors>
+      <speak>The Last Goodnight was an alternative rock/pop band from Enfield, Connecticut, USA. Their major label debut, Poison Kiss, was released on 28 August 2007. The first single from the album, "Pictures of You", became a pop radio hit in the summer of 2007.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Scott F. Crago" zh-data="" id="112" uri="http://dbpedia.org/resource/Scott_F._Crago">
+      <neighbors>
+        <neighbor dest="16" relationship="genre" weight="0"/>
+        <neighbor dest="12" relationship="Affiliation" weight="0"/>
+        <neighbor dest="90" relationship="Affiliation" weight="0"/>
+        <neighbor dest="52" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="Affiliation" weight="0"/>
+      </neighbors>
+      <speak>Scott Francis Crago . Drum Workshop manufactures the device, the DW Pro-Cushion, for drummers to place inside their bass drums for a dampened sound.Aside from drumming, Crago also does some other music duties like songwriting, mostly co-songwriting, including recording, mixing, and producing songs</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hyoshigi" zh-data="" id="113" uri="http://dbpedia.org/resource/Hyoshigi">
+      <neighbors>
+        <neighbor dest="90" relationship="header" weight="0"/>
+      </neighbors>
+      <speak>The hyōshigi  is a simple Japanese musical instrument, consisting of two pieces of hardwood or bamboo that are connected by a thin ornamental rope.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ghost on the Canvas" zh-data="" id="114" uri="http://dbpedia.org/resource/Ghost_on_the_Canvas">
+      <neighbors>
+        <neighbor dest="9" relationship="recorded in" weight="0"/>
+        <neighbor dest="16" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="122" relationship="subsequent work" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Ghost on the Canvas is the 61st album by Glen Campbell, which was intended to be Campbell's farewell studio recording following him being diagnosed with Alzheimer's disease.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="In the Chamber with Linkin Park" zh-data="" id="115" uri="http://dbpedia.org/resource/In_the_Chamber_with_Linkin_Park">
+      <neighbors>
+        <neighbor dest="9" relationship="genre" weight="0"/>
+        <neighbor dest="35" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>In the Chamber with Linkin Park, also known as In the Chamber with Linkin Park: The String Quartet Tribute, is a tribute album to the nu metal band Linkin Park.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="KMCMusicorp" zh-data="" id="116" uri="http://dbpedia.org/resource/KMCMusicorp">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="90" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+        <neighbor dest="184" relationship="państwo" weight="0"/>
+      </neighbors>
+      <speak>KMC Music, Inc., doing business as KMC Musicorp, is a wholly owned subsidiary of Fender Musical Instruments Corporation, and an owner and distributor of several brands of musical instruments.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Luna Guitars" zh-data="" id="117" uri="http://dbpedia.org/resource/Luna_Guitars">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+        <neighbor dest="183" relationship="location" weight="0"/>
+        <neighbor dest="184" relationship="location" weight="0"/>
+      </neighbors>
+      <speak>Luna Guitars is a manufacturer and seller of stringed instruments . The company was founded in 2005 by stained-glass artist Yvonne de Villiers under the umbrella of Armadillo Enterprises and headquartered in Tampa Florida.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Losing My Religion" zh-data="" id="118" uri="http://dbpedia.org/resource/Losing_My_Religion">
+      <neighbors>
+        <neighbor dest="9" relationship="recorded in" weight="0"/>
+        <neighbor dest="184" relationship="recorded in" weight="0"/>
+      </neighbors>
+      <speak>"Losing My Religion" is a song by the American alternative rock band R.E.M. The song was released as the first single from the group's 1991 album Out of Time.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Paige's Music" zh-data="" id="119" uri="http://dbpedia.org/resource/Paige's_Music">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="90" relationship="product" weight="0"/>
+        <neighbor dest="144" relationship="product" weight="0"/>
+      </neighbors>
+      <speak>W. H. Paige and Company is a music retailer based in Indianapolis, Indiana.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Umuduri" zh-data="" id="120" uri="http://dbpedia.org/resource/Umuduri">
+      <neighbors>
+        <neighbor dest="9" relationship="background" weight="0"/>
+      </neighbors>
+      <speak>The umuduri is a Rwandan stringed instrument.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Guitar and Lute Workshop" zh-data="" id="121" uri="http://dbpedia.org/resource/Guitar_and_Lute_Workshop">
+      <neighbors>
+        <neighbor dest="9" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+      </neighbors>
+      <speak>The Guitar and Lute Workshop , now curated by ʻIolani Palace.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Glen Campbell and Jimmy Webb: In Session" zh-data="" id="122" uri="http://dbpedia.org/resource/Glen_Campbell_and_Jimmy_Webb:_In_Session">
+      <neighbors>
+        <neighbor dest="114" relationship="previous work" weight="0"/>
+      </neighbors>
+      <speak>Glen Campbell and Jimmy Webb: In Session is the 62nd album by American singer-guitarist Glen Campbell—a collaborative album with Jimmy Webb—released in September 2012 by Fantasy Records.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Pop music" zh-data="流行 (音樂類型)" id="123" uri="http://dbpedia.org/resource/Pop_music">
+      <neighbors>
+        <neighbor dest="2" relationship="other topics" weight="0"/>
+        <neighbor dest="92" relationship="music subgenre" weight="0"/>
+        <neighbor dest="35" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="94" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>Pop music , as well as the common employment of repeated choruses, melodic tunes, and hooks.So-called "pure pop" music, such as power pop, which has been described as mixture of hard rock and melodic pop music and tends to be more aggressive than pop rock, features all these elements, using electric guitars, drums and bass for instrumentation.</speak>
+      <zh-speak>Pop（全称Pop Music），流行音樂的一個分支音樂類型，不同於古典音樂或民間音樂。「Pop」一開始是「流行音樂」（popular music）的縮寫，也是其同義詞，不過大約在1954年以後逐漸被用來指稱定義較狹窄的特定的音樂類型。Pop歌曲特指由職業音樂作曲家所寫，並由歌手演唱。相較之下，另兩種流行音樂類型，也就是搖滾音樂及Rap音樂，通常是由歌手自行創作歌曲。</zh-speak>
+    </Feature>
+    <Feature data="Choir" zh-data="合唱" id="124" uri="http://dbpedia.org/resource/Choir">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>A choir  and the second to groups that perform in theatres or concert halls, but this distinction is far from rigid.The term "Choir" has the secondary definition of a subset of an ensemble; thus one speaks of the "woodwind choir" of an orchestra, or different "choirs" of voices and/or instruments in a polychoral composition.</speak>
+      <zh-speak>合唱指一種集體性的歌唱藝術。在合唱中，人員分成若干聲部，分別採用不同的旋律，同時唱歌。這類表演團隊被稱為合唱團或者合唱隊。參加的人員則稱做合唱團員或者合唱隊員，其所演唱的歌曲稱作合唱音樂，但也常遇到將合唱當做合唱團或合唱音樂的簡稱。</zh-speak>
+    </Feature>
+    <Feature data="Piano" zh-data="钢琴" id="125" uri="http://dbpedia.org/resource/Piano">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>The piano ; in the Hornbostel-Sachs system of instrument classification, pianos are considered chordophones.</speak>
+      <zh-speak>钢琴是西洋古典音樂中的一種鍵盤樂器，普遍用於獨奏、重奏、伴奏等演出，用於作曲和排練音樂十分方便。彈奏者通過按下鍵盤上的琴鍵，牽動鋼琴裏面包着絨氈的小木槌，繼而敲擊鋼絲弦發出聲音。鋼琴音域寬廣，音色宏亮、清脆，富於變化，表現力很強。獨奏時，可演奏各種氣勢磅礡、寬廣、抒情的音樂，亦可演奏歡快、靈巧、技巧性很高的華彩樂段；鋼琴在樂隊中，可發揮巨大的作用。它還經常作為伴奏樂器使用。鋼琴因其豐富的樂理表達能力，被稱作“樂器之王”。</zh-speak>
+    </Feature>
+    <Feature data="Violin" zh-data="小提琴" id="126" uri="http://dbpedia.org/resource/Violin">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>The violin, also known as a fiddle, is a string instrument, usually with four strings tuned in perfect fifths.</speak>
+      <zh-speak>小提琴（Violin，舊譯梵婀玲、梵鈴）属于四弦的弓弦乐器，是现代管弦樂團弦乐组中最重要的乐器，一般在管弦樂作品中會分成第一小提琴與第二小提琴兩個聲部。作为现代弦乐器中最具份量的乐器，小提琴主要的特点在于其辉煌的声音、高度的演奏技巧和丰富、广泛的表现力。又被稱作為樂器中的女王。小提琴是提琴家族中最小、音高最高的一種，比它大的提琴有中提琴、大提琴和低音提琴。</zh-speak>
+    </Feature>
+    <Feature data="Power metal" zh-data="力量金属" id="127" uri="http://dbpedia.org/resource/Power_metal">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="46" relationship="fusiongenres" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="76" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Power metal is a subgenre of heavy metal combining characteristics of traditional metal with speed metal, often within symphonic context.</speak>
+      <zh-speak>力量金屬（Power Metal）為重金屬音樂的一種分支。力量金屬大可再分為美國派別和歐洲派別。</zh-speak>
+    </Feature>
+    <Feature data="Neoclassical new-age music" zh-data="" id="128" uri="http://dbpedia.org/resource/Neoclassical_new-age_music">
+      <neighbors/>
+      <speak>Within the broad movement of new-age music, neoclassical new-age music is influenced by and sometimes also based upon early, baroque or classical music, especially in terms of melody and composition.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Gothic metal" zh-data="哥特金属" id="129" uri="http://dbpedia.org/resource/Gothic_metal">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="86" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="126" relationship="instrument" weight="0"/>
+        <neighbor dest="46" relationship="music subgenre" weight="0"/>
+        <neighbor dest="6" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="15" relationship="instrument" weight="0"/>
+        <neighbor dest="129" relationship="music subgenre" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>Gothic metal  include Paradise Lost, My Dying Bride and Anathema, all from the north of England.</speak>
+      <zh-speak>哥特金属（Gothic Metal），台灣、香港等地譯作哥德金屬，中國大陸則譯作哥特金屬，是重金属音乐的一个分支，融合了哥特摇滚的黑暗抑郁与重金属的侵略性。哥特金属诞生于20世纪90年代初的欧洲，由死亡厄运金属发展而来。哥特金属音乐按照所融合的重金属乐的不同类型，也有不同分类。歌词上，既有哥特小说式的，也有描述个人经历的，极富戏剧性并充满悲伤与感悟。哥特金属的先驱，包括来自英格兰北部的Paradise Lost，My Dying Bride，Anathema，来自美国的Type O Negative，来自瑞典的Tiamat和来自荷兰的The Gathering。挪威乐队Theatre of Tragedy开创了“美女与野兽”的风格，将侵略性的男声和女声清嗓结合，这种鲜明的对比从此被诸多哥特金属乐队采用。90年代中期，Moonspell和Cradle of Filth在黑金属中加入了哥特元素。90年代末，在Tristania和Within Temptation的带动下，哥特金属出现了向交响金属发展的方向。进入21世纪，哥特金属在欧洲已进入主流，尤其是在芬兰，诸如The 69 Eyes、Entwine、HIM、Lullacry、Poisonblack、Sentenced等乐队均创造了排行榜热门歌曲和畅销专辑。尽管如此，在美国，只有很少乐队，比如HIM、Lacuna Coil、Evanescence、Cradle of Filth取得了商业成功。 在中国，哥特金属同其他重型音乐一样主要靠地下传播，其中Lacrimosa是最受中国乐迷欢迎的乐队，而Evanescence是唯一一支在中国大陆有主流发行渠道的乐队。中国本土的哥特金属也相当弱势，仅有Dengel、寂静的幽怨等为数不多的几支乐队选择了这一乐风。</zh-speak>
+    </Feature>
+    <Feature data="Alea Jacta Est" zh-data="" id="130" uri="http://dbpedia.org/resource/Alea_Jacta_Est">
+      <neighbors>
+        <neighbor dest="49" relationship="genre" weight="0"/>
+        <neighbor dest="1" relationship="genre" weight="0"/>
+        <neighbor dest="46" relationship="rev" weight="0"/>
+        <neighbor dest="127" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Alea Jacta Est , and distributed through Avispa.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="La Quinta Esencia" zh-data="" id="131" uri="http://dbpedia.org/resource/La_Quinta_Esencia">
+      <neighbors>
+        <neighbor dest="46" relationship="rev" weight="0"/>
+        <neighbor dest="127" relationship="genre" weight="0"/>
+        <neighbor dest="132" relationship="previous work" weight="0"/>
+      </neighbors>
+      <speak>La Quinta Esencia , and distributed through Avispa Music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Directo A La Luz" zh-data="" id="132" uri="http://dbpedia.org/resource/Directo_A_La_Luz">
+      <neighbors>
+        <neighbor dest="131" relationship="subsequent work" weight="0"/>
+        <neighbor dest="1" relationship="genre" weight="0"/>
+        <neighbor dest="46" relationship="rev" weight="0"/>
+        <neighbor dest="127" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Directo A La Luz  in digipak format DVD-CD. The CD format only contained a selection of the band's most successful songs played on the concert.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Medieval metal" zh-data="" id="133" uri="http://dbpedia.org/resource/Medieval_metal">
+      <neighbors>
+        <neighbor dest="11" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="9" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instruments" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="90" relationship="instrument" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="140" relationship="instrument" weight="0"/>
+        <neighbor dest="141" relationship="instrument" weight="0"/>
+        <neighbor dest="142" relationship="instrument" weight="0"/>
+        <neighbor dest="143" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="144" relationship="instrument" weight="0"/>
+        <neighbor dest="145" relationship="instrument" weight="0"/>
+        <neighbor dest="146" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="147" relationship="other topics" weight="0"/>
+        <neighbor dest="148" relationship="other topics" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+        <neighbor dest="150" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>For medieval metalworking see Metallurgy.Medieval metal or medieval rock is a subgenre of folk metal that blends hard rock or heavy metal music with medieval folk music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Folk music" zh-data="" id="134" uri="http://dbpedia.org/resource/Folk_music">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+        <neighbor dest="152" relationship="data" weight="0"/>
+      </neighbors>
+      <speak>Folk music includes both traditional music and the genre that evolved from it during the 20th century folk revival.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Electronic keyboard" zh-data="電子琴" id="135" uri="http://dbpedia.org/resource/Electronic_keyboard">
+      <neighbors/>
+      <speak>An electronic keyboard  is an electronic or digital keyboard instrument.</speak>
+      <zh-speak>電子琴是一種鍵盤樂器，一般有兩種，分別是座立式電子琴和手提電子琴。電子琴的聲音輸出，由電子元件發出音頻的電子訊號並擴大，經由耳機或喇叭發出聲音。內部元件包含鍵盤、聲音產生器、節奏與和弦產生器、放大器與擴音器、人機介面軟體，有些還會有記憶體、MIDI等。較著名的製造廠包括Casio、Alesis、Yamaha以及Roland等。</zh-speak>
+    </Feature>
+    <Feature data="Pirate metal" zh-data="" id="136" uri="http://dbpedia.org/resource/Pirate_metal">
+      <neighbors>
+        <neighbor dest="11" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Pirate metal is a subgenre of heavy metal, characterized by its incorporation of pirate mythology within the music and sometimes in stage performances.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Contemporary folk music" zh-data="民俗音樂" id="137" uri="http://dbpedia.org/resource/Contemporary_folk_music">
+      <neighbors>
+        <neighbor dest="11" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="16" relationship="other topics" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="93" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="75" relationship="instrument" weight="0"/>
+        <neighbor dest="138" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="193" relationship="other topics" weight="0"/>
+      </neighbors>
+      <speak>Contemporary folk music refers to a wide variety of genres that emerged in the early 20th century which were associated with traditional folk music.</speak>
+      <zh-speak>民俗音樂（Folk music），又稱民間音樂、民間歌謠、民間短篇詩歌等，簡稱民謠、民歌、民樂或民曲，於國際民間音樂協會（IFMC）之解釋定義為「經過口傳過程發展起來的普羅大眾音樂」，也就是該音樂散佈過程，純粹是由演奏者或音樂接收者記錄教習，並親自相傳所得。其範圍包含歌曲、簡單樂器演奏，甚至舞曲曲調與步伐。此解釋與19世紀中期重新定義民間音樂、民間傳說與民間舞蹈有相當重要之衍生與連帶關係，一般認定，該名詞與學說界定起自於1846年，英國人類學學者托馬斯（W. J. Thomas）提出。民間音樂有系統之定義研究雖起自19世紀，但實際形成卻可溯自遠古，例如中國春秋战国以前之詩經歌曲或今仍盛行之中國民歌等，亦可視為民間音樂。而不論古今或地區，民間音樂樂型態之傳統要素與特性有下列幾項： 民間音樂具有把現在與過去連結之連續性 個體與群體產生出不同類型的創作，並有其一定差異性 決定音樂形式或音樂存在，純粹由社會力選擇</zh-speak>
+    </Feature>
+    <Feature data="Electric folk" zh-data="" id="138" uri="http://dbpedia.org/resource/Electric_folk">
+      <neighbors>
+        <neighbor dest="11" relationship="fusiongenres" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="137" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="72" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="147" relationship="music subgenre" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="210" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Electric folk is the name given to the form of folk rock pioneered in England from the late 1960s, and most significant in the 1970s, which then was taken up and developed in the surrounding Celtic cultures of Brittany, Ireland, Scotland, Wales and the Isle of Man, to produce Celtic rock and its derivatives.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Epizod" zh-data="" id="139" uri="http://dbpedia.org/resource/Epizod">
+      <neighbors>
+        <neighbor dest="11" relationship="Genare" weight="0"/>
+      </neighbors>
+      <speak>Epizod  is a Bulgarian heavy metal band formed in 1983 in Sofia.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Bagpipes" zh-data="风笛" id="140" uri="http://dbpedia.org/resource/Bagpipes">
+      <neighbors/>
+      <speak>Bagpipes are a class of musical instrument, aerophones, using enclosed reeds fed from a constant reservoir of air in the form of a bag.</speak>
+      <zh-speak>风笛（Bagpipes）是乐器的一种，属使用簧片的气鸣乐器。风笛在英国的苏格兰地区非常流行，是苏格兰传统文化的一部分。</zh-speak>
+    </Feature>
+    <Feature data="Harp" zh-data="豎琴" id="141" uri="http://dbpedia.org/resource/Harp">
+      <neighbors/>
+      <speak>"Harp" also commonly refers to a style of harmonica.The harp is a stringed musical instrument which has a number of individual strings running at an angle to its soundboard, which are plucked with the fingers.</speak>
+      <zh-speak>豎琴，是一種大型撥弦樂器，是現代管弦樂團的重要樂器之一。豎琴可作獨奏、重奏和合奏，屬多功能的複音樂器。其流傳地區甚廣，在歐洲、美洲和亞洲等地區亦有出現豎琴類的樂器。豎琴在古埃及稱為貝尼琴，古希臘和古羅馬稱為里拉琴，中國又有一種稱之為箜篌的豎琴。</zh-speak>
+    </Feature>
+    <Feature data="Lute" zh-data="魯特琴" id="142" uri="http://dbpedia.org/resource/Lute">
+      <neighbors/>
+      <speak>Lute  can refer generally to any string instrument having the strings running in a plane parallel to the sound table  is referred to as a luthier.</speak>
+      <zh-speak>鲁特琴，也称琉特琴，是一种曲颈拨弦乐器。一般这个词主要指中世纪到巴洛克时期在欧洲使用的一类古乐器的总称。在广义的乐器分类中，把类似的乐器统称为“琉特属”，此时就不限于年代国别，因此吉他、中国琵琶、日本琵琶等都可以包括在内。欧洲鲁特琴上可以演奏和弦、旋律、跑句、各式各样的装饰音，甚至对位乐曲；它是用作伴奏歌唱的独奏乐器，也可用于重奏中，技艺娴熟的演奏者可以奏出多姿多采的效果。只不过较难弹奏。</zh-speak>
+    </Feature>
+    <Feature data="Medieval music" zh-data="中世紀音樂" id="143" uri="http://dbpedia.org/resource/Medieval_music">
+      <neighbors/>
+      <speak>Medieval music is Western music written during the Middle Ages.</speak>
+      <zh-speak>中世纪時期约為公元800年-1400年。</zh-speak>
+    </Feature>
+    <Feature data="Woodwind instrument" zh-data="木管乐器" id="144" uri="http://dbpedia.org/resource/Woodwind_instrument">
+      <neighbors/>
+      <speak>Wood[wind] instruments  are a family of musical instruments within the more general category of wind instruments.</speak>
+      <zh-speak>木管樂器大多數由堅實耐用的木材製作（新式木管樂器也有用金屬材料和有機材料，甚至用上玻璃製作的，比如長笛）。木管樂器的歷史很久遠，大致上古代人類在動物的腿骨上打洞製造出來的原始笛子就是木管樂器的祖先。現代木管樂器是從各國民間音樂中使用的類似蘆笛、笛和簫之類的樂器發展而來。木管樂器大致有兩種外形，一種是圓柱型，比如長笛和單簧管。另一種是圓錐型，比如雙簧管和大管。從發音原理來講，木管樂器分三類： 雙簧，又稱複簧，由兩片簧片相貼組成一個哨片，氣流通過兩片簧片之間的縫隙，使簧片帶動管內的空氣產生振動發聲。如雙簧管、英國管、大管。 單簧，只有一片簧片，氣流吹過簧片與吹嘴組成的縫隙，簧片帶動管內的空氣產生振動發聲，如單簧管，薩克斯風。 無簧，不使用簧片，氣流通過吹口邊緣的切口產生振動。比如笛類。木管樂器在管身上開有音孔，通過堵住和放開特定的音孔改變管身的有效長度來產生不同的音高。木管樂器在17世紀被正式接受為管絃樂隊中的標準配置。意大利和法國的歌劇作家陸續在自己的作品中使用了木管樂器。木管樂器的表現力豐富，演奏技巧複雜。</zh-speak>
+    </Feature>
+    <Feature data="Hurdy-gurdy" zh-data="" id="145" uri="http://dbpedia.org/resource/Hurdy-gurdy">
+      <neighbors/>
+      <speak>The hurdy-gurdy is a stringed instrument that produces sound by a crank-turned, rosined wheel rubbing against the strings.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Industrial metal" zh-data="工業金屬" id="146" uri="http://dbpedia.org/resource/Industrial_metal">
+      <neighbors>
+        <neighbor dest="25" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="1" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="29" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+        <neighbor dest="218" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Industrial metal is a musical genre that draws from industrial dance music, thrash metal and hardcore punk, using repeating metal guitar riffs, sampling, synthesizer or sequencer lines, and distorted vocals.</speak>
+      <zh-speak>工業金屬(Industrial Metal)是工業音樂中的工業搖滾所衍生出的曲風，是重金屬的其中一個分支的金屬派風。此樂風最主要的樂器搭配和團員配置不外乎就是主唱、電吉他、貝斯、爵士鼓，當然也會搭配一些電子的元素所以會有些MIDI音效的搭配如:音序器(sequencers)、取樣器或合成器……等。</zh-speak>
+    </Feature>
+    <Feature data="Medieval folk rock" zh-data="" id="147" uri="http://dbpedia.org/resource/Medieval_folk_rock">
+      <neighbors>
+        <neighbor dest="133" relationship="subgenres" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="93" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="138" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="148" relationship="derivatives" weight="0"/>
+      </neighbors>
+      <speak>Medieval folk rock, medieval rock or medieval folk is a musical subgenre that emerged in the early 1970s in England and Germany which combined elements of early music with rock music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Neo-Medieval music" zh-data="" id="148" uri="http://dbpedia.org/resource/Neo-Medieval_music">
+      <neighbors/>
+      <speak>Neo-Medieval music is a modern popular music characterized by elements of Medieval music and early music in general.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Synthesizer" zh-data="合成器" id="149" uri="http://dbpedia.org/resource/Synthesizer">
+      <neighbors>
+        <neighbor dest="151" relationship="format" weight="0"/>
+      </neighbors>
+      <speak>A sound synthesizer , and granular synthesis, sample-based synthesis based on grains of sound, generally resulting in soundscapes or clouds.</speak>
+      <zh-speak>合成器是一種以加法合成、減法合成、FM、physical modelling或相位調變等電子技術發聲之電子樂器。合成器有三種發聲方式：直接改變電壓（如類比合成器）。利用電腦做數學運算（如軟體合成器）綜合以上二種，最後會產生電壓訊號會使揚聲器或耳機之薄膜振動。合成器所發之聲音和錄音設備裡的自然聲音（natural sound）不同，錄音（recording）是將聲波的機械能（mechanical energy）轉換為訊號，並且可以經由播放（playback）把訊息轉回機械能（雖然取樣技術會導致失真）。合成器通常是以鍵盤做為操控介面，並且常常被當作一種鍵盤樂器。但是其實合成器之操控介面並不一定是鍵盤，如fingerboard synthesizer、ribbon controlled synthesizers...等，甚至不必為人所控制。(詳見音源器）語音合成也常使用於語音訊號處理，和vocoder有關。</zh-speak>
+    </Feature>
+    <Feature data="Shawm" zh-data="" id="150" uri="http://dbpedia.org/resource/Shawm">
+      <neighbors/>
+      <speak>The shawm was a medieval and Renaissance musical instrument of the woodwind family made in Europe from the 12th century  had at least one key allowing a downward extension of the compass; the keywork was typically covered by a perforated wooden cover called the fontanelle.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ogg" zh-data="Ogg" id="151" uri="http://dbpedia.org/resource/Ogg">
+      <neighbors/>
+      <speak>Ogg is a free, open container format maintained by the Xiph.Org Foundation.</speak>
+      <zh-speak>Ogg是一個自由且開放標準的容器格式，由Xiph.Org基金會所維護。Ogg格式並不受到軟體專利的限制，並設計用於有效率地串流媒體和處理高品質的數位多媒體。「Ogg」意指一種文件格式，可以納入各式各樣自由和开放源代码的编解码器，包含音效、视频、文字（像字幕）與元数据的處理。在Ogg的多媒體框架下，Theora提供有損的影像層面，而通常用音樂導向的Vorbis編解碼器作為音效層面。針對語音設計的壓縮編解碼器Speex和無損的音效壓縮編解碼器FLAC與OggPCM也可能作為音效層面使用。「Ogg」這個詞彙通常意指Ogg Vorbis此一音频文件格式，也就是將Vorbis編碼的音效包含在Ogg的容器中所成的格式。在以往，.ogg此一副檔名曾經被用在任何Ogg支援格式下的內容；但在2007年，Xiph.Org基金會為了向後相容的考量，提出請求，將.ogg只留給Vorbis格式來使用。Xiph.Org基金會決定創造一些新的副檔名和媒體格式來描述不同類型的內容，像是只包含音效所用的.oga、包含或不含聲音的影片（涵蓋Theora）所用的.ogv和可以包含任何比特流的.ogx。Xiph.Org基金會對Ogg的參照實裝，目前最新的版本是2010年3月26日釋出的libogg 1.2.0。另一個版本libogg2也可以在Xiph.Org基金會的SVN套件庫中找到。這兩個函式庫都是在新BSD许可证下釋出的自由软件。因為其格式自由，和其參照實裝並非Copyleft形式，無論自由或專有、商業或非商業的媒体播放器，甚至部分製造商的可攜式媒體播放器和全球定位系统接收器都採用了Ogg下的各種編解碼器。</zh-speak>
+    </Feature>
+    <Feature data="List of folk music traditions" zh-data="" id="152" uri="http://dbpedia.org/resource/List_of_folk_music_traditions">
+      <neighbors/>
+      <speak>Folk music is one of the major divisions of music, now often divided into traditional folk music and contemporary folk music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Orchestra" zh-data="管弦樂團" id="153" uri="http://dbpedia.org/resource/Orchestra">
+      <neighbors/>
+      <speak>An orchestra is a large instrumental ensemble that contains sections of string, brass, woodwind, and percussion instruments.</speak>
+      <zh-speak>管弦樂團（英語：orchestra）是當今世上編制最龐大、最複雜的樂團型態，擁有極強大而廣泛之音樂表現力。管弦樂團一般演奏古典音乐或為歌剧伴奏，有时也会替流行音乐伴奏；現代不少管弦樂團也常為电影配乐演奏，製作電影原聲帶。一个管弦樂團大多有70位以上的演奏家组成，有些甚至有上百位演奏家。形式比较小的管弦樂團也被称为室內樂團（chamber orchestra），室内乐团的成员数一般少于30人，在兩者中間還有所謂小交響樂團（sinfonietta orchestra），主要演奏接近較大於真正室樂和「典型」近代交響樂曲中間的管弦樂作品，如歷史上巴洛克樂派或古典樂派交響曲或大協奏曲，其編制是動用30到50人的中型樂團演出。一些大型的管弦樂團也被称为交響樂團（symphonic orchestra）或愛樂樂團（philharmonic orchestra），两个称呼之间没有實質上的区别，有时是一个城市中有两个管弦乐团时，可以此來區分它們。管弦樂團在演奏时，并不一定所有的團員都要参加；一般根据演奏作品的需要，参加演奏的演奏者数目也不同。大多数管弦樂團并未擁有全部乐器的演奏家，例如，很多乐团没有常態編制竖琴家，或是薩克斯風樂手、鋼琴家、爵士鼓鼓手。因此假如要演奏的作品中有他们不具有的乐器时，他们一般會与独立音乐家合作，樂團人數相當具有彈性。</zh-speak>
+    </Feature>
+    <Feature data="Benson Taylor" zh-data="" id="154" uri="http://dbpedia.org/resource/Benson_Taylor">
+      <neighbors>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="35" relationship="genre" weight="0"/>
+        <neighbor dest="193" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Benson Taylor  is an English composer &amp; songwriter who is best known for producing music for film, television and video games.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Merregnon Studios" zh-data="" id="155" uri="http://dbpedia.org/resource/Merregnon_Studios">
+      <neighbors>
+        <neighbor dest="153" relationship="industry" weight="0"/>
+      </neighbors>
+      <speak>Merregnon Studios was founded in 1999 by Thomas Böcker.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Latin ballad" zh-data="" id="156" uri="http://dbpedia.org/resource/Latin_ballad">
+      <neighbors>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>The romantic ballad or Latin ballad is a music genre derivative of Bolero that was originated to early of the 1960s in Latin America and Spain.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Shaken and Stirred: The David Arnold James Bond Project" zh-data="" id="157" uri="http://dbpedia.org/resource/Shaken_and_Stirred:_The_David_Arnold_James_Bond_Project">
+      <neighbors>
+        <neighbor dest="153" relationship="extra" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Shaken and Stirred: The David Arnold James Bond Project is an album of cover versions of James Bond film themes organized and produced by David Arnold.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Michael Baiardi" zh-data="" id="158" uri="http://dbpedia.org/resource/Michael_Baiardi">
+      <neighbors>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="172" relationship="occupation" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Michael Baiardi . Also notable music contributions are TV shows such as Modern Family, Dexter, Justified, Law &amp; Order, CSI, and Jersey Shore.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Back at One" zh-data="" id="159" uri="http://dbpedia.org/resource/Back_at_One">
+      <neighbors>
+        <neighbor dest="153" relationship="recorded in" weight="0"/>
+      </neighbors>
+      <speak>Back at One is an album by Brian McKnight released September 21, 1999, by Motown.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Minimal music" zh-data="簡約音樂" id="160" uri="http://dbpedia.org/resource/Minimal_music">
+      <neighbors>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="90" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Minimal music is an aesthetic, a style, or a technique of music associated with the work of American composers La Monte Young, Terry Riley, Steve Reich, and Philip Glass.</speak>
+      <zh-speak>簡約音樂在1960年代時被提出作為實驗音樂中的一種音樂風格，這個派別大都展現以下的特色： 如果不具功能調性（functional tonality），則強調和諧的和弦。 樂句、或較小單位的figure、motif、cell會不斷重複。加以難以捉摸、緩慢的改變、長時間極少或沒有改變的旋律。 以持續的低音、節奏或長音的方式暫停音樂演進（stasis）。簡約音樂這個名詞是由簡約主義（或極簡主義）派生而來，在「簡約音樂」之前，有程序音樂或系統音樂等被使用在同樣的音樂上，尤其是經由嚴謹規則所建構的此種音樂。</zh-speak>
+    </Feature>
+    <Feature data="Dimitry Markevitch" zh-data="" id="161" uri="http://dbpedia.org/resource/Dimitry_Markevitch">
+      <neighbors>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="35" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>Dimitry Markevitch  in Switzerland.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Radio France" zh-data="" id="162" uri="http://dbpedia.org/resource/Radio_France">
+      <neighbors>
+        <neighbor dest="153" relationship="product" weight="0"/>
+      </neighbors>
+      <speak>Radio France is a French public service radio broadcaster.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Basil Poledouris" zh-data="" id="163" uri="http://dbpedia.org/resource/Basil_Poledouris">
+      <neighbors>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+        <neighbor dest="153" relationship="instrument" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="184" relationship="death place" weight="0"/>
+      </neighbors>
+      <speak>Basil Poledouris . Poledouris's works are notable for integrating electronic music sounds with traditional orchestral arrangements.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Musical instrument" zh-data="乐器" id="164" uri="http://dbpedia.org/resource/Musical_instrument">
+      <neighbors/>
+      <speak>A musical instrument is a device created or adapted for the purpose of making musical sounds.</speak>
+      <zh-speak>樂器，泛指可以發聲演奏音樂的工具。根據構造或發聲原理，樂器可以細分作以下的分類：</zh-speak>
+    </Feature>
+    <Feature data="Jim Stafford" zh-data="" id="165" uri="http://dbpedia.org/resource/Jim_Stafford">
+      <neighbors>
+        <neighbor dest="16" relationship="genre" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="164" relationship="instrument" weight="0"/>
+        <neighbor dest="182" relationship="instrument" weight="0"/>
+        <neighbor dest="183" relationship="home town" weight="0"/>
+        <neighbor dest="184" relationship="home town" weight="0"/>
+      </neighbors>
+      <speak>James Wayne "Jim" Stafford .</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Tejano music" zh-data="" id="166" uri="http://dbpedia.org/resource/Tejano_music">
+      <neighbors>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="16" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="123" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="164" relationship="instrument" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+        <neighbor dest="193" relationship="stylistic origin" weight="0"/>
+      </neighbors>
+      <speak>Tejano music or Tex-Mex music  is the name given to various forms of folk and popular music originating among the Mexican-American populations of Central and Southern Texas.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Comedy music" zh-data="" id="167" uri="http://dbpedia.org/resource/Comedy_music">
+      <neighbors>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="164" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Comedy music is music that is comic or humorous in nature, encompassing a wide variety of music genres.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Uchpa" zh-data="" id="168" uri="http://dbpedia.org/resource/Uchpa">
+      <neighbors>
+        <neighbor dest="84" relationship="genre" weight="0"/>
+        <neighbor dest="52" relationship="genre" weight="0"/>
+        <neighbor dest="164" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Uchpa is a Quechua-singing Peruvian punk rock &amp; blues band.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Phillip Michael Pacetti" zh-data="" id="169" uri="http://dbpedia.org/resource/Phillip_Michael_Pacetti">
+      <neighbors>
+        <neighbor dest="164" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Phillip Michael Pacetti is an American musician active in the 1990s to present."Philonious" is a vocalist, keyboardist, guitarist, lyricist, songwriter and music producer who began his musical journey in the early 90's with the Los Angeles band Grumblefish.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Charlie Nothing" zh-data="" id="170" uri="http://dbpedia.org/resource/Charlie_Nothing">
+      <neighbors>
+        <neighbor dest="93" relationship="genre" weight="0"/>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>Charles Martin Simon , better known as Charlie Nothing, was an American musician, musical instrument maker and writer.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Guitars in the Classroom" zh-data="" id="171" uri="http://dbpedia.org/resource/Guitars_in_the_Classroom">
+      <neighbors>
+        <neighbor dest="164" relationship="service" weight="0"/>
+      </neighbors>
+      <speak>Guitars in the Classroom , The D'Addario Music Foundation, The Bill Graham Memorial Foundation,  The Wishlist Foundation, as well as individual donors.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Record producer" zh-data="音樂製作人" id="172" uri="http://dbpedia.org/resource/Record_producer">
+      <neighbors>
+        <neighbor dest="48" relationship="competencies" weight="0"/>
+        <neighbor dest="164" relationship="competencies" weight="0"/>
+      </neighbors>
+      <speak>A record producer is an individual working within the music industry, whose job is to oversee and manage the recording , assuming responsibility for creative decisions relating to the recording.With today's relatively easy access to technology, an alternative to the record producer just mentioned, is the so-called 'bedroom producer'. With today's technological advances, it is very easy for a producer to achieve high quality tracks without the use of a single instrument; that happens in modern music such as hip-hop or dance.</speak>
+      <zh-speak>音樂製作人（亦稱唱片製作人或者專輯製作人；英语：Record Producer）在唱片工業裡是個非常重要的角色，工作內容涵蓋控制錄音工程的排程、訓練和指導新的音樂家、組織調度製作預算和資源、監督錄音的過程、進行混音以及母帶後製的工作。就某些方面而言，音樂製作人就像影劇導演，他的任務是製作、設計製作出符合整個專輯風格的歌曲，不同的是專輯製作人很少負責籌措經費，而是被一些擁有資金的人給雇用，通常是唱片出版公司或歌手本身。20世紀下半葉開始，音樂製作人也開始從事一些更廣、更具有創造性的工作。</zh-speak>
+    </Feature>
+    <Feature data="Video Killed the Radio Star" zh-data="" id="173" uri="http://dbpedia.org/resource/Video_Killed_the_Radio_Star">
+      <neighbors>
+        <neighbor dest="164" relationship="label" weight="0"/>
+      </neighbors>
+      <speak>"Video Killed the Radio Star" is a song written by Trevor Horn, Geoff Downes and Bruce Woolley in 1978. It was first recorded by Bruce Woolley and The Camera Club  for their album English Garden, and later by British group The Buggles, consisting of Horn and Downes.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Gavin Koppell" zh-data="" id="174" uri="http://dbpedia.org/resource/Gavin_Koppell">
+      <neighbors>
+        <neighbor dest="172" relationship="occupation" weight="0"/>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>Gavin Koppel, better known by his stage name DJ Lyfe, was the turntablist and co-songwriter of the band Incubus between the years of 1995 and 1998, as well as being a graffiti artist.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Aleksander Serov" zh-data="" id="175" uri="http://dbpedia.org/resource/Aleksander_Serov">
+      <neighbors>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="occupation" weight="0"/>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>Alexander Nikolayevich Serov .</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Haida ceremonial dance rattle (Indianapolis Museum of Art)" zh-data="" id="176" uri="http://dbpedia.org/resource/Haida_ceremonial_dance_rattle_(Indianapolis_Museum_of_Art)">
+      <neighbors>
+        <neighbor dest="164" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>This ritual dance rattle in the form of a raven is part of the Native American collection of the Indianapolis Museum of Art in Indianapolis, Indiana.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="V. Harikrishna" zh-data="" id="177" uri="http://dbpedia.org/resource/V._Harikrishna">
+      <neighbors>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>V. Harikrishna is an Indian film score and soundtrack composer, Playback singer and film producer.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ruokangas Guitars" zh-data="" id="178" uri="http://dbpedia.org/resource/Ruokangas_Guitars">
+      <neighbors>
+        <neighbor dest="164" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>Ruokangas Guitars builds solid-body and semi-hollow electric guitars, including models such as Duke, VSOP, Mojo, Hellcat and Unicorn.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Rhian Benson" zh-data="" id="179" uri="http://dbpedia.org/resource/Rhian_Benson">
+      <neighbors>
+        <neighbor dest="172" relationship="occupation" weight="0"/>
+        <neighbor dest="88" relationship="genre" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Rhiannon Afua "Rhian" Benson is a Ghanaian-British soul and jazz singer and songwriter.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Fibenare Guitars Co." zh-data="" id="180" uri="http://dbpedia.org/resource/Fibenare_Guitars_Co.">
+      <neighbors>
+        <neighbor dest="164" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>Fibenare Guitars  is a company established in 1998.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hamsalekha" zh-data="" id="181" uri="http://dbpedia.org/resource/Hamsalekha">
+      <neighbors>
+        <neighbor dest="135" relationship="instrument" weight="0"/>
+        <neighbor dest="164" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>Hamsalekha, born Govindaraju Gangaraju, is a music director and lyricist, screen play and dialogue writer  in the South Indian Film Industry, prominently the Kannada film industry.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Human voice" zh-data="人聲" id="182" uri="http://dbpedia.org/resource/Human_voice">
+      <neighbors/>
+      <speak>The  voice consists of sound made by a human being using the vocal folds for talking, reading, singing, laughing, crying, screaming etc.</speak>
+      <zh-speak>人聲是通過人類呼吸器官振動產生的聲音。關鍵器官為聲帶的此種人類行為，通過空氣介質傳播，並能被人類聽覺器官而感知。除此，人聲亦與其他聲音相同，也是一種波動現象。複雜的人聲可構成語言、歌曲，並表達複雜的情緒與符號。</zh-speak>
+    </Feature>
+    <Feature data="Florida" zh-data="佛罗里达州" id="183" uri="http://dbpedia.org/resource/Florida">
+      <neighbors>
+        <neighbor dest="184" relationship="country" weight="0"/>
+      </neighbors>
+      <speak>Florida /ˈflɒrɪdə/ is a state in the southeastern region of the United States, bordered to the west by the Gulf of Mexico, to the north by Alabama and Georgia, to the east by the Atlantic Ocean, and to the south by the Straits of Florida.</speak>
+      <zh-speak>佛罗里达州（英语：State of Florida）是美国最南端的一个州（夏威夷州除外），亦屬於墨西哥灣沿岸地區，是美國人口第四多的州，為著名的避寒聖地。中文簡稱為佛州。州府位於塔拉赫西，最大的城市為傑克遜維爾，最大的都會區為邁阿密都會區。佛羅里達吸引了不少名人和運動員來這裡度假，以高爾夫球，網球，水上活動，賽車著稱。</zh-speak>
+    </Feature>
+    <Feature data="United States" zh-data="美国" id="184" uri="http://dbpedia.org/resource/United_States">
+      <neighbors/>
+      <speak>The United States of America  and with around 318 million people, the United States is the world's fourth-largest country by total area and third-largest by population.</speak>
+      <zh-speak>美利堅合眾國（英语：The United States of America，簡稱：The United States、America，縮寫：USA、The US），簡稱美國，是由50個州和華盛頓哥倫比亞特區組成的聯邦共和立憲制國家。美國本土位於北美洲中部，東臨大西洋，西臨太平洋，北面是加拿大，南部和墨西哥及墨西哥灣接壤。除阿拉斯加州和夏威夷州之外，48個州都位於美國本土。阿拉斯加州位於北美大陸西北方，東部為加拿大，西面和俄羅斯隔著白令海峽。夏威夷州則是太平洋中部的群島。美國在加勒比海和太平洋還擁有多處境外領土和島嶼地區。此外，美國在全球140多個國家和地區擁有374個海外軍事基地。美國目前有50個州、一個聯邦直轄特區及若干境外領土，面積約962.9萬平方公里（其中陸地面積915.8960萬平方公里，内陸水域面積約20萬平方公里，五大湖中美國主權部分約17萬平方公里，河口、港灣、内海等沿海水域面積約10萬平方公里），位居世界第二或第三名（依水域面積定義而有差異）。美國人口約為3.15億人，其數量為世界第三。是個多元文化和多元民族的國家，以白人為主，但有大量來自世界各地的移民。在13個殖民地的公民自1776年脫離大不列顛王國管辖，建立國家，殖民地代表一同發表《美國獨立宣言》。在經歷美國獨立戰爭後，於1783年與大不列顛王國簽訂《巴黎條約》，從此受到世界各國承認。美國憲法於1787年通過。1791年，美國權利法案獲得批准之後，又經內戰、第二次世界大戰和民權人士努力引發檢討和改正，而後逐步擴展到美國白人以外全體美國人。美國曾經歷過1812年戰爭、南北戰争 (1861年－1865年）和經濟大蕭條（1930年代）。在第一次世界大戰和第二次世界大戰中，美國和其他盟國共同擊敗納粹德國和大日本帝國而獲得勝利，經歷數十年冷戰，在蘇聯解體後，成為目前唯一的超級強國，在經濟、工業、軍事及科研等領域都處於全世界領先地位。</zh-speak>
+    </Feature>
+    <Feature data="Guitar" zh-data="吉他" id="185" uri="http://dbpedia.org/resource/Guitar">
+      <neighbors>
+        <neighbor dest="9" relationship="classification" weight="0"/>
+      </neighbors>
+      <speak>The guitar is a plucked string instrument, usually played with fingers or a pick.</speak>
+      <zh-speak>吉他（英语：Guitar），港澳称结他，屬於弹拨乐器。通常有六條弦，形状与提琴相似。吉他在流行音樂、搖滾音樂、藍調、民歌、佛朗明哥中，常被視為主要樂器。而在古典音樂的領域裡，結他常以独奏或二重奏的型式演出；當然，在室内乐和管弦乐中，吉他亦扮演著相當程度的陪襯角色。</zh-speak>
+    </Feature>
+    <Feature data="Selwyn Birchwood" zh-data="" id="186" uri="http://dbpedia.org/resource/Selwyn_Birchwood">
+      <neighbors>
+        <neighbor dest="8" relationship="occupation" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="91" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="183" relationship="birth place" weight="0"/>
+        <neighbor dest="27" relationship="occupation" weight="0"/>
+        <neighbor dest="193" relationship="genre" weight="0"/>
+        <neighbor dest="194" relationship="occupation" weight="0"/>
+        <neighbor dest="195" relationship="birth place" weight="0"/>
+        <neighbor dest="196" relationship="record label" weight="0"/>
+      </neighbors>
+      <speak>Selwyn Birchwood , as well the winner of the Albert King Guitarist of the Year award, presented at the same event.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Christoffer Lundquist" zh-data="" id="187" uri="http://dbpedia.org/resource/Christoffer_Lundquist">
+      <neighbors>
+        <neighbor dest="172" relationship="occupation" weight="0"/>
+        <neighbor dest="13" relationship="occupation" weight="0"/>
+        <neighbor dest="8" relationship="occupation" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="197" relationship="associated musical artist" weight="0"/>
+        <neighbor dest="198" relationship="associated musical artist" weight="0"/>
+        <neighbor dest="199" relationship="home town" weight="0"/>
+        <neighbor dest="200" relationship="associated musical artist" weight="0"/>
+      </neighbors>
+      <speak>Carl Christoffer Lundquist, born 1970, is a Swedish musician and producer.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ovation Deacon" zh-data="" id="188" uri="http://dbpedia.org/resource/Ovation_Deacon">
+      <neighbors>
+        <neighbor dest="8" relationship="bodytype" weight="0"/>
+        <neighbor dest="201" relationship="woodbody" weight="0"/>
+      </neighbors>
+      <speak>During the 1970s Ovation Guitar Company created a more "deluxe" version of their exotically shaped solid body electric guitar - the Ovation Breadwinner that was called the Deacon.The Deacon was differentiated by a gloss finish, mother of pearl diamond shaped fretboard marker inlays, and an ivory binding on the edge of the fretboard.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Sangam (1964 Hindi film)" zh-data="" id="189" uri="http://dbpedia.org/resource/Sangam_(1964_Hindi_film)">
+      <neighbors>
+        <neighbor dest="8" relationship="note" weight="0"/>
+        <neighbor dest="202" relationship="starring" weight="0"/>
+        <neighbor dest="203" relationship="note" weight="0"/>
+        <neighbor dest="204" relationship="music composer" weight="0"/>
+        <neighbor dest="205" relationship="language" weight="0"/>
+      </neighbors>
+      <speak>Sangam , against the background of "exotic" landscapes.Director Dasari Narayana Rao remade the film in Telugu and Kannada languages as Swapna.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Jackson Kelly" zh-data="" id="190" uri="http://dbpedia.org/resource/Jackson_Kelly">
+      <neighbors>
+        <neighbor dest="8" relationship="bodytype" weight="0"/>
+      </neighbors>
+      <speak>Jackson Kelly or KE is a lighter version of Gibson Explorer produced by Jackson Guitars.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Stevie Ray Vaughan Stratocaster" zh-data="" id="191" uri="http://dbpedia.org/resource/Stevie_Ray_Vaughan_Stratocaster">
+      <neighbors>
+        <neighbor dest="8" relationship="bodytype" weight="0"/>
+      </neighbors>
+      <speak>The Stevie Ray Vaughan Stratocaster is the signature model electric guitar of American guitarist Stevie Ray Vaughan, based on his favorite guitar, Number One.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Abel Axe" zh-data="" id="192" uri="http://dbpedia.org/resource/Abel_Axe">
+      <neighbors>
+        <neighbor dest="9" relationship="classification" weight="0"/>
+        <neighbor dest="13" relationship="related" weight="0"/>
+        <neighbor dest="8" relationship="related" weight="0"/>
+        <neighbor dest="185" relationship="related" weight="0"/>
+      </neighbors>
+      <speak>The Abel Axe is an electric guitar invented by Jeff Abel from Wyoming, United States and engineered by James Jones.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Blues" zh-data="藍調" id="193" uri="http://dbpedia.org/resource/Blues">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="134" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="88" relationship="derivative" weight="0"/>
+        <neighbor dest="151" relationship="format" weight="0"/>
+        <neighbor dest="125" relationship="instrument" weight="0"/>
+        <neighbor dest="91" relationship="derivative" weight="0"/>
+        <neighbor dest="2" relationship="derivative" weight="0"/>
+        <neighbor dest="52" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="55" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Blues is a genre and musical form that originated in African-American communities in the "Deep South" of the United States around the end of the 19th century.</speak>
+      <zh-speak>藍調（英文：Blues，解作「藍色」，又音譯為布魯斯）是一种基于五聲音階的聲樂和樂器音樂，它的另一個特點是其特殊的和聲。藍調起源于过去美國黑人奴隸的赞美歌、劳动歌曲、叫喊和聖歌。藍調中使用的“蓝调之音”和啟應的演唱方式都显示了它的西非来源。藍調对后来美国和西方流行音乐有非常大的影响，拉格泰姆、爵士乐、蓝草、节奏藍調、摇滚乐、乡村音乐和普通的流行歌曲，甚至现代的古典音乐中都含有藍調的因素或者是从藍調发展出来的。在诗歌裡这个词常被用来描写忧郁情绪。藍調一词是与“蓝色魔鬼”（Blue devils）一致的意思，意思是情绪低调、忧伤、忧郁。早在1798年乔治·科曼就写过一部名为《蓝色魔鬼，一幕滑稽戏》的滑稽戏。19世纪这个词被用来表示震颤谵妄和警察。在美国黑人音乐中这个词的应用可能更老。1912年孟菲斯威廉·克里斯托弗·汉迪的《孟菲斯藍調》是这个词在音乐中最早的书面纪录。</zh-speak>
+    </Feature>
+    <Feature data="Lap steel guitar" zh-data="" id="194" uri="http://dbpedia.org/resource/Lap_steel_guitar">
+      <neighbors/>
+      <speak>The lap steel guitar is a type of steel guitar, an instrument derived from and similar to the guitar.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Orlando, Florida" zh-data="奥兰多 (佛罗里达州)" id="195" uri="http://dbpedia.org/resource/Orlando,_Florida">
+      <neighbors>
+        <neighbor dest="183" relationship="is part of" weight="0"/>
+        <neighbor dest="184" relationship="country" weight="0"/>
+      </neighbors>
+      <speak>Orlando /ɔrˈlændoʊ/ is a major city in the U.S. state of Florida.</speak>
+      <zh-speak>奥兰多（英语：Orlando）是位于美国佛罗里达州中部的一座城市，也是橙縣 (又譯奧蘭治縣) 的县治所在，根据美国人口调查局2006年统计，人口共220,186人。城市地標為伊歐拉湖（Lake Eola），而奧蘭多市長為巴迪·戴尔（Buddy Dyer）。奧蘭多位於中佛羅里達州，是世界上最好的休閒城市之一。湖泊眾多，乾淨的街道、友善的居民及溫暖的氣候為健行、露營、水上活動、蜜月及家庭旅行的最佳去處。走在奧蘭多具有歷史性的 Lock Haven 區內，奧蘭多自然中心（Orlando Science Center）顯眼的鋁質圓頂印入眼簾，該自然中心提供個年齡層兒童互動性的展覽。在Lock Haven 區內還有奧蘭多藝術博物館（Orlando Museum of Art）、橙縣歷史博物館（Orange County Historical Museum）及附近的哈利花園（Harry P. Leu Gardens）。在奧蘭多還有老少咸宜的主題樂園，如華德迪士尼世界（Walt Disney World）、環球影城（Universal Studio）、冒險島樂園（Islands of Adventure）, 海洋世界（Sea World）及無數的旅館，造就了它的觀光地位。由華納兄弟與環球影城公司合作興建的哈利波特的魔法世界，位在兩大電影製片商在奧蘭多面積達787英畝的主題公園園址，霍格華茲城堡與人工白雪覆蓋的霍格華茲村，將哈利波特書中的魔法世界真實呈現。於2009年完工，造價數十億美元。</zh-speak>
+    </Feature>
+    <Feature data="Alligator Records" zh-data="" id="196" uri="http://dbpedia.org/resource/Alligator_Records">
+      <neighbors>
+        <neighbor dest="193" relationship="genre" weight="0"/>
+        <neighbor dest="184" relationship="country" weight="0"/>
+      </neighbors>
+      <speak>Alligator Records is an American, Chicago-based independent blues record label, founded by Bruce Iglauer in 1971. Iglauer was also one of the founders of the Living Blues magazine in Chicago in 1970.Iglauer started the label with his own savings to record and produce his favorite band Hound Dog Taylor and the HouseRockers, whom his employer, Bob Koester of Delmark Records, declined to record.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Per Gessle" zh-data="" id="197" uri="http://dbpedia.org/resource/Per_Gessle">
+      <neighbors>
+        <neighbor dest="185" relationship="instrument" weight="0"/>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="instrument" weight="0"/>
+        <neighbor dest="198" relationship="associated band" weight="0"/>
+        <neighbor dest="199" relationship="birth date" weight="0"/>
+      </neighbors>
+      <speak>Per Håkan Gessle . With Fredriksson's illness in 2002, he went back to recording solo albums, reformed Gyllene Tider in 2004 and became a successful artist in his native Sweden, selling multi-platinum albums.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Roxette" zh-data="罗克塞特" id="198" uri="http://dbpedia.org/resource/Roxette">
+      <neighbors>
+        <neighbor dest="197" relationship="band member" weight="0"/>
+        <neighbor dest="199" relationship="home town" weight="0"/>
+      </neighbors>
+      <speak>Roxette is a Swedish pop rock duo, consisting of Marie Fredriksson . They continued to chart in other territories, mainly in Europe and Latin America, where they earned various Gold and Platinum awards until the beginning of the new millennium.</speak>
+      <zh-speak>罗克塞特是一个瑞典双人乐队, 成员包括Per Gessle和Marie Fredriksson。他们最著名的作品包括"It Must Have Been Love"(电影风月俏佳人配乐)，The Look和 Joyride等 。</zh-speak>
+    </Feature>
+    <Feature data="Sweden" zh-data="瑞典" id="199" uri="http://dbpedia.org/resource/Sweden">
+      <neighbors/>
+      <speak>Sweden .</speak>
+      <zh-speak>瑞典王国（瑞典文：Konungariket Sverige）是一个位于斯堪地纳维亚半岛的北歐国家，首都为斯德哥尔摩。它西鄰挪威，东北与芬兰接壤，西南濒临斯卡格拉克海峡和卡特加特海峡，東邊為波罗的海與波的尼亞灣。瑞典与丹麦、德国、波兰、俄罗斯、立陶宛、拉脫維亞和爱沙尼亚隔海相望，於西南通过厄勒海峽大桥与丹麦相连。瑞典於1995年加入欧洲联盟。瑞典面积为449,964平方公里，为北歐第一大国家。64%的國土由森林覆蓋，人口密度低，只有都會地區人口密度較高，84%的人口居住在只佔国土面积1.3%的城市裡。瑞典是一个現代、自由和民主的高度发达国家，其公民享有高质的生活，政府亦非常注重环保。瑞典是传统的铁、铜和木材出口国，其水资源也很丰富，但是石油和煤矿十分匮乏。隨著運輸及通訊的進步，這些自然資源也能夠更大規模地從各地開採，尤其是木材與鐵礦。經濟自由與教育普及讓瑞典開始歷經快速的工業化，並從1890年代開始發展製造業。20世紀瑞典成為一個福利國家。1397年，瑞典與丹麦和挪威一起組成了卡爾馬聯合（芬兰此時還是瑞典王國的一部分）。瑞典於16世纪初脫離卡爾馬聯合，並且與鄰國進行了多年的戰爭，尤其是與俄羅斯以及從未完全承認瑞典已經離開了卡爾瑪聯合的丹麥-挪威聯合。17世纪時瑞典藉由戰爭擴張領土，成為了強權國家，其領土面积為目前的兩倍之大。1809年瑞典失去了芬蘭，也不再具有強權地位。之后，瑞典沒有再參與過戰爭。今天，瑞典被視為具有社会主义傾向，極力追求平等。瑞典二戰後大多數時間是中左派瑞典社會民主黨執政，設立許多社會福利制度，並且在聯合國開發計劃署的人类发展指数中通常名列前茅。</zh-speak>
+    </Feature>
+    <Feature data="Brainpool (band)" zh-data="" id="200" uri="http://dbpedia.org/resource/Brainpool_(band)">
+      <neighbors>
+        <neighbor dest="123" relationship="genre" weight="0"/>
+        <neighbor dest="2" relationship="genre" weight="0"/>
+        <neighbor dest="199" relationship="home town" weight="0"/>
+        <neighbor dest="187" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Brainpool is a pop music group from Lund, Sweden.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Mahogany" zh-data="桃花心木" id="201" uri="http://dbpedia.org/resource/Mahogany">
+      <neighbors/>
+      <speak>Mahogany is a kind of wood—the straight-grained, reddish-brown timber of three tropical hardwood species of the genus Swietenia, indigenous to the Americas, part of the pantropical  chinaberry family, Meliaceae.</speak>
+      <zh-speak>桃花心木是红色硬木，常见桃花心木有下列几种： 西印度群岛桃花心木（Swietenia mahagoni）产自古巴、巴哈马等加勒比海国家和美国佛罗里达州； 大叶桃花心木（Swietenia macrophylla）产自洪都拉斯和秘鲁、巴西等中南美国家。 非洲桃花心木（Khaya）产自奈及利亞、黄金海岸等西非洲国家。 墨西哥桃花心木（Swietenia humilis）产自墨西哥。被称为“菲律宾桃花心木”的植物属龙脑香科（Dipterocarpaceae），并非桃花心木。桃花心木是受保护的植物。桃花心木主要用于制造高档家具、眼鏡、乐器和游艇、高档汽车的装璜等。</zh-speak>
+    </Feature>
+    <Feature data="Rajendra Kumar" zh-data="" id="202" uri="http://dbpedia.org/resource/Rajendra_Kumar">
+      <neighbors/>
+      <speak>Rajendra Kumar  was an Indian film actor who starred in Bollywood films.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Instrumental" zh-data="器樂" id="203" uri="http://dbpedia.org/resource/Instrumental">
+      <neighbors/>
+      <speak>An instrumental is a musical composition or recording without lyrics or singing, although it might include some non-articulate vocal input; the music is primarily or exclusively produced by musical instruments.</speak>
+      <zh-speak>器乐是相对于声乐而言，完全使用乐器演奏而不用人声或者人声处于附属地位的音乐。演奏的乐器可以包括所有种类的弦乐器、木管乐器、铜管乐器和打击乐器，有的器乐曲也应用部分人声作为效果，但部分作曲家有时也加入一些人声，例如《貝多芬第九交響曲》的《欢乐颂》合唱部分，但总的来说交响曲属于器乐而不属于声乐。另外像人声演奏的口哨、哼唱等也经常被加入到器乐曲中增加某些效果。</zh-speak>
+    </Feature>
+    <Feature data="Shankar Jaikishan" zh-data="" id="204" uri="http://dbpedia.org/resource/Shankar_Jaikishan">
+      <neighbors/>
+      <speak>Shankar Jaikishan , were a duo who composed Indian music for the Hindi film industry, who worked together from 1949–1971.Shankar-Jaikishan, along with other artists, wrote "everlasting" and "immortal melodies" in the fifties and sixties.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hindi" zh-data="印地语" id="205" uri="http://dbpedia.org/resource/Hindi">
+      <neighbors/>
+      <speak>Hindi  people in India reported Hindi to be their native language, which also includes people who identify as native speakers of related languages who consider their speech to be a dialect of Hindi, the Hindi belt.</speak>
+      <zh-speak>印地语（天城文：हिन्दी或हिंदी，拉丁字母转写：Hindī）又稱北印度語，是印欧语系印度-伊朗语族中印度-雅利安语支下的一种语言。1965年1月26日成为印度中央政府的官方語言（连同英语）。印地语和乌尔都语（合稱印度斯坦語）大同小異，主要區別在於前者用天城文，後者用烏爾都字母，前者引进的梵语借词多一点，后者的阿拉伯语和波斯语借词多一些。</zh-speak>
+    </Feature>
+    <Feature data="Anna Katharina Kränzlein" zh-data="" id="206" uri="http://dbpedia.org/resource/Anna_Katharina_Kr%C3%A4nzlein">
+      <neighbors>
+        <neighbor dest="11" relationship="genre" weight="0"/>
+        <neighbor dest="126" relationship="Instrument" weight="0"/>
+        <neighbor dest="145" relationship="Instrument" weight="0"/>
+        <neighbor dest="35" relationship="genre" weight="0"/>
+        <neighbor dest="27" relationship="Instrument" weight="0"/>
+        <neighbor dest="147" relationship="genre" weight="0"/>
+        <neighbor dest="210" relationship="Instrument" weight="0"/>
+      </neighbors>
+      <speak>Anna Katharina Kränzlein, also known as Anna Katharina,  is a German violinist.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="List of European folk music traditions" zh-data="" id="207" uri="http://dbpedia.org/resource/List_of_European_folk_music_traditions">
+      <neighbors>
+        <neighbor dest="140" relationship="styles" weight="0"/>
+        <neighbor dest="18" relationship="Instrumentation" weight="0"/>
+        <neighbor dest="185" relationship="Instrumentation" weight="0"/>
+        <neighbor dest="141" relationship="Instrumentation" weight="0"/>
+        <neighbor dest="125" relationship="Instrumentation" weight="0"/>
+        <neighbor dest="126" relationship="Instrumentation" weight="0"/>
+        <neighbor dest="145" relationship="Instrumentation" weight="0"/>
+      </neighbors>
+      <speak>This is a list of folk music traditions, with styles, dances, instruments and other related topics.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Warsaw Village Band" zh-data="" id="208" uri="http://dbpedia.org/resource/Warsaw_Village_Band">
+      <neighbors>
+        <neighbor dest="126" relationship="band member" weight="0"/>
+        <neighbor dest="145" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Warsaw Village Band  is a band from Warsaw, Poland, that plays traditional Polish folk music tunes combined with modern elements.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Donskoy ryley" zh-data="" id="209" uri="http://dbpedia.org/resource/Donskoy_ryley">
+      <neighbors>
+        <neighbor dest="9" relationship="classification" weight="0"/>
+        <neighbor dest="145" relationship="related" weight="0"/>
+      </neighbors>
+      <speak>The Donskoy ryley  is a stringed musical instrument from Russia.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Recorder (musical instrument)" zh-data="直笛" id="210" uri="http://dbpedia.org/resource/Recorder_(musical_instrument)">
+      <neighbors/>
+      <speak>The recorder is a family of woodwind musical instruments of the group known as fipple flutes or internal duct flutes—whistle-like instruments that include the tin whistle.</speak>
+      <zh-speak>直笛，在台湾稱直笛，在中国大陆称竖笛，在香港称牧童笛，是一種木管樂器，直身長管，以邊陵發聲。笛端有1個吹孔，吹孔以下有尖版開口，笛身有8至10個音孔，其中2個為半音孔，由口吹氣至吹口的窄管，窄管的氣撞到尖板，令空氣震盪。直笛音色优美圆润，是巴洛克时代的标准独奏乐器。标准直笛有8个音孔，通过按孔的不同组合可以得到2个半八度以内的所有半音。现在的直笛是十二平均律乐器，可以吹奏包括大調、小調的24个调。因为音孔較少，在吹奏远关系调时，指法极为复杂。</zh-speak>
+    </Feature>
+    <Feature data="Gulbransen" zh-data="" id="211" uri="http://dbpedia.org/resource/Gulbransen">
+      <neighbors>
+        <neighbor dest="17" relationship="Caption" weight="0"/>
+      </neighbors>
+      <speak>Gulbransen Company was a musical instrument manufacturer of player pianos and home organs in the United States.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ragga hip hop" zh-data="" id="212" uri="http://dbpedia.org/resource/Ragga_hip_hop">
+      <neighbors>
+        <neighbor dest="17" relationship="instruments" weight="0"/>
+        <neighbor dest="149" relationship="instruments" weight="0"/>
+        <neighbor dest="218" relationship="instruments" weight="0"/>
+        <neighbor dest="219" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="220" relationship="stylistic origins" weight="0"/>
+      </neighbors>
+      <speak>Ragga hip hop is a fusion-genre that blends ragga and hip hop music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Reggae en Español" zh-data="" id="213" uri="http://dbpedia.org/resource/Reggae_en_Espa%C3%B1ol">
+      <neighbors>
+        <neighbor dest="13" relationship="instruments" weight="0"/>
+        <neighbor dest="12" relationship="instruments" weight="0"/>
+        <neighbor dest="185" relationship="instruments" weight="0"/>
+        <neighbor dest="17" relationship="instruments" weight="0"/>
+      </neighbors>
+      <speak>Reggae en Español  is reggae and dancehall music recorded in the Spanish language by artists of Latin American origin.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Japanese reggae" zh-data="" id="214" uri="http://dbpedia.org/resource/Japanese_reggae">
+      <neighbors>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instruments" weight="0"/>
+        <neighbor dest="185" relationship="instruments" weight="0"/>
+        <neighbor dest="17" relationship="instruments" weight="0"/>
+        <neighbor dest="149" relationship="instruments" weight="0"/>
+        <neighbor dest="218" relationship="instruments" weight="0"/>
+      </neighbors>
+      <speak>Japanese reggae is reggae music originating from Japan.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Silvertone (instruments)" zh-data="" id="215" uri="http://dbpedia.org/resource/Silvertone_(instruments)">
+      <neighbors>
+        <neighbor dest="13" relationship="product" weight="0"/>
+        <neighbor dest="185" relationship="product" weight="0"/>
+        <neighbor dest="17" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+        <neighbor dest="23" relationship="owner" weight="0"/>
+      </neighbors>
+      <speak>Silvertone was the brand name used by Sears, Roebuck and Company for its line of sound equipment from 1915 to 1972.  A hand-cranked phonograph was introduced under the Silvertone brand by Sears in 1915.  Beginning in the 1920s, the brand was expanded to include Silvertone radios and again in the 1930s, superseding the Supertone branding on musical instruments.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Embryo (band)" zh-data="" id="216" uri="http://dbpedia.org/resource/Embryo_(band)">
+      <neighbors>
+        <neighbor dest="48" relationship="band member" weight="0"/>
+        <neighbor dest="85" relationship="former band member" weight="0"/>
+        <neighbor dest="86" relationship="genre" weight="0"/>
+        <neighbor dest="87" relationship="former band member" weight="0"/>
+        <neighbor dest="13" relationship="band member" weight="0"/>
+        <neighbor dest="185" relationship="band member" weight="0"/>
+        <neighbor dest="90" relationship="band member" weight="0"/>
+        <neighbor dest="125" relationship="former band member" weight="0"/>
+        <neighbor dest="126" relationship="former band member" weight="0"/>
+        <neighbor dest="17" relationship="former band member" weight="0"/>
+        <neighbor dest="27" relationship="band member" weight="0"/>
+        <neighbor dest="216" relationship="band member" weight="0"/>
+      </neighbors>
+      <speak>Embryo is a musical collective from Munich which has been active since 1969, although its story started in the mid-1950s in Hof where Christian Burchard and Dieter Serfas met for the first time at the age of 10. It was one of the most important German jazz-rock bands during the 1970s and has also been described as "the most eclectic of the Krautrock bands."</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Vox (musical equipment)" zh-data="" id="217" uri="http://dbpedia.org/resource/Vox_(musical_equipment)">
+      <neighbors>
+        <neighbor dest="13" relationship="product" weight="0"/>
+        <neighbor dest="8" relationship="product" weight="0"/>
+        <neighbor dest="17" relationship="product" weight="0"/>
+        <neighbor dest="164" relationship="industry" weight="0"/>
+      </neighbors>
+      <speak>Vox is a musical equipment manufacturer which is most famous for making the Vox AC30 guitar amplifier, the Vox Continental electric organ, and a series of innovative but commercially unsuccessful electric guitars and bass guitars.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Drum machine" zh-data="" id="218" uri="http://dbpedia.org/resource/Drum_machine">
+      <neighbors/>
+      <speak>For the early "drum machine" computers that used a rotating cylinder as their main memory, see drum memoryA drum machine is an electronic musical instrument designed to imitate the sound of drums or other percussion instruments.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ragga" zh-data="" id="219" uri="http://dbpedia.org/resource/Ragga">
+      <neighbors>
+        <neighbor dest="218" relationship="instrument" weight="0"/>
+        <neighbor dest="17" relationship="instrument" weight="0"/>
+        <neighbor dest="212" relationship="music fusion genre" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>Raggamuffin music, usually abbreviated as ragga, is a subgenre of dancehall music or reggae, in which the instrumentation primarily consists of electronic music.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hip hop" zh-data="嘻哈" id="220" uri="http://dbpedia.org/resource/Hip_hop">
+      <neighbors/>
+      <speak>Hip hop culture  on two turntables.</speak>
+      <zh-speak>嘻哈（英语：Hip-hop），是1970年代源自紐約市南布朗克斯與哈林區的非洲裔及拉丁裔青年之間的一種邊緣性次文化，繼而发展壮大成為新興藝術型態，并席捲全球。嘻哈包含饒舌、DJ、地板霹靂舞及塗鴉四大要素。另外，亦衍生出節奏口技、嘻哈時裝、嘻哈俗語等次文化。</zh-speak>
+    </Feature>
+    <Feature data="Mister Maker" zh-data="" id="221" uri="http://dbpedia.org/resource/Mister_Maker">
+      <neighbors>
+        <neighbor dest="203" relationship="ending theme" weight="0"/>
+        <neighbor dest="235" relationship="channel" weight="0"/>
+        <neighbor dest="236" relationship="genre" weight="0"/>
+        <neighbor dest="237" relationship="subsequent work" weight="0"/>
+        <neighbor dest="238" relationship="company" weight="0"/>
+        <neighbor dest="239" relationship="author" weight="0"/>
+      </neighbors>
+      <speak>Mister Maker is a preschool television series commissioned by Michael Carrington at the BBC for CBeebies.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Life's Work" zh-data="" id="222" uri="http://dbpedia.org/resource/Life's_Work">
+      <neighbors>
+        <neighbor dest="203" relationship="opening theme" weight="0"/>
+        <neighbor dest="240" relationship="network" weight="0"/>
+      </neighbors>
+      <speak>Life's Work is an American situation comedy series that aired from September 1996 to June 1997 on ABC; the show stars Lisa Ann Walter as Lisa Ann Minardi Hunter, an assistant district attorney in Baltimore.Lisa Ann always wanted to practice law since she was young because she always argued with her parents.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="On the Run (instrumental)" zh-data="" id="223" uri="http://dbpedia.org/resource/On_the_Run_(instrumental)">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>"On the Run" is the third track from British progressive rock band Pink Floyd's 1973 album, The Dark Side of the Moon.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Summer Means New Love" zh-data="" id="224" uri="http://dbpedia.org/resource/Summer_Means_New_Love">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+        <neighbor dest="92" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>"Summer Means New Love" is an instrumental composed by Brian Wilson for the American rock band The Beach Boys.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Instrumental rock" zh-data="" id="225" uri="http://dbpedia.org/resource/Instrumental_rock">
+      <neighbors>
+        <neighbor dest="3" relationship="music subgenre" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="203" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="2" relationship="stylistic origins" weight="0"/>
+        <neighbor dest="58" relationship="music subgenre" weight="0"/>
+      </neighbors>
+      <speak>Instrumental rock is a type of rock music which emphasizes musical instruments, and which features very little or no singing.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Chitlins con Carne" zh-data="" id="226" uri="http://dbpedia.org/resource/Chitlins_con_Carne">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>"Chitlins con Carne" is a jazz blues instrumental composed by guitarist Kenny Burrell and first released on his 1963 album Midnight Blue.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Europa (Earth's Cry Heaven's Smile)" zh-data="" id="227" uri="http://dbpedia.org/resource/Europa_(Earth's_Cry_Heaven's_Smile)">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>"Europa , with the first verse ending in the minor, and the last verse ending in the major.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Meco Plays The Wizard of Oz" zh-data="" id="228" uri="http://dbpedia.org/resource/Meco_Plays_The_Wizard_of_Oz">
+      <neighbors>
+        <neighbor dest="203" relationship="recorded in" weight="0"/>
+      </neighbors>
+      <speak>Meco Plays The Wizard of Oz is a studio album that was released in 1979. The album sold around 400,000 copies.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="The Elements: Fire" zh-data="" id="229" uri="http://dbpedia.org/resource/The_Elements:_Fire">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+        <neighbor dest="51" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>"Fire" is an unfinished instrumental written and produced by Brian Wilson for the Beach Boys' Smile project.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Flying (Beatles instrumental)" zh-data="" id="230" uri="http://dbpedia.org/resource/Flying_(Beatles_instrumental)">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+        <neighbor dest="51" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>"Flying" is an instrumental by the Beatles which first appeared on the 1967 Magical Mystery Tour release . It is one of the very few songs written by all four of the Beatles: John Lennon, Paul McCartney, George Harrison, and Ringo Starr.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Interstellar Overdrive" zh-data="" id="231" uri="http://dbpedia.org/resource/Interstellar_Overdrive">
+      <neighbors>
+        <neighbor dest="86" relationship="genre" weight="0"/>
+        <neighbor dest="203" relationship="type" weight="0"/>
+        <neighbor dest="51" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>"Interstellar Overdrive" is a psychedelic instrumental composition written by Pink Floyd in 1966, which appears on their 1967 debut album The Piper at the Gates of Dawn at almost ten minutes in length.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Revelations (Santana song)" zh-data="" id="232" uri="http://dbpedia.org/resource/Revelations_(Santana_song)">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+      </neighbors>
+      <speak>"Revelations" is an instrumental song by Carlos Santana that was originally released on the album Festival.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="White Summer" zh-data="" id="233" uri="http://dbpedia.org/resource/White_Summer">
+      <neighbors>
+        <neighbor dest="203" relationship="type" weight="0"/>
+        <neighbor dest="225" relationship="genre" weight="0"/>
+      </neighbors>
+      <speak>"White Summer" is a guitar instrumental by English rock guitarist Jimmy Page, which incorporates Indian and Arabic musical influences.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Parichay (TV series)" zh-data="" id="234" uri="http://dbpedia.org/resource/Parichay_(TV_series)">
+      <neighbors>
+        <neighbor dest="203" relationship="opening theme" weight="0"/>
+        <neighbor dest="205" relationship="language" weight="0"/>
+        <neighbor dest="234" relationship="starring" weight="0"/>
+      </neighbors>
+      <speak>Parichay  is an Indian soap opera that aired on Colors TV from 9 August 2011 to 15 March 2013 . The Show is produced by Ekta Kapoor of Balaji Telefilms.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="CBeebies" zh-data="" id="235" uri="http://dbpedia.org/resource/CBeebies">
+      <neighbors/>
+      <speak>CBeebies is the brand used by the BBC for programming aimed at encouraging "learning through play in a consistently safe environment for children aged 6 or under", and providing "high quality, mostly UK-produced programmes".The name is used to brand the free-to-air domestic British channel, and is used for international variants supported by advertising, subscription or both.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Children's television series" zh-data="儿童电视节目" id="236" uri="http://dbpedia.org/resource/Children's_television_series">
+      <neighbors/>
+      <speak>Children's television series are television programs designed for, and marketed to children, normally scheduled for broadcast during the morning and afternoon when children are awake.</speak>
+      <zh-speak>儿童电视节目是为儿童设计并面向儿童的电视节目，通常在早上或下午放送，主要在上学前后。电视节目的效果主要是娱乐，并有时教育年轻观众有关基本生活技能或理想的东西。</zh-speak>
+    </Feature>
+    <Feature data="Mister Maker Comes to Town" zh-data="" id="237" uri="http://dbpedia.org/resource/Mister_Maker_Comes_to_Town">
+      <neighbors>
+        <neighbor dest="235" relationship="channel" weight="0"/>
+        <neighbor dest="236" relationship="genre" weight="0"/>
+        <neighbor dest="221" relationship="previous work" weight="0"/>
+        <neighbor dest="238" relationship="company" weight="0"/>
+        <neighbor dest="239" relationship="starring" weight="0"/>
+      </neighbors>
+      <speak>Mister Maker Comes to Town is a spin-off of the children's television Mister Maker commissioned by Michael Carrington at the BBC for CBeebies.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Zodiak Media" zh-data="" id="238" uri="http://dbpedia.org/resource/Zodiak_Media">
+      <neighbors/>
+      <speak>Zodiak Media is an independent media company that produces entertainment, factual, drama and kids' programming, with 45 companies operating in 15 countries.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Phil Gallagher" zh-data="" id="239" uri="http://dbpedia.org/resource/Phil_Gallagher">
+      <neighbors/>
+      <speak>Gallagher started his career as a presenter and sports reporter on BBC Radio Kent.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="American Broadcasting Company" zh-data="美国广播公司" id="240" uri="http://dbpedia.org/resource/American_Broadcasting_Company">
+      <neighbors>
+        <neighbor dest="184" relationship="country" weight="0"/>
+      </neighbors>
+      <speak>The American Broadcasting Company  was sold to Citadel Broadcasting, ABC has reduced its broadcasting operations almost exclusively to television.</speak>
+      <zh-speak>美國廣播公司（英语：American Broadcasting Company，簡稱ABC）是美国传统三大广播电视公司之一。創立於1943年，前身為全国廣播公司两张广播网之一的藍色廣播網。目前的最大股東是华特迪士尼公司，为迪士尼ABC電視集團的成员。美國廣播公司的集团总部在纽约市曼哈顿，节目制作总部在加州洛杉矶市附近的伯班克市，与迪士尼公司的总部和迪士尼攝影棚由人行天橋相連。截至2008年為止，ABC是美国观众最多的电视网。现在的电视台呼号是「Start Here」。除非是为了区别电视台的时候，才会使用旧的呼号「America's Broadcasting Company」。在「America's Broadcasting Company」呼号之前，在1997年到2000年期间，电视台的识别是使用集团的全称。集团正式的名称“美国广播公司集团”（American Broadcasting Companies, Inc）总是出现在版权声明和本电视网制作的节目中，还出现在集团的所有正式文件，包括合约和支票。ABC拥有并运营的电视台，分布在洛杉矶、纽约、芝加哥、费城、旧金山-奥克兰-圣何塞、休斯顿、加州弗雷斯诺、北卡州达勒姆-罗利-费耶特维尔。以前，ABC曾在底特律、俄亥俄州托莱多、弗林特-萨吉诺-贝城拥有运营地方电视台。</zh-speak>
+    </Feature>
+    <Feature data="Jared Ball" zh-data="" id="241" uri="http://dbpedia.org/resource/Jared_Ball">
+      <neighbors>
+        <neighbor dest="220" relationship="field" weight="0"/>
+      </neighbors>
+      <speak>Jared A. Ball is an associate professor of communication studies at Morgan State University in Baltimore in the U.S. state of Maryland.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Against All Odds (clothing retailer)" zh-data="" id="242" uri="http://dbpedia.org/resource/Against_All_Odds_(clothing_retailer)">
+      <neighbors>
+        <neighbor dest="184" relationship="location" weight="0"/>
+        <neighbor dest="220" relationship="product" weight="0"/>
+      </neighbors>
+      <speak>Against All Odds is a United States retail chain that predominantly sells clothing inspired by hip hop culture.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="WFQY" zh-data="" id="243" uri="http://dbpedia.org/resource/WFQY">
+      <neighbors>
+        <neighbor dest="220" relationship="programme format" weight="0"/>
+      </neighbors>
+      <speak>WFQY  switched from classic country to all-sports.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="It's Bigger Than Hip Hop" zh-data="" id="244" uri="http://dbpedia.org/resource/It's_Bigger_Than_Hip_Hop">
+      <neighbors>
+        <neighbor dest="220" relationship="literary genre" weight="0"/>
+      </neighbors>
+      <speak>It's Bigger Than Hip Hop: The Rise of the Post-Hip-Hop Generation is a creative non-fiction book by M. K. Asante.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Mexican pop music" zh-data="" id="245" uri="http://dbpedia.org/resource/Mexican_pop_music">
+      <neighbors>
+        <neighbor dest="218" relationship="instrument" weight="0"/>
+        <neighbor dest="48" relationship="instrument" weight="0"/>
+        <neighbor dest="13" relationship="instrument" weight="0"/>
+        <neighbor dest="12" relationship="instrument" weight="0"/>
+        <neighbor dest="8" relationship="instrument" weight="0"/>
+        <neighbor dest="88" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="91" relationship="stylistic origin" weight="0"/>
+        <neighbor dest="220" relationship="instrument" weight="0"/>
+        <neighbor dest="149" relationship="instrument" weight="0"/>
+      </neighbors>
+      <speak>The type of pop music produced in Mexico is called Mexican pop, is a music genre particularly intended for teenagers and young adults.Mexico is the country that exports the most entertainment in Spanish language.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Behind the Beat" zh-data="" id="246" uri="http://dbpedia.org/resource/Behind_the_Beat">
+      <neighbors>
+        <neighbor dest="220" relationship="non-fiction subject" weight="0"/>
+      </neighbors>
+      <speak>Behind the Beat: Hip Hop Home Studios is a book by Raph , along with brief descriptions of the producers and their studios.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Ken Swift" zh-data="" id="247" uri="http://dbpedia.org/resource/Ken_Swift">
+      <neighbors>
+        <neighbor dest="220" relationship="movement" weight="0"/>
+      </neighbors>
+      <speak>Ken Swift  is a second generation B-boy, or breakdancer, and former Vice President of the Rock Steady Crew of which he was a longtime member and key figure.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Born to Use Mics: Reading Nas's Illmatic" zh-data="" id="248" uri="http://dbpedia.org/resource/Born_to_Use_Mics:_Reading_Nas's_Illmatic">
+      <neighbors>
+        <neighbor dest="220" relationship="non-fiction subject" weight="0"/>
+      </neighbors>
+      <speak>Born to Use Mics: Reading Nas's Illmatic, edited by Michael Eric Dyson and Sohail Daulatzai, is a collection of scholarly essays and historical documents presenting Illmatic from an academic perspective.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Respect. (magazine)" zh-data="" id="249" uri="http://dbpedia.org/resource/Respect._(magazine)">
+      <neighbors>
+        <neighbor dest="184" relationship="country" weight="0"/>
+        <neighbor dest="220" relationship="category" weight="0"/>
+      </neighbors>
+      <speak>RESPECT. is a New York-based, quarterly hip hop and photojournalism magazine founded in 2009 by Jonathan Rheingold and edited by RapRadar's Elliott Wilson.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Troy CLE" zh-data="" id="250" uri="http://dbpedia.org/resource/Troy_CLE">
+      <neighbors>
+        <neighbor dest="220" relationship="influenced by" weight="0"/>
+      </neighbors>
+      <speak>Troy Tompkins, known as Troy CLE, is an American fiction writer from East Orange, New Jersey.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hong 10" zh-data="" id="251" uri="http://dbpedia.org/resource/Hong_10">
+      <neighbors>
+        <neighbor dest="220" relationship="movement" weight="0"/>
+      </neighbors>
+      <speak>Hong 10 .</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Dave Halili" zh-data="" id="252" uri="http://dbpedia.org/resource/Dave_Halili">
+      <neighbors>
+        <neighbor dest="220" relationship="movement" weight="0"/>
+      </neighbors>
+      <speak>Dave Halili is a contemporary American fine arts illustrator, graffiti writer and graphic designer of album cover paintings, posters, logos, T-shirts along with other forms of representational merchandise.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Navtej Singh Rehal" zh-data="" id="253" uri="http://dbpedia.org/resource/Navtej_Singh_Rehal">
+      <neighbors>
+        <neighbor dest="27" relationship="occupation" weight="0"/>
+        <neighbor dest="220" relationship="known for" weight="0"/>
+      </neighbors>
+      <speak>Navtej Singh Rehal  popularly known as Naf is the lead singer of  the Indo-Danish music band named Bombay Rockers.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Foundation (b-boy book)" zh-data="" id="254" uri="http://dbpedia.org/resource/Foundation_(b-boy_book)">
+      <neighbors>
+        <neighbor dest="220" relationship="non-fiction subject" weight="0"/>
+      </neighbors>
+      <speak>Foundation: B-boys, B-girls and Hip-Hop Culture in New York is a book by Joseph G. Schloss which looks at b-boying and the culture surrounding it.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="DAIM" zh-data="" id="255" uri="http://dbpedia.org/resource/DAIM">
+      <neighbors>
+        <neighbor dest="220" relationship="movement" weight="0"/>
+      </neighbors>
+      <speak>DAIM  is a German Graffiti-Artist, lives and works in Hamburg.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Soul Train Music Awards" zh-data="" id="256" uri="http://dbpedia.org/resource/Soul_Train_Music_Awards">
+      <neighbors>
+        <neighbor dest="88" relationship="Description" weight="0"/>
+        <neighbor dest="91" relationship="Description" weight="0"/>
+        <neighbor dest="184" relationship="country" weight="0"/>
+        <neighbor dest="220" relationship="Description" weight="0"/>
+      </neighbors>
+      <speak>The Soul Train Music Awards is an annual award show which previously aired in national television syndication, and honors the best in Black music and entertainment.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Can't Stop Won't Stop (book)" zh-data="" id="257" uri="http://dbpedia.org/resource/Can't_Stop_Won't_Stop_(book)">
+      <neighbors>
+        <neighbor dest="220" relationship="non-fiction subject" weight="0"/>
+      </neighbors>
+      <speak>Can't Stop Won't Stop: A History of the Hip-Hop Generation is a book by Jeff Chang chronicling the early hip hop scene.The book features portraits of DJ Kool Herc, Afrika Bambaataa, Chuck D, and Ice Cube, among others, and is based on numerous interviews with graffiti artists, gang members, DJs, rappers, and hip hop activists.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Hype (magazine)" zh-data="" id="258" uri="http://dbpedia.org/resource/Hype_(magazine)">
+      <neighbors>
+        <neighbor dest="220" relationship="category" weight="0"/>
+      </neighbors>
+      <speak>Hype is a hip hop magazine in South Africa.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Crazy Legs (dancer)" zh-data="" id="259" uri="http://dbpedia.org/resource/Crazy_Legs_(dancer)">
+      <neighbors>
+        <neighbor dest="220" relationship="movement" weight="0"/>
+      </neighbors>
+      <speak>Richard Colón  better known by his stage name Crazy Legs is a b-boy from the Bronx New York City, USA. He featured in the earliest stories on hip hop dancing to appear in mainstream press, and as president of the Rock Steady Crew brought the form to London and Paris in 1983. Today he is also involved in community outreach, dance instruction and dance theater productions.</speak>
+      <zh-speak/>
+    </Feature>
+    <Feature data="Daddy Saj" zh-data="" id="260" uri="http://dbpedia.org/resource/Daddy_Saj">
+      <neighbors>
+        <neighbor dest="220" relationship="occupation" weight="0"/>
+      </neighbors>
+      <speak>Joseph Gerald Adolphus Cole  struck a chord not only in Sierra Leone, but across Africa.</speak>
+      <zh-speak/>
+    </Feature>
+  </Features>
+</AIMind>
