@@ -15,6 +15,13 @@ def jaccard_index(a,b):
         return 1
     return len(a&b) / len(a|b)
 
+def dice_coefficient(a,b):
+    total = (len(a) + len(b))
+    if total == 0:
+        return 1
+    overlap = len(a & b)
+    return overlap * 2.0/total
+
 def sqmag(v):
     return sum(x*x for x in v)
 
@@ -40,12 +47,15 @@ class Feature:
     def __init__(self,name,domain):
         self.name = name
         self.domain = domain
-        self.relations = set() #set of specific relations to other objects
-        self.connections = set() #set of associated objects
-        self.rtypes = set() #set of relation types between this and other objects
-        self.knowledge_level = len(self.relations)
+        self.outgoing_relations = set() #set of relations to other features
+        self.incoming_relations = set() #set of relations from other features
 
-        self.predecessors = set() #inverse connections for fast lookup
+        self.predecessors = set() #set of incoming features
+        self.connections = set() #set of outgoing features
+
+        self.rtypes = set() #set of outgoing relation types
+
+        self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
 
         #for topo sort
         self.marked = False
@@ -54,29 +64,24 @@ class Feature:
 
         self._vector = None
 
-    def add_predecessor(self,pred):
+    def add_predecessor(self, rtype, pred):
+        self.incoming_relations.add((rtype,pred))
         self.predecessors.add(pred)
+        self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
 
-    def add_relation(self,rtype,dest):
+    def add_relation(self, rtype, dest):
         self.connections.add(dest)
-        self.relations.add((rtype,dest))
+        self.outgoing_relations.add((rtype,dest))
         self.rtypes.add(rtype)
-        self.knowledge_level = len(self.relations)
+        self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
 
     def get_vector(self):
         if self._vector == None:#cache optimization
-            #tmpl = [self.domain.rtype_index[rtype] for c1 in self.predecessors
-            #                                  for c2 in self.domain.features[c1].connections
-            #                                  for rtype in self.domain.features[c2].rtypes] or [self.domain.rtype_index[rtype] for rtype in self.rtypes]
 
-            tmpl = [self.domain.rtype_index[rtype] for rtype in self.rtypes] or [self.domain.rtype_index[rtype] for c1 in self.predecessors
-                                              for c2 in self.domain.features[c1].connections
-                                              for rtype in self.domain.features[c2].rtypes]
-
-            #tmpl = [self.domain.rtype_index[rtype] for rtype in self.rtypes]
-
+            tmpl = [self.domain.rtype_index[rtype] for rtype in self.rtypes] + \
+                   [self.domain.rtype_index[rtype] for rtype,c1 in self.incoming_relations]
 
             if len(tmpl):
                 tmpv = tmpl[0]
@@ -84,7 +89,7 @@ class Feature:
                     tmpv = vadd(tmpv,rtype)
                 self._vector = tmpv#normalize(tmpv)
             else:
-                self._vector = (0,)*JACCARD_DIMENSIONS
+                self._vector = (0,)*(JACCARD_DIMENSIONS*2)
 
         return self._vector
 
@@ -128,17 +133,24 @@ class AIMind:
         self.r_feature_id_table = {b:a for a,b in self.feature_id_table.items()}
 
         for feature in self.features.values():
-            for rtype, dest in feature.relations:
+            for rtype, dest in feature.outgoing_relations:
                 self.usage_map.setdefault(rtype,set()).add((feature.name,dest))
-                self.features[dest].add_predecessor(feature.name)
+                self.features[dest].add_predecessor(rtype, 
+                                                    feature.name)
 
-        def val(v,visited):
+        def ival(v,visited):#incoming values
             visited.add(v)
-            return 1 + sum([val(w,visited) for w in self.features[v].predecessors if not w in visited])
+            return 1 + sum([ival(w,visited) for w in self.features[v].predecessors if not w in visited])
+
+        def oval(v,visited):#outgoing values
+            visited.add(v)
+            return 1 + sum([oval(w,visited) for w in self.features[v].connections if not w in visited])
 
         #calculate values
         for feature in self.features:
-            self.features[feature].value = val(feature,set())
+            iv = ival(feature,set())
+            ov = oval(feature,set())
+            self.features[feature].value = iv * ov
 
         #calculate rtype jaccard index
         self.rtype_index = self.index_rtypes()
@@ -181,7 +193,7 @@ class AIMind:
     def index_rtypes(self):
         hm = {} #aggregate rtypes across all usages
         for fnode1 in self.features.values():
-            for (rtype,dest) in fnode1.relations:
+            for (rtype,dest) in fnode1.outgoing_relations:
                 loses = fnode1.rtypes - self.features[dest].rtypes
                 gains = self.features[dest].rtypes - fnode1.rtypes
                 same = self.features[dest].rtypes & fnode1.rtypes
@@ -209,65 +221,63 @@ class AIMind:
                      jaccard_index(y,z),
                      jaccard_index(y,w),
                      jaccard_index(z,w))
+            
+            #score = (dice_coefficient(x,y),
+            #         dice_coefficient(x,z),
+            #         dice_coefficient(x,w),
+            #         dice_coefficient(y,z),
+            #         dice_coefficient(y,w),
+            #         dice_coefficient(z,w))
 
-            out[rtype] = score#normalize(score)
+            out[rtype] = normalize(score)
         return out
 
     def get_analogy(self, src_feature, target_feature, target_domain):
         """Get the best analogy between two arbitrary features"""
 
-        if not src_feature in self.features:
+        #ensure features exist
+        if (not src_feature in self.features):
+            print("Feature %s not in source domain"%src_feature)
             return None
-
-        ixmap = self.rtype_index.copy()
-        #merge target domain and current
-        #use highest score version for now
-        #probably best to merge before jaccard
-        for k,v in target_domain.rtype_index.items():
-            if k in ixmap:
-                ixmap[k] = max(ixmap[k],v,key=lambda x: sqmag(x))
-            else:
-                ixmap[k] = v
+        if (not target_feature in target_domain.features):
+            print("Feature %s not in target domain"%target_feature)
+            return None
 
         src_node = self.features[src_feature]
         svec = src_node.get_vector()
 
-        if target_feature == src_feature: #ignore analogies to self
-            return None
-
         c_node = target_domain.features[target_feature]
-
-        #keep track of the best result only
-        bestrating = -10000
-        bestresult = None
-        hypotheses = set()
-
         cvec = c_node.get_vector()
 
-        for r2,d2 in c_node.relations: #for each pair in candidate
-            #scoreval = c_node.value + src_node.value#c_node.value/max2 + src_node.value/max1
+        hypotheses = set()
 
-            for r1,d1 in src_node.relations:#find best rtype to compare with
-
+        for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
+            for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
                 #base score of matchup
+                ##iscore, oscore = vadd(self.features[d1].value, target_domain.features[d2].value)
                 scoreval = self.features[d1].value + target_domain.features[d2].value
 
                 #weight by strength of relation matchup
-                rdiff = (JACCARD_DIMENSIONS-sq_edist(ixmap[r1],ixmap[r2]))/JACCARD_DIMENSIONS
+                rdiff = (JACCARD_DIMENSIONS-sq_edist(self.rtype_index[r1],
+                                                     target_domain.rtype_index[r2])) / JACCARD_DIMENSIONS
+
+                #if rdiff < 0.5:
+                #    continue
 
                 #weight by relative feature distance from parent
                 d1vec = self.features[d1].get_vector()
                 d2vec = target_domain.features[d2].get_vector()
 
-                diff1 = vsub(svec,d1vec)
-                diff2 = vsub(cvec,d2vec)
+                diff1 = normalize(vsub(svec,d1vec))
+                diff2 = normalize(vsub(cvec,d2vec))
                 vdiff = 1-sq_edist(diff1,diff2)
 
-                actual_score = (scoreval * vdiff) + (scoreval * rdiff)
+                actual_score = (scoreval * rdiff)#(scoreval * vdiff) + (scoreval * rdiff)
+                tscore = scoreval#scoreval*2
 
-                hypotheses.add((actual_score / (scoreval*2), r1, d1, r2, d2, scoreval*2))
+                hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
 
-        rassert = {}
+        rassert = {} 
         hmap = {}
         best = {}
         rating = 0
@@ -285,7 +295,7 @@ class AIMind:
                     hmap[src] = target
                     total_rating += tscore
                 if r1 == r2 or rassert.get(r1) == r2:
-                    best[(r1,src)] = (r2,target)
+                    best[(r1,src)] = (r2,target,score,score/tscore)
                     rating += score
                 else: #penalize inconsistent rtype matchup
                     total_rating += tscore
@@ -305,117 +315,28 @@ class AIMind:
 
         normalized_rating = rating/total_rating
 
-        if normalized_rating > bestrating:
-            return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
-        else:
-            return None
+        return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
+
 
 
 
     def find_best_analogy(self, src_feature, target_domain, filter_list=None):
+        """
+        Finds the best analogy between a specific feature in the source domain and any feature in the target domain.
 
-        if not src_feature in self.features:
-            return None
-
-        ixmap = self.rtype_index.copy()
-        #merge target domain and current
-        #use highest score version for now
-        #probably best to merge before jaccard
-        for k,v in target_domain.rtype_index.items():
-            if k in ixmap:
-                ixmap[k] = max(ixmap[k],v,key=lambda x: sqmag(x))
-            else:
-                ixmap[k] = v
-
-        src_node = self.features[src_feature]
-        svec = src_node.get_vector()
+        If filter_list is specified, only the features in that list will be selected from to make analogies.
+        
+        """
 
         candidate_pool = filter_list if filter_list != None else target_domain.features
-
         candidate_results = []
 
         for c_feature in candidate_pool:
-            if c_feature == src_feature: #ignore analogies to self
+            if target_domain == self and c_feature == src_feature:#find novel within same domain
                 continue
-
-            c_node = target_domain.features[c_feature]
-
-            #keep track of the best result only
-            bestrating = -10000
-            bestresult = None
-            hypotheses = set()
-
-            cvec = c_node.get_vector()
-
-            for r2,d2 in c_node.relations: #for each pair in candidate
-                #scoreval = c_node.value + src_node.value#c_node.value/max2 + src_node.value/max1
-
-                for r1,d1 in src_node.relations:#find best rtype to compare with
-
-                    #base score of matchup
-                    scoreval = self.features[d1].value + target_domain.features[d2].value
-
-                    #weight by strength of relation matchup
-                    rdiff = (JACCARD_DIMENSIONS-sq_edist(ixmap[r1],ixmap[r2]))/JACCARD_DIMENSIONS
-
-                    #weight by relative feature distance from parent
-                    d1vec = self.features[d1].get_vector()
-                    d2vec = target_domain.features[d2].get_vector()
-
-                    diff1 = vsub(svec,d1vec)
-                    diff2 = vsub(cvec,d2vec)
-                    vdiff = 1-sq_edist(diff1,diff2)
-
-                    actual_score = (scoreval * vdiff) + (scoreval * rdiff)
-                    tscore = scoreval*2
-
-                    hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
-
-            rassert = {}
-            hmap = {}
-            best = {}
-            rating = 0
-            total_rating = 0
-
-
-            #for each mh, pick the best then pick the next best non-conflicting
-            for score,r1,src,r2,target,tscore in sorted(hypotheses,reverse=True):
-                score = score * tscore
-                if (hmap.get(src) == target) or (src not in hmap.keys() and target not in hmap.values()):
-                    if r1 != r2 and r1 not in rassert.keys() and r2 not in rassert.values():
-                        if r1 not in c_node.rtypes and\
-                            r2 not in src_node.rtypes: #prevent crossmatching
-                            rassert[r1] = r2
-                    if src not in hmap.keys() and target not in hmap.values():
-                        hmap[src] = target
-                        total_rating += tscore
-                    if r1 == r2 or rassert.get(r1) == r2:
-                        best[(r1,src)] = (r2,target)
-                        rating += score
-                    else: #penalize inconsistent rtype matchup
-                        total_rating
-
-
-            #penalize score for non-matches
-            for destobj in src_node.connections:
-                if destobj not in hmap.keys():
-                    total_rating += self.features[destobj].value
-
-            for destobj in c_node.connections:
-                if destobj not in hmap.values():
-                    total_rating += target_domain.features[destobj].value
-
-            if total_rating == 0: #prevent divide by zero error
-                continue
-
-            normalized_rating = rating/total_rating
-
-            if normalized_rating > bestrating:
-                bestrating = normalized_rating
-                bestresult = (normalized_rating,rating,total_rating,(src_feature,c_feature),rassert,best)
-
-            if bestresult:
-                candidate_results.append(bestresult)
+            result = self.get_analogy(src_feature, c_feature, target_domain)
+            if result:
+                candidate_results.append(result)
 
         if not candidate_results:
             return None
@@ -427,71 +348,54 @@ class AIMind:
 
     def find_optimal_matchups(self, target_domain):
 
-        ixmap = self.rtype_index.copy()
-        #merge target domain and current
-        #use highest score version for now
-        #probably best to merge before jaccard
-        for k,v in target_domain.rtype_index.items():
-            if k in ixmap:
-                ixmap[k] = max(ixmap[k],v,key=lambda x: sqmag(x))
-            else:
-                ixmap[k] = v
-
         optimax = Counter()
-
         occurances = Counter()
-
-        #srclen = len(src_node.relations)
-
-        #max1 = max([f.value for f in self.features.values()])
-        #max2 = max([f.value for f in target_domain.features.values()])
 
         for src_feature in self.features:
             src_node = self.features[src_feature]
             svec = src_node.get_vector()
+
+            #counter ratios
+            srctmp = Counter()
+            for rtype,dest in src_node.outgoing_relations:
+                srctmp[rtype] += 1
+            srctotal = sum(srctmp.values())
+            src_ratios = {k:v/srctotal for k,v in srctmp.items()}
+
             for c_feature in target_domain.features:
-
                 c_node = target_domain.features[c_feature]
-
                 cvec = c_node.get_vector()
 
-                #clen = len(c_node.relations)
+                #counter ratios
+                ctmp = Counter()
+                for rtype,dest in c_node.outgoing_relations:
+                    ctmp[rtype] += 1
+                ctotal = sum(ctmp.values())
+                c_ratios = {k:v/ctotal for k,v in ctmp.items()}
 
+                #ktotal = len(c_node.outgoing_relations) * len(src_node.outgoing_relations)
 
-
-                for r2,d2 in c_node.relations: #for each pair in candidate
-                    #scoreval = c_node.value + src_node.value#c_node.value/max2 + src_node.value/max1
-
-                    #relative_score1 = target_domain.features[d2].value / max2
-
-
-                    for r1,d1 in src_node.relations:#find best rtype to compare with
-
-                        #relative_score2 = self.features[d1].value / max1
-
+                for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
+                    for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
                         #base score of matchup
-                        scoreval = self.features[d1].value + target_domain.features[d2].value
+                        ##scoreval = self.features[d1].value + target_domain.features[d2].value
+                        scoreval = self.features[d1].value * src_ratios[r1] + target_domain.features[d2].value * c_ratios[r2]
 
                         #weight by strength of relation matchup
-                        #rdiff = (JACCARD_DIMENSIONS-sq_edist(ixmap[r1],ixmap[r2]))/JACCARD_DIMENSIONS
-                        rdiff = sq_edist(ixmap[r1],ixmap[r2])
+                        #rdiff = (JACCARD_DIMENSIONS-sq_edist(self.rtype_index[r1],
+                        #                                     target_domain.rtype_index[r2])) / JACCARD_DIMENSIONS
+                        rdiff = sq_edist(self.rtype_index[r1],target_domain.rtype_index[r2])
 
                         #weight by relative feature distance from parent
                         d1vec = self.features[d1].get_vector()
                         d2vec = target_domain.features[d2].get_vector()
 
-                        diff1 = vsub(svec,d1vec)
-                        diff2 = vsub(cvec,d2vec)
+                        diff1 = normalize(vsub(svec,d1vec))
+                        diff2 = normalize(vsub(cvec,d2vec))
                         vdiff = sq_edist(diff1,diff2)
 
-                        #diff1 = sq_edist(svec,d1vec)
-                        #diff2 = sq_edist(cvec,d2vec)
-
-                        #vdiff = abs(diff1-diff2)
-
-                        #vdiff = abs(relative_score1-relative_score2) * rdiff
-                       
-                        actual_score = scoreval/(vdiff if vdiff != 0 else 1) + scoreval/(rdiff if rdiff != 0 else 1)#(scoreval * vdiff) + (scoreval * rdiff)
+                        #actual_score = (scoreval * vdiff) + (scoreval * rdiff)
+                        actual_score = vdiff + rdiff
 
                         optimax[(r2,r1)] += actual_score
                         occurances[(r2,r1)] += 1
@@ -501,6 +405,3 @@ class AIMind:
         pprint(sorted(tmpl,key=lambda x:x[1]))
 
         #for (a,b),c in optimax.most_common():
-
-
-
