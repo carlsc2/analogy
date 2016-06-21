@@ -87,7 +87,7 @@ class Feature:
                 tmpv = tmpl[0]
                 for rtype in tmpl[1:]:
                     tmpv = vadd(tmpv,rtype)
-                self._vector = tmpv#normalize(tmpv)
+                self._vector = normalize(tmpv)
             else:
                 self._vector = (0,)*(JACCARD_DIMENSIONS*2)
 
@@ -255,14 +255,10 @@ class AIMind:
             for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
                 #base score of matchup
                 ##iscore, oscore = vadd(self.features[d1].value, target_domain.features[d2].value)
-                scoreval = self.features[d1].value + target_domain.features[d2].value
+                #scoreval = self.features[d1].value + target_domain.features[d2].value
 
-                #weight by strength of relation matchup
-                rdiff = (JACCARD_DIMENSIONS-sq_edist(self.rtype_index[r1],
-                                                     target_domain.rtype_index[r2])) / JACCARD_DIMENSIONS
-
-                #if rdiff < 0.5:
-                #    continue
+                #weight by strength of matchup (if distance between them is 0, strength is 2)
+                rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
 
                 #weight by relative feature distance from parent
                 d1vec = self.features[d1].get_vector()
@@ -270,10 +266,10 @@ class AIMind:
 
                 diff1 = normalize(vsub(svec,d1vec))
                 diff2 = normalize(vsub(cvec,d2vec))
-                vdiff = 1-sq_edist(diff1,diff2)
+                vdiff = 2-sq_edist(diff1,diff2)
 
-                actual_score = (scoreval * rdiff)#(scoreval * vdiff) + (scoreval * rdiff)
-                tscore = scoreval#scoreval*2
+                actual_score = (rdiff + vdiff) #*scoreval
+                tscore = 4 #*scoreval
 
                 hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
 
@@ -302,20 +298,22 @@ class AIMind:
 
 
         #penalize score for non-matches
-        for destobj in src_node.connections:
-            if destobj not in hmap.keys():
-                total_rating += self.features[destobj].value
+        #for destobj in src_node.connections:
+        #    if destobj not in hmap.keys():
+        #        total_rating += 2#self.features[destobj].value
 
-        for destobj in c_node.connections:
-            if destobj not in hmap.values():
-                total_rating += target_domain.features[destobj].value
+        #for destobj in c_node.connections:
+        #    if destobj not in hmap.values():
+        #        total_rating += 2#target_domain.features[destobj].value
 
         if total_rating == 0: #prevent divide by zero error
             return None
 
         normalized_rating = rating/total_rating
 
-        return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
+        #return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
+        return (rating,normalized_rating,total_rating,(src_feature,target_feature),rassert,best)
+
 
 
 
@@ -392,6 +390,9 @@ class AIMind:
 
                         diff1 = normalize(vsub(svec,d1vec))
                         diff2 = normalize(vsub(cvec,d2vec))
+                        #diff1 = vsub(svec,d1vec)
+                        #diff2 = vsub(cvec,d2vec)
+
                         vdiff = sq_edist(diff1,diff2)
 
                         #actual_score = (scoreval * vdiff) + (scoreval * rdiff)
