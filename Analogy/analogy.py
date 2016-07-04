@@ -8,7 +8,8 @@ from itertools import combinations, permutations, zip_longest
 
 from math import sqrt
 
-JACCARD_DIMENSIONS = 6
+JACCARD_DIMENSIONS = 28#6
+NULL_VEC = (0,)*(JACCARD_DIMENSIONS)
 
 def jaccard_index(a,b):
     if len(a) == len(b) == 0:
@@ -43,6 +44,10 @@ def normalize(v):
         return v
     return tuple(x/magnitude for x in v)
 
+def get_centroid(data):
+    l = len(data)
+    return tuple(sum(k)/l for k in zip(*data))
+
 class Feature:
     def __init__(self,name,domain):
         self.name = name
@@ -57,18 +62,17 @@ class Feature:
 
         self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
 
-        #for topo sort
-        self.marked = False
-        self.visited = False
         self.value = 0
 
         self._vector = None
+        self._vector2 = None
 
     def add_predecessor(self, rtype, pred):
         self.incoming_relations.add((rtype,pred))
         self.predecessors.add(pred)
         self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
+        self._vector2 = None
 
     def add_relation(self, rtype, dest):
         self.connections.add(dest)
@@ -76,22 +80,24 @@ class Feature:
         self.rtypes.add(rtype)
         self.knowledge_level = len(self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
+        self._vector2 = None
 
     def get_vector(self):
+        ''' construct vector from centroid of rtypes'''
         if self._vector == None:#cache optimization
-
-            tmpl = [self.domain.rtype_index[rtype] for rtype in self.rtypes] + \
-                   [self.domain.rtype_index[rtype] for rtype,c1 in self.incoming_relations]
-
-            if len(tmpl):
-                tmpv = tmpl[0]
-                for rtype in tmpl[1:]:
-                    tmpv = vadd(tmpv,rtype)
-                self._vector = normalize(tmpv)
-            else:
-                self._vector = (0,)*(JACCARD_DIMENSIONS*2)
-
+            tmp1 = [self.domain.rtype_index[rtype] for rtype,dest in self.outgoing_relations] or [NULL_VEC]
+            tmp2 = [self.domain.rtype_index[rtype] for rtype,prev in self.incoming_relations] or [NULL_VEC]
+            self._vector = get_centroid(tmp1) + get_centroid(tmp2) #should be a unit vector
         return self._vector
+
+    def get_vector2(self):
+        ''' construct vector from neighbor base vectors'''
+        if self._vector2 == None:#cache optimization
+            tmp1 = [self.domain.features[dest].get_vector() for rtype,dest in self.outgoing_relations] or [NULL_VEC+NULL_VEC]
+            tmp2 = [self.domain.features[prev].get_vector() for rtype,prev in self.incoming_relations] or [NULL_VEC+NULL_VEC]
+            self._vector2 = get_centroid(tmp1) + get_centroid(tmp2) #should be a unit vector
+        return self._vector2
+
 
     def __repr__(self):
         return "<%s>(%d,%.d)"%(self.name,self.knowledge_level,self.value)
@@ -112,7 +118,6 @@ class AIMind:
             raise Exception("No data given")
         root = tree.getroot()
         features = root.find("Features")
-        relations = root.find("Relations")
 
         self.feature_id_table = {}
 
@@ -177,7 +182,7 @@ class AIMind:
 
         mentioned = set()
 
-        for (a,b),(c,d) in mapping.items():
+        for (a,b),(c,d,e,f) in mapping.items():
             if not verbose and a in mentioned:
                 continue
             nchunks.append((src,a,b,trg,c,d))
@@ -198,29 +203,80 @@ class AIMind:
                 gains = self.features[dest].rtypes - fnode1.rtypes
                 same = self.features[dest].rtypes & fnode1.rtypes
                 diff = self.features[dest].rtypes ^ fnode1.rtypes
-                lc,gc,sm,df = hm.setdefault(rtype,(Counter(),Counter(),Counter(),Counter()))
+                lco,gco,smo,dfo,lci,gci,smi,dfi = hm.setdefault(rtype,(Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter()))
                 for r in loses:
-                    lc[r] += 1
+                    lco[r] += 1
                 for r in gains:
-                    gc[r] += 1
+                    gco[r] += 1
                 for r in same:
-                    sm[r] += 1
+                    smo[r] += 1
                 for r in diff:
-                    df[r] += 1
+                    dfo[r] += 1
+
+            for (rtype,src) in fnode1.incoming_relations:
+                loses = fnode1.rtypes - self.features[src].rtypes
+                gains = self.features[src].rtypes - fnode1.rtypes
+                same = self.features[src].rtypes & fnode1.rtypes
+                diff = self.features[src].rtypes ^ fnode1.rtypes
+                lco,gco,smo,dfo,lci,gci,smi,dfi = hm.setdefault(rtype,(Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter()))
+                for r in loses:
+                    lci[r] += 1
+                for r in gains:
+                    gci[r] += 1
+                for r in same:
+                    smi[r] += 1
+                for r in diff:
+                    dfi[r] += 1
 
         out = {} #compute metrics from rtypes
-        for rtype, (lc, gc, sm, df) in hm.items():
-            x = set(lc)
-            y = set(gc)
-            z = set(sm)
-            w = set(df)
+        for rtype, (lco, gco, smo, dfo, lci, gci, smi, dfi) in hm.items():
+            x1 = set(lco)
+            y1 = set(gco)
+            z1 = set(smo)
+            w1 = set(dfo)
 
-            score = (jaccard_index(x,y),
-                     jaccard_index(x,z),
-                     jaccard_index(x,w),
-                     jaccard_index(y,z),
-                     jaccard_index(y,w),
-                     jaccard_index(z,w))
+            x2 = set(lci)
+            y2 = set(gci)
+            z2 = set(smi)
+            w2 = set(dfi)
+
+            #score = (jaccard_index(x,y),
+            #         jaccard_index(x,z),
+            #         jaccard_index(x,w),
+            #         jaccard_index(y,z),
+            #         jaccard_index(y,w),
+            #         jaccard_index(z,w))
+
+            score = (jaccard_index(x1,y1),
+                     jaccard_index(x1,z1),
+                     jaccard_index(x1,w1),
+                     jaccard_index(x1,x2),
+                     jaccard_index(x1,y2),
+                     jaccard_index(x1,z2),
+                     jaccard_index(x1,w2),
+                     jaccard_index(y1,z1),
+                     jaccard_index(y1,w1),
+                     jaccard_index(y1,x2),
+                     jaccard_index(y1,y2),
+                     jaccard_index(y1,z2),
+                     jaccard_index(y1,w2),
+                     jaccard_index(z1,w1),
+                     jaccard_index(z1,x2),
+                     jaccard_index(z1,y2),
+                     jaccard_index(z1,z2),
+                     jaccard_index(z1,w2),
+                     jaccard_index(w1,x2),
+                     jaccard_index(w1,y2),
+                     jaccard_index(w1,z2),
+                     jaccard_index(w1,w2),
+                     jaccard_index(x2,y2),
+                     jaccard_index(x2,z2),
+                     jaccard_index(x2,w2),
+                     jaccard_index(y2,z2),
+                     jaccard_index(y2,w2),
+                     jaccard_index(z2,w2),
+
+                     )
             
             #score = (dice_coefficient(x,y),
             #         dice_coefficient(x,z),
@@ -264,12 +320,12 @@ class AIMind:
                 d1vec = self.features[d1].get_vector()
                 d2vec = target_domain.features[d2].get_vector()
 
-                diff1 = normalize(vsub(svec,d1vec))
-                diff2 = normalize(vsub(cvec,d2vec))
-                vdiff = 2-sq_edist(diff1,diff2)
+                diff1 = vsub(svec,d1vec)
+                diff2 = vsub(cvec,d2vec)
+                vdiff = 4-sq_edist(diff1,diff2)
 
-                actual_score = (rdiff + vdiff) #*scoreval
-                tscore = 4 #*scoreval
+                actual_score = (rdiff + vdiff) #* scoreval
+                tscore = 6 #* scoreval
 
                 hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
 
@@ -298,21 +354,21 @@ class AIMind:
 
 
         #penalize score for non-matches
-        #for destobj in src_node.connections:
-        #    if destobj not in hmap.keys():
-        #        total_rating += 2#self.features[destobj].value
+        for destobj in src_node.connections:
+            if destobj not in hmap.keys():
+                total_rating += 2#self.features[destobj].value
 
-        #for destobj in c_node.connections:
-        #    if destobj not in hmap.values():
-        #        total_rating += 2#target_domain.features[destobj].value
+        for destobj in c_node.connections:
+            if destobj not in hmap.values():
+                total_rating += 2#target_domain.features[destobj].value
 
         if total_rating == 0: #prevent divide by zero error
             return None
 
         normalized_rating = rating/total_rating
 
-        #return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
-        return (rating,normalized_rating,total_rating,(src_feature,target_feature),rassert,best)
+        return (normalized_rating,rating,total_rating,(src_feature,target_feature),rassert,best)
+        #return (rating, normalized_rating, total_rating, (src_feature,target_feature), rassert, best)
 
 
 
@@ -340,69 +396,3 @@ class AIMind:
             return None
         else:
             return sorted(candidate_results,key=lambda x:x[0])[-1]#best global analogy
-
-        
-
-
-    def find_optimal_matchups(self, target_domain):
-
-        optimax = Counter()
-        occurances = Counter()
-
-        for src_feature in self.features:
-            src_node = self.features[src_feature]
-            svec = src_node.get_vector()
-
-            #counter ratios
-            srctmp = Counter()
-            for rtype,dest in src_node.outgoing_relations:
-                srctmp[rtype] += 1
-            srctotal = sum(srctmp.values())
-            src_ratios = {k:v/srctotal for k,v in srctmp.items()}
-
-            for c_feature in target_domain.features:
-                c_node = target_domain.features[c_feature]
-                cvec = c_node.get_vector()
-
-                #counter ratios
-                ctmp = Counter()
-                for rtype,dest in c_node.outgoing_relations:
-                    ctmp[rtype] += 1
-                ctotal = sum(ctmp.values())
-                c_ratios = {k:v/ctotal for k,v in ctmp.items()}
-
-                #ktotal = len(c_node.outgoing_relations) * len(src_node.outgoing_relations)
-
-                for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
-                    for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
-                        #base score of matchup
-                        ##scoreval = self.features[d1].value + target_domain.features[d2].value
-                        scoreval = self.features[d1].value * src_ratios[r1] + target_domain.features[d2].value * c_ratios[r2]
-
-                        #weight by strength of relation matchup
-                        #rdiff = (JACCARD_DIMENSIONS-sq_edist(self.rtype_index[r1],
-                        #                                     target_domain.rtype_index[r2])) / JACCARD_DIMENSIONS
-                        rdiff = sq_edist(self.rtype_index[r1],target_domain.rtype_index[r2])
-
-                        #weight by relative feature distance from parent
-                        d1vec = self.features[d1].get_vector()
-                        d2vec = target_domain.features[d2].get_vector()
-
-                        diff1 = normalize(vsub(svec,d1vec))
-                        diff2 = normalize(vsub(cvec,d2vec))
-                        #diff1 = vsub(svec,d1vec)
-                        #diff2 = vsub(cvec,d2vec)
-
-                        vdiff = sq_edist(diff1,diff2)
-
-                        #actual_score = (scoreval * vdiff) + (scoreval * rdiff)
-                        actual_score = vdiff + rdiff
-
-                        optimax[(r2,r1)] += actual_score
-                        occurances[(r2,r1)] += 1
-
-        tmpl = [(a,b) for a,b in optimax.most_common()]
-
-        pprint(sorted(tmpl,key=lambda x:x[1]))
-
-        #for (a,b),c in optimax.most_common():

@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/get_analogy', methods=['GET', 'POST'])
 def get_analogy():
-    try:
+    #try:
         #use JSON if POST else check args for GET
         idata = request.get_json() if request.method == "POST" else request.args
         id_filter = idata.get("id_filter")
@@ -77,8 +77,8 @@ def get_analogy():
         else:
             #just return the analogy
             return encoded_data
-    except Exception as e:
-        return "Error: %r"%e
+    #except Exception as e:
+    #    return "Error: %r"%e
 
 
 
