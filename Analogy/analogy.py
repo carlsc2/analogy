@@ -8,7 +8,29 @@ from itertools import combinations, permutations, zip_longest
 
 from math import sqrt
 
-JACCARD_DIMENSIONS = 28#6
+from urllib.request import urlopen
+from urllib.parse import quote
+import json
+import pickle
+
+import re
+
+pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
+
+JACCARD_DIMENSIONS = 28
+#JACCARD_DIMENSIONS = 6
+
+from conceptnet5 import nodes
+from conceptnet5 import query
+from conceptnet5.uri import split_uri
+from conceptnet5.readers import dbpedia
+from conceptnet5.language.token_utils import un_camel_case
+from conceptnet5.nodes import standardized_concept_uri
+
+ENABLE_CONCEPTNET = False
+
+
+
 NULL_VEC = (0,)*(JACCARD_DIMENSIONS)
 
 def jaccard_index(a,b):
@@ -157,6 +179,12 @@ class AIMind:
             ov = oval(feature,set())
             self.features[feature].value = iv * ov
 
+        
+        if ENABLE_CONCEPTNET:
+            #augment knowledge with conceptnet
+            self._augment_knowledge()
+            
+
         #calculate rtype jaccard index
         self.rtype_index = self.index_rtypes()
 
@@ -166,6 +194,53 @@ class AIMind:
 
     def get_feature(self,fid):
         return self.feature_id_table[fid]
+
+    def _augment_knowledge(self):
+        try:
+            with open("conceptnetquerycache.pkl","rb") as f:
+                cache = pickle.load(f)
+        except:
+            cache = {}
+
+        #use conceptnet to augment knowledge
+        def get_results(feature):
+            feature = feature.lower()
+
+            if feature in cache:
+                ret = cache[feature]
+            else:
+                with urlopen('http://conceptnet5.media.mit.edu/data/5.4%s?limit=1000'%quote('/c/en/'+feature)) as response:
+                    html = response.read().decode('utf8')
+                    result = json.loads(html)
+                    ret = []
+                    for x in result['edges']:
+                        r = pattern.match(x['uri'][3:])
+                        if r:
+                            ret.append(r.groups())
+                cache[feature] = ret
+            return ret
+
+        current_features = list(self.features)
+
+        for feature in current_features:
+            #convert dbpedia entry to conceptnet uri
+            pieces = dbpedia.parse_topic_name(feature)
+            pieces[0] = un_camel_case(pieces[0])
+            cneturi = standardized_concept_uri('en', *pieces)
+
+            ret = get_results(cneturi)
+            for (rtype, src, dest) in ret:
+                if src not in self.features:
+                    self.features[src] = Feature(src,self)
+                if dest not in self.features:
+                    self.features[dest] = Feature(dest,self)
+
+                self.usage_map.setdefault(rtype,set()).add((src,dest))
+                self.features[src].add_relation(rtype, dest)
+                self.features[dest].add_predecessor(rtype, src)
+
+        with open("conceptnetquerycache.pkl","wb") as f:
+            pickle.dump(cache,f)
 
     def explain_analogy(self, analogy, verbose=False):
         #only explain main relation
@@ -197,12 +272,12 @@ class AIMind:
 
     def index_rtypes(self):
         hm = {} #aggregate rtypes across all usages
-        for fnode1 in self.features.values():
-            for (rtype,dest) in fnode1.outgoing_relations:
-                loses = fnode1.rtypes - self.features[dest].rtypes
-                gains = self.features[dest].rtypes - fnode1.rtypes
-                same = self.features[dest].rtypes & fnode1.rtypes
-                diff = self.features[dest].rtypes ^ fnode1.rtypes
+        for fnode in self.features.values():
+            for (rtype,dest) in fnode.outgoing_relations:
+                loses = fnode.rtypes - self.features[dest].rtypes
+                gains = self.features[dest].rtypes - fnode.rtypes
+                same = self.features[dest].rtypes & fnode.rtypes
+                diff = self.features[dest].rtypes ^ fnode.rtypes
                 lco,gco,smo,dfo,lci,gci,smi,dfi = hm.setdefault(rtype,(Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter()))
                 for r in loses:
                     lco[r] += 1
@@ -213,11 +288,11 @@ class AIMind:
                 for r in diff:
                     dfo[r] += 1
 
-            for (rtype,src) in fnode1.incoming_relations:
-                loses = fnode1.rtypes - self.features[src].rtypes
-                gains = self.features[src].rtypes - fnode1.rtypes
-                same = self.features[src].rtypes & fnode1.rtypes
-                diff = self.features[src].rtypes ^ fnode1.rtypes
+            for (rtype,src) in fnode.incoming_relations:
+                loses = fnode.rtypes - self.features[src].rtypes
+                gains = self.features[src].rtypes - fnode.rtypes
+                same = self.features[src].rtypes & fnode.rtypes
+                diff = self.features[src].rtypes ^ fnode.rtypes
                 lco,gco,smo,dfo,lci,gci,smi,dfi = hm.setdefault(rtype,(Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter(),Counter()))
                 for r in loses:
                     lci[r] += 1
@@ -239,13 +314,6 @@ class AIMind:
             y2 = set(gci)
             z2 = set(smi)
             w2 = set(dfi)
-
-            #score = (jaccard_index(x,y),
-            #         jaccard_index(x,z),
-            #         jaccard_index(x,w),
-            #         jaccard_index(y,z),
-            #         jaccard_index(y,w),
-            #         jaccard_index(z,w))
 
             score = (jaccard_index(x1,y1),
                      jaccard_index(x1,z1),
@@ -274,16 +342,7 @@ class AIMind:
                      jaccard_index(x2,w2),
                      jaccard_index(y2,z2),
                      jaccard_index(y2,w2),
-                     jaccard_index(z2,w2),
-
-                     )
-            
-            #score = (dice_coefficient(x,y),
-            #         dice_coefficient(x,z),
-            #         dice_coefficient(x,w),
-            #         dice_coefficient(y,z),
-            #         dice_coefficient(y,w),
-            #         dice_coefficient(z,w))
+                     jaccard_index(z2,w2))
 
             out[rtype] = normalize(score)
         return out
@@ -396,3 +455,22 @@ class AIMind:
             return None
         else:
             return sorted(candidate_results,key=lambda x:x[0])[-1]#best global analogy
+
+    def get_all_analogies(self, src_feature, target_domain, filter_list=None):
+        """
+        Returns all analogies between a specific feature in the source domain and all features in the target domain.
+
+        If filter_list is specified, only the features in that list will be selected from to make analogies.
+        
+        """
+
+        candidate_pool = filter_list if filter_list != None else target_domain.features
+        results = []
+
+        for target_feature in candidate_pool:
+            if target_domain == self and target_feature == src_feature:#find novel within same domain
+                continue
+            result = self.get_analogy(src_feature, target_feature, target_domain)
+            if result:
+                results.append(result)
+        return results
