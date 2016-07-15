@@ -20,14 +20,17 @@ pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
 JACCARD_DIMENSIONS = 28
 #JACCARD_DIMENSIONS = 6
 
-from conceptnet5 import nodes
-from conceptnet5 import query
-from conceptnet5.uri import split_uri
-from conceptnet5.readers import dbpedia
-from conceptnet5.language.token_utils import un_camel_case
-from conceptnet5.nodes import standardized_concept_uri
+
 
 ENABLE_CONCEPTNET = False
+
+if ENABLE_CONCEPTNET:
+    from conceptnet5 import nodes
+    from conceptnet5 import query
+    from conceptnet5.uri import split_uri
+    from conceptnet5.readers import dbpedia
+    from conceptnet5.language.token_utils import un_camel_case
+    from conceptnet5.nodes import standardized_concept_uri
 
 
 
@@ -105,7 +108,7 @@ class Feature:
         self._vector2 = None
 
     def get_vector(self):
-        ''' construct vector from centroid of rtypes'''
+        ''' construct vector from centroid of rtypes '''
         if self._vector == None:#cache optimization
             tmp1 = [self.domain.rtype_index[rtype] for rtype,dest in self.outgoing_relations] or [NULL_VEC]
             tmp2 = [self.domain.rtype_index[rtype] for rtype,prev in self.incoming_relations] or [NULL_VEC]
@@ -113,7 +116,7 @@ class Feature:
         return self._vector
 
     def get_vector2(self):
-        ''' construct vector from neighbor base vectors'''
+        ''' construct vector from neighbor base vectors '''
         if self._vector2 == None:#cache optimization
             tmp1 = [self.domain.features[dest].get_vector() for rtype,dest in self.outgoing_relations] or [NULL_VEC+NULL_VEC]
             tmp2 = [self.domain.features[prev].get_vector() for rtype,prev in self.incoming_relations] or [NULL_VEC+NULL_VEC]
@@ -366,11 +369,28 @@ class AIMind:
 
         hypotheses = set()
 
+        #for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
+        #    for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
+
+        #        #weight by strength of matchup (if distance between them is 0, strength is 2)
+        #        rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
+
+        #        #weight by relative feature distance from parent
+        #        d1vec = self.features[d1].get_vector()
+        #        d2vec = target_domain.features[d2].get_vector()
+
+        #        diff1 = vsub(svec,d1vec)
+        #        diff2 = vsub(cvec,d2vec)
+        #        vdiff = 4-sq_edist(diff1,diff2)
+
+        #        actual_score = (rdiff + vdiff)
+        #        tscore = 6
+
+        #        hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
+
+
         for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
             for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
-                #base score of matchup
-                ##iscore, oscore = vadd(self.features[d1].value, target_domain.features[d2].value)
-                #scoreval = self.features[d1].value + target_domain.features[d2].value
 
                 #weight by strength of matchup (if distance between them is 0, strength is 2)
                 rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
@@ -383,10 +403,29 @@ class AIMind:
                 diff2 = vsub(cvec,d2vec)
                 vdiff = 4-sq_edist(diff1,diff2)
 
-                actual_score = (rdiff + vdiff) #* scoreval
-                tscore = 6 #* scoreval
+                actual_score = (rdiff + vdiff)
+                tscore = 6
 
-                hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
+                hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore, True))
+
+        for r2,d2 in c_node.incoming_relations: #for each pair in candidate
+            for r1,d1 in src_node.incoming_relations:#find best rtype to compare with
+
+                #weight by strength of matchup (if distance between them is 0, strength is 2)
+                rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
+
+                #weight by relative feature distance from parent
+                d1vec = self.features[d1].get_vector2()
+                d2vec = target_domain.features[d2].get_vector2()
+
+                diff1 = vsub(svec,d1vec)
+                diff2 = vsub(cvec,d2vec)
+                vdiff = 4-sq_edist(diff1,diff2)
+
+                actual_score = (rdiff + vdiff)
+                tscore = 6
+
+                hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore, False))
 
         rassert = {} 
         hmap = {}
@@ -395,7 +434,7 @@ class AIMind:
         total_rating = 0
 
         #for each mh, pick the best then pick the next best non-conflicting
-        for score,r1,src,r2,target,tscore in sorted(hypotheses,reverse=True):
+        for score,r1,src,r2,target,tscore,outgoing in sorted(hypotheses,reverse=True):
             score = score * tscore
             if (hmap.get(src) == target) or (src not in hmap.keys() and target not in hmap.values()):
                 if r1 != r2 and r1 not in rassert.keys() and r2 not in rassert.values():
@@ -406,7 +445,7 @@ class AIMind:
                     hmap[src] = target
                     total_rating += tscore
                 if r1 == r2 or rassert.get(r1) == r2:
-                    best[(r1,src)] = (r2,target,score,score/tscore)
+                    best[(outgoing, r1, src)] = (r2, target, score, score/tscore)
                     rating += score
                 else: #penalize inconsistent rtype matchup
                     total_rating += tscore
@@ -455,6 +494,79 @@ class AIMind:
             return None
         else:
             return sorted(candidate_results,key=lambda x:x[0])[-1]#best global analogy
+
+
+    def find_best_analogy_chain(self, src_feature, target_domain, max_depth, depth=0, map_assert={}, results=[], visited = set()):
+        """
+        Finds the best analogy between a specific feature in the source domain and any feature in the target domain.
+        Uses a chain of analogies to guarantee consistency.
+
+        """
+
+        if depth > max_depth:
+            return None
+
+        visited.add(src_feature)
+
+        candidate_results = []
+
+        for c_feature in target_domain.features:
+            if target_domain == self and c_feature == src_feature:#find novel within same domain
+                continue
+            result = self.get_analogy(src_feature, c_feature, target_domain)
+            if result:
+                candidate_results.append(result)
+
+        
+        alright = False
+        for candidate_result in sorted(candidate_results,key=lambda x:x[0],reverse=True):
+            tmpr = candidate_result[5]
+            good = True
+            for (r1,d1), (r2,d2,s,t) in tmpr.items():
+                if d1 in map_assert.keys() and map_assert[d1] != d2:
+                    good = False
+                    break
+
+            if good:
+                new_assert = map_assert.copy()
+                new_results = []
+
+                #new_assert.update(tmpr)
+                new_results.append(candidate_result)
+
+                tempr = []
+
+                all_good = True
+                for (r1,d1), (r2,d2,s,t) in tmpr.items():
+
+                    new_assert[d1] = d2
+
+                    if d1 in visited:
+                        continue
+                    tmpv = self.find_best_analogy_chain(d1, target_domain, max_depth, depth+1, new_assert, new_results, visited)
+                    if tmpv == False:
+                        return False
+                    elif tmpv != None:
+                        double_good,na,nr = tmpv
+                    else:
+                        continue                    
+                    
+                    if double_good:
+                        tempr.append((na,nr))
+                    else:
+                        all_good = False
+                        break
+
+                if all_good:
+                    for na,nr in tempr:
+                        new_assert.update(na)
+                        new_results.extend(nr)
+                    return (True, new_assert, new_results)
+
+        return False
+
+
+        
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """

@@ -4,22 +4,58 @@ import random
 
 #a1 = AIMind("data files/big_unrestricted_techdata.xml")
 #a2 = AIMind("data files/big_unrestricted_music.xml")
-##pprint(a1.find_best_analogy("Google",a1))
+#pprint(a1.find_best_analogy("Google",a2))
 
-a1 = AIMind("data files/plang_small.xml")
+#pprint(a1.find_best_analogy_chain("Python (programming language)",a2,2))
 
-#a1 = AIMind("data files/techdata.xml")
+#print("Done")
+
+#a1 = AIMind("data files/plang_small.xml")
+
+a1 = AIMind("data files/techdata.xml")
+a2 = AIMind("data files/music.xml")
+
+pprint(a1.find_best_analogy("Python (programming language)",a2))
+
+#pprint(a1.get_analogy("C (programming language)","Rock music",a2))
+
+#pprint(a1.get_analogy("C (programming language)","Blues",a2))
+
+#pprint(a1.get_analogy("Python (programming language)", "Electric blues", a2))
+#pprint(a1.get_analogy("Python (programming language)", "Psychedelic rock", a2))
+
+
+#a1 = AIMind("data files/roman_empire_1000.xml")
+#with open("outdata_sorted.txt","w+",encoding="utf8") as f:
+#    li = []
+
+#    flist1 = [f.name for f in a1.features.values() if f.knowledge_level > 10]
+#    flist2 = [f.name for f in a2.features.values() if f.knowledge_level > 10]
+
+#    for f1 in flist1:
+#        for f2 in flist2:
+#            if f1 != f2:
+#                x = a1.get_analogy(f1,f2,a2)
+#                if x != None:
+#                    li.append(x)
+#    li = sorted(li, key=lambda x:x[0])
+#    for x in li:
+#        pprint(x,f)
+#    print("Done")
+
 
 
 #a2 = AIMind("data files/big_music.xml")
 
 
 #a1 = AIMind("data files/music.xml")
-a2 = AIMind("data files/music_small.xml")
+
+#a2 = AIMind("data files/music_small.xml")
 
 #a1 = AIMind("data files/roman_empire_500.xml")
 
 #pprint(a1.find_best_analogy("C (programming language)",a2))
+#pprint(a1.find_best_analogy("C++",a2))
 #pprint(a1.find_best_analogy("C (programming language)",a1))
 
 #pprint(a2.find_best_analogy("Rock music",a1))
@@ -64,7 +100,7 @@ a2 = AIMind("data files/music_small.xml")
 #tmp = [a1.find_best_analogy(f,a1) for f in filterset]
 #pprint(sorted(tmp,key=lambda x:x[0]))
 
-
+'''
 import numpy as np
 from scipy.spatial import cKDTree
 
@@ -72,30 +108,45 @@ from scipy.spatial import cKDTree
 lookup = {}
 data = []
 
-#for i, f in enumerate(a1.features.values()):
-#    lookup[i] = f.name
-#    data.append(f.get_vector())
+# ========================== graph the features ============
+
 
 featurepool1 = list(a1.features.values())
-featurepool2 = list(a2.features.values())
+#featurepool2 = list(a2.features.values())
 random.shuffle(featurepool1)
-random.shuffle(featurepool2)
+#random.shuffle(featurepool2)
 
 
 i = 0
 for f in featurepool1:
-    #if f.knowledge_level > 15 and i < 100:
-    if f.knowledge_level > 1:
+    if f.knowledge_level > 10 and i < 500:
         lookup[i] = f.name
         i+=1
         data.append(f.get_vector())
 
-for f in featurepool2:
-    #if f.knowledge_level > 15 and i < 200:
-    if f.knowledge_level > 1:
-        lookup[i] = f.name
-        i+=1
-        data.append(f.get_vector())
+
+
+# ========================== graph the rtypes ============
+
+#datapool = list(a1.rtype_index.items())
+#random.shuffle(datapool)
+
+#i = 0
+#for a,b in datapool:
+#    if i < 2500:
+#        lookup[i] = a
+#        i+=1
+#        data.append(b)
+
+
+#=========================================================
+
+#for f in featurepool2:
+#    #if f.knowledge_level > 15 and i < 200:
+#    if f.knowledge_level > 1:
+#        lookup[i] = f.name
+#        i+=1
+#        data.append(f.get_vector())
 
 
 
@@ -199,11 +250,11 @@ from scipy.cluster.hierarchy import fcluster, dendrogram, linkage, to_tree
 
 Z = linkage(data, 'complete')
 
-out = {}
-for i,c in enumerate(fcluster(Z,1,depth=2)):
-    out.setdefault(c,[]).append(lookup[i])
+#out = {}
+#for i,c in enumerate(fcluster(Z,1,depth=2)):
+#    out.setdefault(c,[]).append(lookup[i])
 
-pprint(out)
+#pprint(out)
 
 
 
@@ -236,4 +287,40 @@ for method in ['ward','complete','single','average','weighted','centroid','media
     plt.savefig('figures/dendrogram_%s.png'%method)
     plt.gcf().clear()
 
+
+
+##=========== conceptnet test ==============
+
+#from conceptnet5 import nodes
+#from conceptnet5 import query
+#from conceptnet5.uri import split_uri
+
+#from urllib.request import urlopen
+#from urllib.parse import quote
+#import json
+#import pickle
+
+#import re
+
+#pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
+
+
+
+#def get_results(feature):
+#    feature = feature.lower()
+#    ret = []
+#    with urlopen('http://conceptnet5.media.mit.edu/data/5.4%s?limit=1000'%quote('/c/en/'+feature)) as response:
+#        html = response.read().decode('utf8')
+#        result = json.loads(html)
+#        for x in result['edges']:
+#            r = pattern.match(x['uri'][3:])
+#            if r:
+#                print(r.groups())
+#    return ret
+
+#get_results('california')
+
+
 print("Done")
+
+'''
