@@ -15,6 +15,11 @@ import pickle
 
 import re
 
+
+import numpy as np
+from scipy import spatial
+from numpy.linalg import norm
+
 pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
 
 JACCARD_DIMENSIONS = 28
@@ -34,44 +39,42 @@ if ENABLE_CONCEPTNET:
 
 
 
-NULL_VEC = (0,)*(JACCARD_DIMENSIONS)
+#NULL_VEC = (0,)*(JACCARD_DIMENSIONS)
+NULL_VEC = np.zeros(JACCARD_DIMENSIONS)
+NULL_VEC2 = np.zeros(JACCARD_DIMENSIONS*2)
+
 
 def jaccard_index(a,b):
     if len(a) == len(b) == 0:
         return 1
     return len(a&b) / len(a|b)
 
-def dice_coefficient(a,b):
-    total = (len(a) + len(b))
-    if total == 0:
-        return 1
-    overlap = len(a & b)
-    return overlap * 2.0/total
+#def dice_coefficient(a,b):
+#    total = (len(a) + len(b))
+#    if total == 0:
+#        return 1
+#    overlap = len(a & b)
+#    return overlap * 2.0/total
 
-def sqmag(v):
-    return sum(x*x for x in v)
+similarity_cache = {}
 
-def mag(v):
-    return sqrt(sum(x*x for x in v))
+def euclidean_distance(v1,v2,_f=np.sum):  
+    return sqrt(_f((v1-v2)**2))
 
-def sq_edist(v1,v2):
-    return sum((x-y)*(x-y) for x,y in zip(v1,v2))
-
-def vadd(v1,v2):
-    return tuple(x+y for x,y in zip(v1,v2))
-
-def vsub(v1,v2):
-    return tuple(x-y for x,y in zip(v1,v2))
-
-def normalize(v):
-    magnitude = mag(v)
-    if magnitude == 0:
-        return v
-    return tuple(x/magnitude for x in v)
-
-def get_centroid(data):
-    l = len(data)
-    return tuple(sum(k)/l for k in zip(*data))
+def cosine_similarity(v1,v2):
+    key = (v1.data.tobytes(),v2.data.tobytes())
+    if key in similarity_cache:
+        return similarity_cache[key]
+    else:
+        nu = sqrt(v1.dot(v1))
+        nv = sqrt(v2.dot(v2))
+        if nu == 0 or nv == 0:
+            value = 0
+        else:
+            similarity = 2.0 - v1.dot(v2) / (nu * nv) #-1 to 1
+            value = (similarity + 1) / 2 #0 to 1
+        similarity_cache[key] = value
+        return value
 
 class Feature:
     def __init__(self,name,domain):
@@ -92,6 +95,8 @@ class Feature:
         self._vector = None
         self._vector2 = None
 
+        self.text = ""
+
     def add_predecessor(self, rtype, pred):
         self.incoming_relations.add((rtype,pred))
         self.predecessors.add(pred)
@@ -109,18 +114,20 @@ class Feature:
 
     def get_vector(self):
         ''' construct vector from centroid of rtypes '''
-        if self._vector == None:#cache optimization
+        if self._vector is None:#cache optimization
             tmp1 = [self.domain.rtype_index[rtype] for rtype,dest in self.outgoing_relations] or [NULL_VEC]
             tmp2 = [self.domain.rtype_index[rtype] for rtype,prev in self.incoming_relations] or [NULL_VEC]
-            self._vector = get_centroid(tmp1) + get_centroid(tmp2) #should be a unit vector
+            self._vector = np.concatenate((np.asarray(tmp1).mean(axis=0),
+                                           np.asarray(tmp2).mean(axis=0))) #should be a unit vector
         return self._vector
 
     def get_vector2(self):
         ''' construct vector from neighbor base vectors '''
-        if self._vector2 == None:#cache optimization
-            tmp1 = [self.domain.features[dest].get_vector() for rtype,dest in self.outgoing_relations] or [NULL_VEC+NULL_VEC]
-            tmp2 = [self.domain.features[prev].get_vector() for rtype,prev in self.incoming_relations] or [NULL_VEC+NULL_VEC]
-            self._vector2 = get_centroid(tmp1) + get_centroid(tmp2) #should be a unit vector
+        if self._vector2 is None:#cache optimization
+            tmp1 = [self.domain.features[dest].get_vector() for rtype,dest in self.outgoing_relations] or [NULL_VEC2]
+            tmp2 = [self.domain.features[prev].get_vector() for rtype,prev in self.incoming_relations] or [NULL_VEC2]
+            self._vector2 = np.concatenate((np.asarray(tmp1).mean(axis=0),
+                                            np.asarray(tmp2).mean(axis=0))) #should be a unit vector
         return self._vector2
 
 
@@ -131,9 +138,6 @@ class AIMind:
     def __init__(self,filename=None,rawdata=None):
         self.features = {}
         self.usage_map = {}
-
-
-        self.topo_sorted_features = []
 
         if filename:
             tree = ET.parse(filename)
@@ -153,6 +157,8 @@ class AIMind:
         #build relation structure
         for feature in features.iter('Feature'):
             fobj = Feature(feature.attrib["data"],self)
+            speak = feature.find('speak')
+            fobj.text = speak.text
             neighbors = feature.find('neighbors')
             for neighbor in neighbors.iter('neighbor'):
                 fobj.add_relation(neighbor.attrib['relationship'],
@@ -190,7 +196,6 @@ class AIMind:
 
         #calculate rtype jaccard index
         self.rtype_index = self.index_rtypes()
-
 
     def get_id(self,feature):
         return self.r_feature_id_table[feature]
@@ -347,7 +352,7 @@ class AIMind:
                      jaccard_index(y2,w2),
                      jaccard_index(z2,w2))
 
-            out[rtype] = normalize(score)
+            out[rtype] = np.asarray(score, dtype=np.float)
         return out
 
     def get_analogy(self, src_feature, target_feature, target_domain):
@@ -369,61 +374,53 @@ class AIMind:
 
         hypotheses = set()
 
-        #for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
-        #    for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
-
-        #        #weight by strength of matchup (if distance between them is 0, strength is 2)
-        #        rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
-
-        #        #weight by relative feature distance from parent
-        #        d1vec = self.features[d1].get_vector()
-        #        d2vec = target_domain.features[d2].get_vector()
-
-        #        diff1 = vsub(svec,d1vec)
-        #        diff2 = vsub(cvec,d2vec)
-        #        vdiff = 4-sq_edist(diff1,diff2)
-
-        #        actual_score = (rdiff + vdiff)
-        #        tscore = 6
-
-        #        hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore))
-
-
         for r2,d2 in c_node.outgoing_relations: #for each pair in candidate
             for r1,d1 in src_node.outgoing_relations:#find best rtype to compare with
 
-                #weight by strength of matchup (if distance between them is 0, strength is 2)
-                rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
-
-                #weight by relative feature distance from parent
+                #==== using cosine similarity ====
+                rdiff = cosine_similarity(self.rtype_index[r1], target_domain.rtype_index[r2])
                 d1vec = self.features[d1].get_vector()
                 d2vec = target_domain.features[d2].get_vector()
-
-                diff1 = vsub(svec,d1vec)
-                diff2 = vsub(cvec,d2vec)
-                vdiff = 4-sq_edist(diff1,diff2)
-
+                diff1 = svec-d1vec
+                diff2 = cvec-d2vec
+                vdiff = cosine_similarity(diff1, diff2)
                 actual_score = (rdiff + vdiff)
-                tscore = 6
+                tscore = 2
+
+                '''#==== using euclidean distance ====
+                rdiff = 2-euclidean_distance(self.rtype_index[r1], target_domain.rtype_index[r2])
+                d1vec = self.features[d1].get_vector()
+                d2vec = target_domain.features[d2].get_vector()
+                diff1 = svec-d1vec
+                diff2 = cvec-d2vec
+                vdiff = 4-euclidean_distance(diff1, diff2)
+                actual_score = (rdiff + vdiff)
+                tscore = 6'''
 
                 hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore, True))
 
         for r2,d2 in c_node.incoming_relations: #for each pair in candidate
             for r1,d1 in src_node.incoming_relations:#find best rtype to compare with
 
-                #weight by strength of matchup (if distance between them is 0, strength is 2)
-                rdiff = 2-sq_edist(self.rtype_index[r1], target_domain.rtype_index[r2])
-
-                #weight by relative feature distance from parent
-                d1vec = self.features[d1].get_vector2()
-                d2vec = target_domain.features[d2].get_vector2()
-
-                diff1 = vsub(svec,d1vec)
-                diff2 = vsub(cvec,d2vec)
-                vdiff = 4-sq_edist(diff1,diff2)
-
+                #==== using cosine similarity ====
+                rdiff = cosine_similarity(self.rtype_index[r1], target_domain.rtype_index[r2])
+                d1vec = self.features[d1].get_vector()
+                d2vec = target_domain.features[d2].get_vector()
+                diff1 = svec-d1vec
+                diff2 = cvec-d2vec
+                vdiff = cosine_similarity(diff1, diff2)
                 actual_score = (rdiff + vdiff)
-                tscore = 6
+                tscore = 2
+
+                '''#==== using euclidean distance ====
+                rdiff = 2-euclidean_distance(self.rtype_index[r1], target_domain.rtype_index[r2])
+                d1vec = self.features[d1].get_vector()
+                d2vec = target_domain.features[d2].get_vector()
+                diff1 = svec-d1vec
+                diff2 = cvec-d2vec
+                vdiff = 4-euclidean_distance(diff1, diff2)
+                actual_score = (rdiff + vdiff)
+                tscore = 6'''
 
                 hypotheses.add((actual_score / tscore, r1, d1, r2, d2, tscore, False))
 
@@ -459,6 +456,11 @@ class AIMind:
         for destobj in c_node.connections:
             if destobj not in hmap.values():
                 total_rating += 2#target_domain.features[destobj].value
+
+        #max1 = jaccard_index(src_node.connections, set(hmap.keys()))
+        #max2 = jaccard_index(c_node.connections, set(hmap.values()))
+
+        #rating = rating * (max1 + max2) / 2
 
         if total_rating == 0: #prevent divide by zero error
             return None

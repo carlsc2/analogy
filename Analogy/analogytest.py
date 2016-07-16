@@ -2,9 +2,24 @@
 from pprint import pprint
 import random
 
-#a1 = AIMind("data files/big_unrestricted_techdata.xml")
-#a2 = AIMind("data files/big_unrestricted_music.xml")
-#pprint(a1.find_best_analogy("Google",a2))
+import time
+
+from cProfile import run
+
+def main():
+    a1 = AIMind("data files/big_unrestricted_techdata.xml")
+    a2 = AIMind("data files/big_unrestricted_music.xml")
+    #a1 = AIMind("data files/plang_small.xml")
+    #a2 = AIMind("data files/music_small.xml")
+    start = time.time()
+    pprint(a1.find_best_analogy("Python (programming language)",a1))
+    #a1.find_best_analogy("Python (programming language)",a1)
+    print("time: %.7f"%(time.time() - start))
+
+#if __name__ == "__main__":
+#    run('main()',sort=1)
+
+main()
 
 #pprint(a1.find_best_analogy_chain("Python (programming language)",a2,2))
 
@@ -12,10 +27,13 @@ import random
 
 #a1 = AIMind("data files/plang_small.xml")
 
-a1 = AIMind("data files/techdata.xml")
-a2 = AIMind("data files/music.xml")
+#a1 = AIMind("data files/techdata.xml")
 
-pprint(a1.find_best_analogy("Python (programming language)",a2))
+
+
+#a2 = AIMind("data files/music.xml")
+
+#pprint(a1.find_best_analogy("Python (programming language)",a2))
 
 #pprint(a1.get_analogy("C (programming language)","Rock music",a2))
 
