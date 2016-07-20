@@ -6,20 +6,37 @@ import time
 
 from cProfile import run
 
+
+a1 = AIMind("data files/big_unrestricted_techdata.xml")
+a2 = AIMind("data files/big_unrestricted_music.xml")
+#a2 = AIMind("data files/olympics_parsed.xml")
+#a1 = AIMind("data files/plang_small.xml")
+#a2 = AIMind("data files/music_small.xml")
+
+
 def main():
-    a1 = AIMind("data files/big_unrestricted_techdata.xml")
-    a2 = AIMind("data files/big_unrestricted_music.xml")
-    #a1 = AIMind("data files/plang_small.xml")
-    #a2 = AIMind("data files/music_small.xml")
+    
+    
+    
+
     start = time.time()
+
+    #pprint(a1.find_best_analogy("C (programming language)",a2))
+    #pprint(a1.find_best_analogy("C++",a2))
+
+    #pprint(a1.get_analogy("C (programming language)","C (programming language)",a1))
+
+
     pprint(a1.find_best_analogy("Python (programming language)",a1))
+
+    #pprint(a2.find_best_analogy("Aug. 15th, 2008",a1))
+
+    #pprint(a2.get_analogy("Serena Williams","Caryn Davies",a2))
+
+    #pprint(a2.get_analogy("Vincent Hancock","Google",a1))
     #a1.find_best_analogy("Python (programming language)",a1)
     print("time: %.7f"%(time.time() - start))
 
-#if __name__ == "__main__":
-#    run('main()',sort=1)
-
-main()
 
 #pprint(a1.find_best_analogy_chain("Python (programming language)",a2,2))
 
@@ -118,227 +135,196 @@ main()
 #tmp = [a1.find_best_analogy(f,a1) for f in filterset]
 #pprint(sorted(tmp,key=lambda x:x[0]))
 
-'''
-import numpy as np
-from scipy.spatial import cKDTree
+def make_dendrograms():
+    import numpy as np
+    from scipy.spatial import cKDTree
 
+    a1 = AIMind("data files/big_unrestricted_techdata.xml")
+    #a2 = AIMind("data files/big_unrestricted_music.xml")
 
-lookup = {}
-data = []
 
-# ========================== graph the features ============
+    lookup = {}
+    data = []
 
+    # ========================== graph the features ============
 
-featurepool1 = list(a1.features.values())
-#featurepool2 = list(a2.features.values())
-random.shuffle(featurepool1)
-#random.shuffle(featurepool2)
 
+    featurepool1 = list(a1.features.values())
+    #featurepool2 = list(a2.features.values())
+    random.shuffle(featurepool1)
+    #random.shuffle(featurepool2)
 
-i = 0
-for f in featurepool1:
-    if f.knowledge_level > 10 and i < 500:
-        lookup[i] = f.name
-        i+=1
-        data.append(f.get_vector())
 
+    i = 0
+    for f in featurepool1:
+        if f.knowledge_level > 10 and i < 500:
+            lookup[i] = f.name
+            i+=1
+            data.append(f.get_vector())
 
 
-# ========================== graph the rtypes ============
 
-#datapool = list(a1.rtype_index.items())
-#random.shuffle(datapool)
+    # ========================== graph the rtypes ============
 
-#i = 0
-#for a,b in datapool:
-#    if i < 2500:
-#        lookup[i] = a
-#        i+=1
-#        data.append(b)
+    #datapool = list(a1.rtype_index.items())
+    #random.shuffle(datapool)
 
+    #i = 0
+    #for a,b in datapool:
+    #    if i < 2500:
+    #        lookup[i] = a
+    #        i+=1
+    #        data.append(b)
 
-#=========================================================
 
-#for f in featurepool2:
-#    #if f.knowledge_level > 15 and i < 200:
-#    if f.knowledge_level > 1:
-#        lookup[i] = f.name
-#        i+=1
-#        data.append(f.get_vector())
+    #=========================================================
 
+    #for f in featurepool2:
+    #    #if f.knowledge_level > 15 and i < 200:
+    #    if f.knowledge_level > 1:
+    #        lookup[i] = f.name
+    #        i+=1
+    #        data.append(f.get_vector())
 
 
 
-#for j, f in enumerate(a2.features.values()):
-#    lookup[i+j+1] = f.name
-#    data.append(f.get_vector())
 
-#kdtree = cKDTree(data)
+    #for j, f in enumerate(a2.features.values()):
+    #    lookup[i+j+1] = f.name
+    #    data.append(f.get_vector())
 
-#def get_similar_features(feature, number=10):
-#    distances, ndx = kdtree.query(a1.features[feature].get_vector(), number)
-#    for i,ix in enumerate(ndx):
-#        print("\t%r"%distances[i],lookup[ix])
+    #kdtree = cKDTree(data)
 
+    #def get_similar_features(feature, number=10):
+    #    distances, ndx = kdtree.query(a1.features[feature].get_vector(), number)
+    #    for i,ix in enumerate(ndx):
+    #        print("\t%r"%distances[i],lookup[ix])
 
-#def get_similar_feature_pairs(dist):
-#    for i1, i2 in kdtree.query_pairs(dist):
-#        print(lookup[i1], "::", lookup[i2])
 
+    #def get_similar_feature_pairs(dist):
+    #    for i1, i2 in kdtree.query_pairs(dist):
+    #        print(lookup[i1], "::", lookup[i2])
 
-#get_similar_features("Google",50)
 
-from numpy import array
-from scipy.cluster.vq import vq, kmeans, whiten
+    #get_similar_features("Google",50)
 
-#whitened = whiten(data)
+    from numpy import array
+    from scipy.cluster.vq import vq, kmeans, whiten
 
-#code_book = kmeans(whitened,15)[0]
+    #whitened = whiten(data)
 
-#decoded = vq(whitened,code_book)[0]
+    #code_book = kmeans(whitened,15)[0]
 
-#clusters = {}
+    #decoded = vq(whitened,code_book)[0]
 
-#for i,ix in enumerate(decoded):
-#    clusters.setdefault(ix,[]).append(lookup[i])
+    #clusters = {}
 
-#pprint(clusters)
+    #for i,ix in enumerate(decoded):
+    #    clusters.setdefault(ix,[]).append(lookup[i])
 
+    #pprint(clusters)
 
 
 
-#================= hierarchy code =====================
 
+    #================= hierarchy code =====================
 
 
 
-from scipy.cluster.hierarchy import fcluster, dendrogram, linkage, to_tree
 
+    from scipy.cluster.hierarchy import fcluster, dendrogram, linkage, to_tree
 
 
-#Z = linkage(data, 'ward')
-#Z = linkage(data, 'complete')
-#Z = linkage(data, 'single')
-#Z = linkage(data, 'average')
-#Z = linkage(data, 'weighted')
-#Z = linkage(data, 'centroid')
-#Z = linkage(data, 'median')
 
+    #Z = linkage(data, 'ward')
+    #Z = linkage(data, 'complete')
+    #Z = linkage(data, 'single')
+    #Z = linkage(data, 'average')
+    #Z = linkage(data, 'weighted')
+    #Z = linkage(data, 'centroid')
+    #Z = linkage(data, 'median')
 
-##tree = to_tree(Z)
 
-##def get_all_children(node,clist):
-##    if node is None:
-##        return
-##    if node.is_leaf():
-##        clist.append(lookup[node.id])
-##    else:
-##        get_all_children(node.left,clist)
-##        get_all_children(node.right,clist)
+    ##tree = to_tree(Z)
 
-##def build_hierarchy(node,tmp,depth,maxdepth):
-##    if node is None:
-##        return
+    ##def get_all_children(node,clist):
+    ##    if node is None:
+    ##        return
+    ##    if node.is_leaf():
+    ##        clist.append(lookup[node.id])
+    ##    else:
+    ##        get_all_children(node.left,clist)
+    ##        get_all_children(node.right,clist)
 
-##    if node.is_leaf():
-##        tmp.append(lookup[node.id])
-##    else:
-##        lli = []
-##        rli = []
-##        tmp.append([node.dist,lli,rli])
-##        if depth < maxdepth: #traverse hierarchy
-##            build_hierarchy(node.left, lli, depth + 1, maxdepth)
-##            build_hierarchy(node.right, rli, depth + 1, maxdepth)
-##        else: #aggregate children
-##            get_all_children(node.left,lli)
-##            get_all_children(node.right,rli)
+    ##def build_hierarchy(node,tmp,depth,maxdepth):
+    ##    if node is None:
+    ##        return
 
+    ##    if node.is_leaf():
+    ##        tmp.append(lookup[node.id])
+    ##    else:
+    ##        lli = []
+    ##        rli = []
+    ##        tmp.append([node.dist,lli,rli])
+    ##        if depth < maxdepth: #traverse hierarchy
+    ##            build_hierarchy(node.left, lli, depth + 1, maxdepth)
+    ##            build_hierarchy(node.right, rli, depth + 1, maxdepth)
+    ##        else: #aggregate children
+    ##            get_all_children(node.left,lli)
+    ##            get_all_children(node.right,rli)
 
 
-##out = []
-##build_hierarchy(tree,out,0,5)
 
+    ##out = []
+    ##build_hierarchy(tree,out,0,5)
 
-##import json
 
-##with open("output.txt","w+") as f:
-##    f.write(json.dumps(out, indent=4))
+    ##import json
 
+    ##with open("output.txt","w+") as f:
+    ##    f.write(json.dumps(out, indent=4))
 
+    Z = linkage(data, 'complete')
 
-Z = linkage(data, 'complete')
+    #out = {}
+    #for i,c in enumerate(fcluster(Z,1,depth=2)):
+    #    out.setdefault(c,[]).append(lookup[i])
 
-#out = {}
-#for i,c in enumerate(fcluster(Z,1,depth=2)):
-#    out.setdefault(c,[]).append(lookup[i])
+    #pprint(out)
 
-#pprint(out)
 
+    from matplotlib import rcParams
+    rcParams.update({'figure.autolayout': True})
+    from matplotlib import pyplot as plt
 
+    for method in ['ward','complete','single','average','weighted','centroid','median']:
+        Z = linkage(data, method)
 
+        w = len(data)/10
+        w = 25 if w < 25 else w
 
+        h = len(data)/100
+        h = 10 if h < 10 else h
 
-from matplotlib import rcParams
-rcParams.update({'figure.autolayout': True})
-from matplotlib import pyplot as plt
+        plt.figure(figsize=(w,h))
+        plt.title('Hierarchical Clustering Dendrogram (method = %s)'%method)
+        plt.xlabel('Feature')
+        plt.ylabel('Distance')
+        dendrogram(
+            Z,
+            leaf_rotation=90.,  # rotates the x axis labels
+            leaf_font_size=8.,  # font size for the x axis labels
+            labels=[lookup[x] for x in range(len(data))],
+        )
 
-for method in ['ward','complete','single','average','weighted','centroid','median']:
-    Z = linkage(data, method)
+        plt.savefig('figures/dendrogram_%s.png'%method)
+        plt.gcf().clear()
 
-    w = len(data)/10
-    w = 25 if w < 25 else w
 
-    h = len(data)/100
-    h = 10 if h < 10 else h
+    
 
-    plt.figure(figsize=(w,h))
-    plt.title('Hierarchical Clustering Dendrogram (method = %s)'%method)
-    plt.xlabel('Feature')
-    plt.ylabel('Distance')
-    dendrogram(
-        Z,
-        leaf_rotation=90.,  # rotates the x axis labels
-        leaf_font_size=8.,  # font size for the x axis labels
-        labels=[lookup[x] for x in range(len(data))],
-    )
-
-    plt.savefig('figures/dendrogram_%s.png'%method)
-    plt.gcf().clear()
-
-
-
-##=========== conceptnet test ==============
-
-#from conceptnet5 import nodes
-#from conceptnet5 import query
-#from conceptnet5.uri import split_uri
-
-#from urllib.request import urlopen
-#from urllib.parse import quote
-#import json
-#import pickle
-
-#import re
-
-#pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
-
-
-
-#def get_results(feature):
-#    feature = feature.lower()
-#    ret = []
-#    with urlopen('http://conceptnet5.media.mit.edu/data/5.4%s?limit=1000'%quote('/c/en/'+feature)) as response:
-#        html = response.read().decode('utf8')
-#        result = json.loads(html)
-#        for x in result['edges']:
-#            r = pattern.match(x['uri'][3:])
-#            if r:
-#                print(r.groups())
-#    return ret
-
-#get_results('california')
-
-
-print("Done")
-
-'''
+if __name__ == "__main__":
+    #run('main()',sort=1)
+    main()
+    #make_dendrograms()
+    print("Done")

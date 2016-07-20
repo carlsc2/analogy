@@ -28,6 +28,9 @@
     <Compile Include="analogy.py" />
     <Compile Include="analogytest.py" />
     <Compile Include="analogyserver.py" />
+    <Compile Include="semantic_analysis.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
