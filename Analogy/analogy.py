@@ -273,7 +273,7 @@ class AIMind:
 
         mentioned = set()
 
-        for (a, b), (c, d, e, f) in mapping.items():
+        for (x, a, b), (c, d, e, f) in mapping.items():
             if not verbose and a in mentioned:
                 continue
             nchunks.append((src, a, b, trg, c, d))

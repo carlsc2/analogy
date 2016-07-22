@@ -48,7 +48,7 @@ def get_analogy():
             returndata = {"data":[],"count":len(analogyData)}
             for analogy in analogyData:
                 nrating, rating, total_rating, (src,trg), rassert, mapping = analogy
-                evidence = [(a1.get_id(a[1]),a1.get_id(b[1])) for a,b in mapping.items()]
+                evidence = [(a1.get_id(a[2]),a1.get_id(b[1])) for a,b in mapping.items()]
                 explanation = cgi.escape(a1.explain_analogy(analogy))
                 data = {
                     "source":a1.get_id(src), #source topic
@@ -70,7 +70,7 @@ def get_analogy():
 
             if analogyData:
                 nrating, rating, total_rating, (src,trg), rassert, mapping = analogyData
-                evidence = [(a1.get_id(a[1]),a1.get_id(b[1])) for a,b in mapping.items()]
+                evidence = [(a1.get_id(a[2]),a1.get_id(b[1])) for a,b in mapping.items()]
                 explanation = cgi.escape(a1.explain_analogy(analogyData))
                 data = {
                     "source":a1.get_id(src), #source topic
