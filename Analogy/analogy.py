@@ -72,17 +72,15 @@ def euclidean_distance(v1, v2, _f=np.sum):
 
 def cosine_similarity(v1, v2):
     key = (v1.data.tobytes(), v2.data.tobytes())
-    if key in similarity_cache:
+    try:
         return similarity_cache[key]
-    else:
-        nu = sqrt(v1.dot(v1))
-        nv = sqrt(v2.dot(v2))
+    except KeyError:
+        nu = v1.dot(v1)
+        nv = v2.dot(v2)
         if nu == 0 or nv == 0:
             value = 0
         else:
-            # value = (3.0 - v1.dot(v2) / (nu * nv)) / 2 # get similarity and
-            # rescale from (-1 to 1) to (0 to 1)
-            value = 0.5 * (v1.dot(v2) / (nu * nv) + 1)
+            value = 0.5 * (v1.dot(v2) / sqrt(nu * nv) + 1)
 
         similarity_cache[key] = value
         return value
@@ -135,6 +133,12 @@ class Feature:
                     for rtype, prev in self.incoming_relations] or [NULL_VEC]
             self._vector = np.concatenate((np.asarray(tmp1).mean(axis=0),
                                            np.asarray(tmp2).mean(axis=0)))
+            #a = np.asarray(tmp1).mean(axis=0)
+            #b = np.asarray(tmp2).mean(axis=0)
+            #c = np.empty((a.size + b.size,), dtype=a.dtype)
+            #c[0::2] = a
+            #c[1::2] = b
+            #self._vector = c
         return self._vector
 
     def get_vector2(self):
@@ -149,7 +153,7 @@ class Feature:
         return self._vector2
 
     def __repr__(self):
-        return "<%s>(%d,%.d)" % (self.name, self.knowledge_level)
+        return "<%s>(%d)" % (self.name, self.knowledge_level)
 
 
 class AIMind:
@@ -171,20 +175,23 @@ class AIMind:
 
         # map all feature ids to name
         for feature in features.iter('Feature'):
-            self.feature_id_table[feature.attrib[
-                "id"]] = feature.attrib["data"]
+            self.feature_id_table[feature.attrib["id"]] = feature.attrib["data"]
 
         # build relation structure
         for feature in features.iter('Feature'):
             fobj = Feature(feature.attrib["data"], self)
-            speak = feature.find('speak')
-            fobj.text = speak.text
+            tmp = feature.find('description')
+            if tmp != None:
+                fobj.text = tmp.text
+            else:
+                tmp = feature.find('speak')
+                if tmp != None:
+                    fobj.text = tmp.text
             neighbors = feature.find('neighbors')
             for neighbor in neighbors.iter('neighbor'):
                 fobj.add_relation(
                     neighbor.attrib['relationship'],
-                    self.feature_id_table[
-                        neighbor.attrib['dest']])
+                    self.feature_id_table[neighbor.attrib['dest']])
             self.features[fobj.name] = (fobj)
 
         # map feature name to id
@@ -193,8 +200,8 @@ class AIMind:
 
         for feature in self.features.values():
             for rtype, dest in feature.outgoing_relations:
-                self.usage_map.setdefault(
-                    rtype, set()).add((feature.name, dest))
+                self.usage_map.setdefault(rtype, set()).add((feature.name,
+                                                             dest))
                 self.features[dest].add_predecessor(rtype,
                                                     feature.name)
 
@@ -276,15 +283,18 @@ class AIMind:
         for (x, a, b), (c, d, e, f) in mapping.items():
             if not verbose and a in mentioned:
                 continue
-            nchunks.append((src, a, b, trg, c, d))
+            if x == "INCOMING":
+                nchunks.append((b, a, src, d, c, trg, f))
+            if x == "OUTGOING":
+                nchunks.append((src, a, b, trg, c, d, f))
             mentioned.add(a)
-        for i, nc in enumerate(nchunks):
-            a, b, c, d, e, f = nc
+        for i, nc in enumerate(sorted(nchunks,key=lambda x:x[-1],reverse=True)):
+            a, b, c, d, e, f, s = nc
             if i == len(nchunks) - 1:
-                narrative += " and %s <%s> %s in the same way that %s <%s> %s.\n" % (
+                narrative += " and '%s' <%s> '%s' in the same way that '%s' <%s> '%s'.\n" % (
                     a, b, c, d, e, f)
             else:
-                narrative += " %s <%s> %s in the same way that %s <%s> %s," % (
+                narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'," % (
                     a, b, c, d, e, f)
         return narrative
 
@@ -333,29 +343,29 @@ class AIMind:
 
         out = {}  # compute metrics from rtypes
         for rtype, (lco, gco, smo, dfo, lci, gci, smi, dfi) in hm.items():
-            #x1 = set(lco)
-            #y1 = set(gco)
-            #z1 = set(smo)
-            #w1 = set(dfo)
+            x1 = set(lco)
+            y1 = set(gco)
+            z1 = set(smo)
+            w1 = set(dfo)
 
-            #x2 = set(lci)
-            #y2 = set(gci)
-            #z2 = set(smi)
-            #w2 = set(dfi)
+            x2 = set(lci)
+            y2 = set(gci)
+            z2 = set(smi)
+            w2 = set(dfi)
 
-            def adjust(x):  # eliminate outlier data for better results
-                total_count = sum(x.values())
-                return set(a for a, b in x.items() if b / total_count > .25)
+            #def adjust(x):  # eliminate outlier data for better results
+            #    total_count = sum(x.values())
+            #    return set(a for a, b in x.items() if b / total_count > .25)
 
-            x1 = adjust(lco)
-            y1 = adjust(gco)
-            z1 = adjust(smo)
-            w1 = adjust(dfo)
+            #x1 = adjust(lco)
+            #y1 = adjust(gco)
+            #z1 = adjust(smo)
+            #w1 = adjust(dfo)
 
-            x2 = adjust(lci)
-            y2 = adjust(gci)
-            z2 = adjust(smi)
-            w2 = adjust(dfi)
+            #x2 = adjust(lci)
+            #y2 = adjust(gci)
+            #z2 = adjust(smi)
+            #w2 = adjust(dfi)
 
             score = (jaccard_index(x1, y1),
                      jaccard_index(x1, z1),
@@ -389,7 +399,7 @@ class AIMind:
             out[rtype] = np.asarray(score, dtype=np.float)
         return out
 
-    def get_analogy(self, src_feature, target_feature, target_domain):
+    def get_analogy(self, src_feature, target_feature, target_domain, rmax=1, vmax=1):
         """Get the best analogy between two arbitrary features"""
 
         # ensure features exist
@@ -400,49 +410,62 @@ class AIMind:
             print("Feature %s not in target domain" % target_feature)
             return None
 
+        #tscore = rmax+vmax
+        tscore = 1 
         src_node = self.features[src_feature]
-        svec = src_node.get_vector()
         c_node = target_domain.features[target_feature]
-        cvec = c_node.get_vector()
 
-        hypotheses = set()
+        def get_hypotheses():
+            svec = src_node.get_vector2()
+            cvec = c_node.get_vector2()
+            hypotheses = []
 
-        # precompute source vectors because this won't change
-        src_vec_dict = {}
-        for r1, d1 in src_node.outgoing_relations:
-            d1vec = self.features[d1].get_vector()
-            diff1 = svec - d1vec
-            src_vec_dict[(d1, True)] = diff1
-        for r1, d1 in src_node.incoming_relations:
-            d1vec = self.features[d1].get_vector()
-            diff1 = svec - d1vec
-            src_vec_dict[(d1, False)] = diff1
-
-        # for each pair in candidate outgoing
-        for r2, d2 in c_node.outgoing_relations:
-            d2vec = target_domain.features[d2].get_vector()
-            diff2 = cvec - d2vec
-            # find best outgoing rtype to compare with
+            # precompute source vectors because this won't change
+            src_vec_dict = {}
             for r1, d1 in src_node.outgoing_relations:
-                rdiff = cosine_similarity(self.rtype_index[r1],
-                                          target_domain.rtype_index[r2])
-                diff1 = src_vec_dict[(d1, True)]
-                vdiff = cosine_similarity(diff1, diff2)
-                actual_score = (rdiff + vdiff)
-                hypotheses.add((actual_score / 2, r1, d1, r2, d2, 2, True))
-
-        # for each pair in candidate incoming
-        for r2, d2 in c_node.incoming_relations:
-            d2vec = target_domain.features[d2].get_vector()
-            diff2 = cvec - d2vec
-            # find best incoming rtype to compare with
+                d1vec = self.features[d1].get_vector2()
+                diff1 = svec - d1vec
+                src_vec_dict[(d1, True)] = diff1
             for r1, d1 in src_node.incoming_relations:
-                rdiff = cosine_similarity(self.rtype_index[r1],
-                                          target_domain.rtype_index[r2])
-                diff1 = src_vec_dict[(d1, False)]
-                vdiff = cosine_similarity(diff1, diff2)
-                actual_score = (rdiff + vdiff)
-                hypotheses.add((actual_score / 2, r1, d1, r2, d2, 2, False))
+                d1vec = self.features[d1].get_vector2()
+                diff1 = svec - d1vec
+                src_vec_dict[(d1, False)] = diff1
+
+            # for each pair in candidate outgoing
+            for r2, d2 in c_node.outgoing_relations:
+                d2vec = target_domain.features[d2].get_vector2()
+                diff2 = cvec - d2vec
+                # find best outgoing rtype to compare with
+                for r1, d1 in src_node.outgoing_relations:
+                    rdiff = cosine_similarity(self.rtype_index[r1],
+                                              target_domain.rtype_index[r2])
+                    diff1 = src_vec_dict[(d1, True)]
+                    vdiff = cosine_similarity(diff1, diff2)
+                    #actual_score = (rdiff*rmax + vdiff*vmax)
+                    #actual_score = max(rdiff, vdiff)
+
+                    #hypotheses.append((actual_score / tscore, r1, d1, r2, d2, True))
+                    hypotheses.append((rdiff*rmax, r1, d1, r2, d2, True))
+                    hypotheses.append((vdiff*vmax, r1, d1, r2, d2, True))
+
+            # for each pair in candidate incoming
+            for r2, d2 in c_node.incoming_relations:
+                d2vec = target_domain.features[d2].get_vector2()
+                diff2 = cvec - d2vec
+                # find best incoming rtype to compare with
+                for r1, d1 in src_node.incoming_relations:
+                    rdiff = cosine_similarity(self.rtype_index[r1],
+                                              target_domain.rtype_index[r2])
+                    diff1 = src_vec_dict[(d1, False)]
+                    vdiff = cosine_similarity(diff1, diff2)
+                    #actual_score = (rdiff*rmax + vdiff*vmax)
+                    #actual_score = max(rdiff, vdiff)
+
+                    #hypotheses.append((actual_score / tscore, r1, d1, r2, d2, False))
+                    hypotheses.append((rdiff*rmax, r1, d1, r2, d2, False))
+                    hypotheses.append((vdiff*vmax, r1, d1, r2, d2, False))
+
+            return sorted(hypotheses,reverse=True)
 
         rassert = {}
         hmap = {}
@@ -451,8 +474,7 @@ class AIMind:
         total_rating = 0
 
         # for each mh, pick the best then pick the next best non-conflicting
-        for score, r1, src, r2, target, tscore, outgoing in sorted(hypotheses,
-                                                                   reverse=True):
+        for score, r1, src, r2, target, outgoing in get_hypotheses():
             score = score * tscore
             key = (src, outgoing)
             if (hmap.get(key) == target) or (key not in hmap.keys() and\
@@ -466,7 +488,8 @@ class AIMind:
                     hmap[key] = target
                     total_rating += tscore
                 if r1 == r2 or rassert.get(r1) == r2:
-                    best[(outgoing, r1, src)] = (
+                    otype = "OUTGOING" if outgoing else "INCOMING"
+                    best[(otype, r1, src)] = (
                         r2, target, score, score / tscore)
                     rating += score
                 else:  # penalize inconsistent rtype matchup
@@ -489,7 +512,7 @@ class AIMind:
         return (normalized_rating, rating, total_rating,
                 (src_feature, target_feature), rassert, best)
 
-    def find_best_analogy(self, src_feature, target_domain, filter_list=None):
+    def find_best_analogy(self, src_feature, target_domain, filter_list=None, rmax=1, vmax=1):
         """
         Finds the best analogy between a specific feature in the source domain
         and any feature in the target domain.
@@ -507,7 +530,7 @@ class AIMind:
             # find novel within same domain
             if target_domain == self and c_feature == src_feature:
                 continue
-            result = self.get_analogy(src_feature, c_feature, target_domain)
+            result = self.get_analogy(src_feature, c_feature, target_domain, rmax, vmax)
             if result:
                 candidate_results.append(result)
 
