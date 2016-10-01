@@ -35,6 +35,8 @@ def kulczynski_2(a, b):
     This is the arithmetic mean probability that if one object has an attribute,
     the other object has it too
 
+    1 means completely similar, 0 means completely different.
+
     '''
     if len(a) == len(b) == 0:  # if both sets are empty, return 1
         return 1
@@ -47,16 +49,19 @@ def kulczynski_2(a, b):
 
 
 def jaccard_index(a, b):
-    '''Computes the jaccard index between two sets'''
-    n = len(a&b)
-    if n == 0:
+    '''Computes the jaccard index between two sets. 
+    
+    1 means completely similar, 0 means completely different.'''
+    if len(a) == len(b) == 0:  # if both sets are empty, return 1
         return 1
+    n = len(a&b)
     return n / (len(a) + len(b) - n)
 
 
 def dice_coefficient(a, b):
     '''Computes the dice coefficient between two sets
-    '''
+
+    1 means completely similar, 0 means completely different.'''
     total = (len(a) + len(b))
     if total == 0:
         return 1
@@ -380,24 +385,24 @@ class AIMind:
         c_node = target_domain.features[target_feature]
 
         def get_hypotheses():
-            svec = src_node.get_vector()
-            cvec = c_node.get_vector()
+            svec = src_node.get_vector2()
+            cvec = c_node.get_vector2()
             hypotheses = []
 
             # precompute source vectors because this won't change
             src_vec_dict = {}
             for r1, d1 in src_node.outgoing_relations:
-                d1vec = self.features[d1].get_vector()
+                d1vec = self.features[d1].get_vector2()
                 diff1 = svec - d1vec
                 src_vec_dict[(d1, True)] = diff1
             for r1, d1 in src_node.incoming_relations:
-                d1vec = self.features[d1].get_vector()
+                d1vec = self.features[d1].get_vector2()
                 diff1 = svec - d1vec
                 src_vec_dict[(d1, False)] = diff1
 
             # for each pair in candidate outgoing
             for r2, d2 in c_node.outgoing_relations:
-                d2vec = target_domain.features[d2].get_vector()
+                d2vec = target_domain.features[d2].get_vector2()
                 diff2 = cvec - d2vec
                 # find best outgoing rtype to compare with
                 for r1, d1 in src_node.outgoing_relations:
@@ -414,7 +419,7 @@ class AIMind:
 
             # for each pair in candidate incoming
             for r2, d2 in c_node.incoming_relations:
-                d2vec = target_domain.features[d2].get_vector()
+                d2vec = target_domain.features[d2].get_vector2()
                 diff2 = cvec - d2vec
                 # find best incoming rtype to compare with
                 for r1, d1 in src_node.incoming_relations:
