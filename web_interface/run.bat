@@ -1,2 +1,1 @@
-set FLASK_APP=webinterface.py
-flask run --host=0.0.0.0
+webinterface.py --host=0.0.0.0
