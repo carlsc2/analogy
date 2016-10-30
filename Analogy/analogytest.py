@@ -11,110 +11,59 @@ from itertools import combinations, product
 
 #a1 = AIMind("data files/big_unrestricted_techdata.xml")
 #a2 = AIMind("data files/big_unrestricted_music.xml")
+
+
 #a2 = AIMind("data files/olympics_parsed.xml")
 #a1 = AIMind("data files/plang_small.xml")
 #a2 = AIMind("data files/music_small.xml")
 #a1 = AIMind("data files/techdata_verbose.xml")
 #a1 = AIMind("data files/plang_small_new_test.xml")
+
+
 a1 = AIMind("data files/roman_empire_1000.xml")
 a2 = AIMind("data files/ww2.xml")
 
-from semantic_analysis import generate_corpus, get_similarity
+#a1 = AIMind("data files/connected_plang_extended.xml")
+#a2 = AIMind("data files/big_unrestricted_music_extended.xml")
 
 
-
-dictionary, corpus, lookup = generate_corpus(a2)
-
-#get_similarity(a2, "Adolf Hitler", corpus, dictionary, lookup)
-get_similarity(a1, "Augustus", corpus, dictionary, lookup)
-1/0
-
-
-#get_similarity(a1, "Python (programming language)", "C++", corpus, dictionary, lookup)
-
-#get_similarity(a1, "C (programming language)", "C++", corpus, dictionary, lookup)
-
-#get_similarity(a1, "Python (programming language)", "C (programming language)", corpus, dictionary)
-#get_similarity(a1, "C++", "C (programming language)", corpus, dictionary)
-#get_similarity(a1, "Google", "Google", corpus, dictionary)
 
 def main():
     start = time.time()
 
-    def fba(x,a1,a2=None):
+    def fba(x,a1,a2=None,filter_list=None):
         a2 = a1 if not a2 else a2
-        tmp = a1.find_best_analogy(x,a2,rmax=1,vmax=1)
+        tmp = a1.find_best_analogy(x,a2,filter_list=filter_list,rmax=1,vmax=1)
         pprint(tmp)
         ex = a1.explain_analogy(tmp)
         print(ex)
         pprint(ex)
 
-    #pprint(a1.find_best_analogy("C (programming language)",a2))
-    #pprint(a1.find_best_analogy("C++",a2))
-    #pprint(a1.get_analogy("C (programming language)","C (programming language)",a1))
 
-    #pprint(a1.find_best_analogy("Python (programming language)",a1))
+    #t = a1.get_analogy("Byzantine Empire", "Nazi Germany", a2)
+    #pprint(t)
+    #pprint(a1.explain_analogy(t))
 
-    #pprint(a2.find_best_analogy("Aug. 15th, 2008",a1))
+    #fba("Adolf Hitler",a2,a2)
+    #fba("Winston Churchill",a2,a1)
 
-    #pprint(a2.get_analogy("Serena Williams","Caryn Davies",a2))
+    #fba("Trajan",a1,a1)
 
-    #pprint(a2.get_analogy("Vincent Hancock","Google",a1))
-    #a1.find_best_analogy("Python (programming language)",a1)
+    #fba("Byzantine Empire",a1,a2)
+    fba("Nazi Germany",a2,a1)
 
-    #pprint(a2.find_best_analogy("Joseph Stalin",a1))
-    #tmp = a2.find_best_analogy("Adolf Hitler",a1,rmax=1,vmax=2)
-    #pprint(tmp)
-    #print(a2.explain_analogy(tmp))
-    #tmp = a1.find_best_analogy("Augustus",a2,rmax=4,vmax=1)
-    #pprint(tmp)
-    #ex = a1.explain_analogy(tmp)
-    #print(ex)
-    #pprint(ex)
-
-    fba("Adolf Hitler",a2,a2)
-    #fba("Joseph Stalin",a2,a1)
     #fba("Augustus",a1,a2)
 
-    #rmax=1, vmax=1 : Leon Trotsky
-    #rmax=1, vmax=2 : Winston Churchill
-    #rmax=1, vmax=3 : Winston Churchill
-    #rmax=2, vmax=1 : Winston Churchill
-    #rmax=10, vmax=1 : Winston Churchill
-    #rmax=0, vmax=10 : Winston Churchill
-    #rmax=1, vmax=10 : Winston Churchill
-    #rmax=1, vmax=0 : Nazi Germany
-    #rmax=0, vmax=1 : Axis powers
-    #rmax=10, vmax=0 : Nicholas II of Russia
+    #fba("Rock music",a2,a1)
 
+    #fba("Python (programming language)",a1,a1)
+    #fba("Python (programming language)",a1,a2)
 
+    #for f in nodes:
+    #    fba(f,a1,a1,nodes)
 
-    #a1 = AIMind("data files/roman_empire_1000.xml")
-    #with open("outdata_sorted.txt","w+",encoding="utf8") as f:
-    #    li = []
-
-    #    flist1 = [f.name for f in a1.features.values() if f.knowledge_level > 10]
-    #    flist2 = [f.name for f in a2.features.values() if f.knowledge_level > 10]
-
-    #    for a,b in product(flist1,flist2):
-    #        x = a1.get_analogy(a,b,a2)
-    #        if x != None:
-    #            li.append(x)
-
-    #    #for f1 in flist1:
-    #    #    for f2 in flist2:
-    #    #        if f1 != f2:
-    #    #            x = a1.get_analogy(f1,f2,a2)
-    #    #            if x != None:
-    #    #                li.append(x)
-    #    li = sorted(li, key=lambda x:x[0])
-    #    for x in li:
-    #        pprint(x,f)
-    #    print("Done")
-
-
-
-
+    #fba("Rock music",a2,a1)
+   
 
     print("time: %.7f"%(time.time() - start))
 
@@ -216,15 +165,9 @@ def main():
 #tmp = [a1.find_best_analogy(f,a1) for f in filterset]
 #pprint(sorted(tmp,key=lambda x:x[0]))
 
-def make_dendrograms():
+def make_dendrograms(graph):
     import numpy as np
     from scipy.spatial import cKDTree
-
-    #a1 = AIMind("data files/big_unrestricted_techdata.xml")
-    #a2 = AIMind("data files/big_unrestricted_music.xml")
-    #a1 = AIMind("data files/roman_empire_1000.xml")
-    a1 = AIMind("data files/ww2.xml")
-
 
     lookup = {}
     data = []
@@ -232,7 +175,7 @@ def make_dendrograms():
     # ========================== graph the features ============
 
 
-    featurepool1 = list(a1.features.values())
+    featurepool1 = list(graph.features.values())
     #featurepool2 = list(a2.features.values())
     random.shuffle(featurepool1)
     #random.shuffle(featurepool2)
@@ -240,7 +183,7 @@ def make_dendrograms():
 
     i = 0
     for f in sorted(featurepool1,key=lambda x:x.knowledge_level,reverse=True):
-        if f.knowledge_level > 10 and i < 500:
+        if f.knowledge_level > 10 and i < 100:
             lookup[i] = f.name
             i+=1
             data.append(f.get_vector())
@@ -291,8 +234,8 @@ def make_dendrograms():
 
     #get_similar_features("Google",50)
 
-    from numpy import array
-    from scipy.cluster.vq import vq, kmeans, whiten
+    #from numpy import array
+    #from scipy.cluster.vq import vq, kmeans, whiten
 
     #whitened = whiten(data)
 
@@ -404,10 +347,14 @@ def make_dendrograms():
         plt.gcf().clear()
 
 
+
+
+
     
 
 if __name__ == "__main__":
     #run('main()',sort=1)
     main()
-    #make_dendrograms()
+    #make_dendrograms(a1)
+
     print("Done")
