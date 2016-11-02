@@ -345,23 +345,21 @@ class AIMind:
         out = {}  # compute metrics from rtypes
         for rtype, (lco, gco, smo, dfo, gci) in hm.items():
 
-            def adjust(x):  # eliminate outlier data for better results
-                n = len(x)
-                total_count = sum(x.values())
-                return set(a for a, b in x.items() if b / total_count > 1/n)
+            #def adjust(x):  # eliminate outlier data for better results
+            #    n = len(x)
+            #    total_count = sum(x.values())
+            #    return set(a for a, b in x.items() if b / total_count > 1/n)
+            #x1 = adjust(lco)
+            #y1 = adjust(gco)
+            #z1 = adjust(smo)
+            #w1 = adjust(dfo)
+            #y2 = adjust(gci)
 
-            x1 = adjust(lco)
-            y1 = adjust(gco)
-            z1 = adjust(smo)
-            w1 = adjust(dfo)
-            
-            y2 = adjust(gci)
-
-            #x1 = set(lco)
-            #y1 = set(gco)
-            #z1 = set(smo)
-            #w1 = set(dfo)
-            #y2 = set(gci)
+            x1 = set(lco)
+            y1 = set(gco)
+            z1 = set(smo)
+            w1 = set(dfo)
+            y2 = set(gci)
 
             # new ==> linearly independent columns only
             score = (jaccard_index(x1, y1),
@@ -531,13 +529,13 @@ class AIMind:
         tr1 = len(nc1.keys())
         tr2 = len(nc2.keys())
 
-        sr1 = len(nc1.keys())
-        sr2 = len(nc2.keys())
+        sr1 = sum(src_node.rtype_count.values())
+        sr2 = sum(c_node.rtype_count.values())
 
         v = max(sr1, sr2)
         z = max(tr1, tr2)
 
-        confidence = 1 - abs(sr1-sr2)/v * abs(tr1-tr2)/z
+        confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
 
 
         #print(target_feature, "confidence: ", confidence)
