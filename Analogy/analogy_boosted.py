@@ -1,15 +1,14 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
-from math import sqrt, log
+from math import sqrt
 from pprint import pprint
 import numpy as np
 from lru import LRU
-import statistics
 
 
-JACCARD_DIMENSIONS = 5
-NULL_VEC = np.zeros(JACCARD_DIMENSIONS)
-NULL_VEC2 = np.zeros(JACCARD_DIMENSIONS * 2)
+JACCARD_DIMENSIONS = 28
+NULL_VEC = np.zeros(JACCARD_DIMENSIONS * 4)
+NULL_VEC2 = np.zeros(JACCARD_DIMENSIONS * 8)
 
 
 ENABLE_CONCEPTNET = False
@@ -36,8 +35,6 @@ def kulczynski_2(a, b):
     This is the arithmetic mean probability that if one object has an attribute,
     the other object has it too
 
-    1 means completely similar, 0 means completely different.
-
     '''
     if len(a) == len(b) == 0:  # if both sets are empty, return 1
         return 1
@@ -50,19 +47,16 @@ def kulczynski_2(a, b):
 
 
 def jaccard_index(a, b):
-    '''Computes the jaccard index between two sets. 
-    
-    1 means completely similar, 0 means completely different.'''
-    if len(a) == len(b) == 0:  # if both sets are empty, return 1
+    '''Computes the jaccard index between two sets
+    '''
+    if len(a) == len(b) == 0:
         return 1
-    n = len(a&b)
-    return n / (len(a) + len(b) - n)
+    return len(a & b) / len(a | b)
 
 
 def dice_coefficient(a, b):
     '''Computes the dice coefficient between two sets
-
-    1 means completely similar, 0 means completely different.'''
+    '''
     total = (len(a) + len(b))
     if total == 0:
         return 1
@@ -72,9 +66,8 @@ def dice_coefficient(a, b):
 similarity_cache = LRU(10000) #use LRU cache to limit size and avoid memory error
 
 
-def euclidean_distance(v1, v2):
-    t = (v1 - v2)
-    return t.dot(t)
+def euclidean_distance(v1, v2, _f=np.sum):
+    return sqrt(_f((v1 - v2)**2))
 
 
 def cosine_similarity(v1, v2):
@@ -92,17 +85,8 @@ def cosine_similarity(v1, v2):
         similarity_cache[key] = value
         return value
 
-
-def relative_euclidean_distance(v1, v2, _f=np.sum):
-    """
-    Returns a value from 0-1 based on max distance between vectors    
-    
-    """
-
-    t = (v1 - v2)
-    return (5 - t.dot(t))/5
-
-
+def find_ngrams(input_list, n):
+    return zip(*[input_list[i:] for i in range(n)])
 
 class Feature:
 
@@ -117,8 +101,6 @@ class Feature:
 
         self.rtypes = set()  # set of outgoing relation types
 
-        self.rtype_count = Counter() #how many times each rtype is used
-
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
 
@@ -127,14 +109,8 @@ class Feature:
 
         self.text = ""
 
-    def get_rtype_ratios(self):
-        total = sum(self.rtype_count.values())
-        return {x:self.rtype_count[x]/total for x in self.rtype_count}
-
-
     def add_predecessor(self, rtype, pred):
         self.incoming_relations.add((rtype, pred))
-        self.rtype_count[rtype] += 1
         self.predecessors.add(pred)
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
@@ -145,7 +121,6 @@ class Feature:
         self.connections.add(dest)
         self.outgoing_relations.add((rtype, dest))
         self.rtypes.add(rtype)
-        self.rtype_count[rtype] += 1
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
@@ -158,8 +133,14 @@ class Feature:
                     for rtype, dest in self.outgoing_relations] or [NULL_VEC]
             tmp2 = [self.domain.rtype_index[rtype]
                     for rtype, prev in self.incoming_relations] or [NULL_VEC]
-            self._vector = np.concatenate((np.asarray(tmp1).mean(axis=0),
-                                           np.asarray(tmp2).mean(axis=0)))
+            self._vector = np.concatenate((np.asarray(tmp1).sum(axis=0),
+                                           np.asarray(tmp2).sum(axis=0)))
+            #a = np.asarray(tmp1).mean(axis=0)
+            #b = np.asarray(tmp2).mean(axis=0)
+            #c = np.empty((a.size + b.size,), dtype=a.dtype)
+            #c[0::2] = a
+            #c[1::2] = b
+            #self._vector = c
         return self._vector
 
     def get_vector2(self):
@@ -182,7 +163,6 @@ class AIMind:
     def __init__(self, filename=None, rawdata=None):
         self.features = {}
         self.usage_map = {}
-        self.usage_count = Counter()
 
         if filename:
             tree = ET.parse(filename)
@@ -224,7 +204,6 @@ class AIMind:
             for rtype, dest in feature.outgoing_relations:
                 self.usage_map.setdefault(rtype, set()).add((feature.name,
                                                              dest))
-                self.usage_count[rtype] += 1
                 self.features[dest].add_predecessor(rtype,
                                                     feature.name)
 
@@ -321,103 +300,214 @@ class AIMind:
                     a, b, c, d, e, f)
         return narrative
 
-
     def index_rtypes(self):
-        """Constructs vector representations for every type of relationship
-        in the domain.        
-        """
-        out = {}
+        hm = {}  # aggregate rtypes across all usages
         for fnode in self.features.values():
             for (rtype, dest) in fnode.outgoing_relations:
-                dnode = self.features[dest]
-                x1 = fnode.rtypes - dnode.rtypes
-                y1 = dnode.rtypes - fnode.rtypes
-                z1 = dnode.rtypes & fnode.rtypes
-                w1 = dnode.rtypes ^ fnode.rtypes
+                loses = fnode.rtypes - self.features[dest].rtypes
+                gains = self.features[dest].rtypes - fnode.rtypes
+                same = self.features[dest].rtypes & fnode.rtypes
+                diff = self.features[dest].rtypes ^ fnode.rtypes
 
-                rval = out.setdefault(rtype,np.zeros(5))
+                if rtype not in hm:
+                    hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                 Counter(), Counter(), Counter(), Counter())
+                lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
 
-                score = np.array([jaccard_index(x1, y1),
-                                  jaccard_index(x1, z1),
-                                  jaccard_index(x1, w1),
-                                  jaccard_index(y1, z1),
-                                  jaccard_index(z1, w1)], dtype=np.float)
+                for r in loses:
+                    lco[r] += 1
+                for r in gains:
+                    gco[r] += 1
+                for r in same:
+                    smo[r] += 1
+                for r in diff:
+                    dfo[r] += 1
 
-                out[rtype] = rval + score
+            for (rtype, src) in fnode.incoming_relations:
+                loses = fnode.rtypes - self.features[src].rtypes
+                gains = self.features[src].rtypes - fnode.rtypes
+                same = self.features[src].rtypes & fnode.rtypes
+                diff = self.features[src].rtypes ^ fnode.rtypes
 
-        #normalize everything
+                if rtype not in hm:
+                    hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                 Counter(), Counter(), Counter(), Counter())
+                lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
 
-        for r,v in out.items():
-            out[r] = v / sqrt(v.dot(v))
+                for r in loses:
+                    lci[r] += 1
+                for r in gains:
+                    gci[r] += 1
+                for r in same:
+                    smi[r] += 1
+                for r in diff:
+                    dfi[r] += 1
+
+        tmp0 = {}  # compute metrics from rtypes
+        for rtype, (lco, gco, smo, dfo, lci, gci, smi, dfi) in hm.items():
+            x1 = set(lco)
+            y1 = set(gco)
+            z1 = set(smo)
+            w1 = set(dfo)
+
+            x2 = set(lci)
+            y2 = set(gci)
+            z2 = set(smi)
+            w2 = set(dfi)
+
+            score = [jaccard_index(x1, y1),
+                     jaccard_index(x1, z1),
+                     jaccard_index(x1, w1),
+                     jaccard_index(x1, x2),
+                     jaccard_index(x1, y2),
+                     jaccard_index(x1, z2),
+                     jaccard_index(x1, w2),
+                     jaccard_index(y1, z1),
+                     jaccard_index(y1, w1),
+                     jaccard_index(y1, x2),
+                     jaccard_index(y1, y2),
+                     jaccard_index(y1, z2),
+                     jaccard_index(y1, w2),
+                     jaccard_index(z1, w1),
+                     jaccard_index(z1, x2),
+                     jaccard_index(z1, y2),
+                     jaccard_index(z1, z2),
+                     jaccard_index(z1, w2),
+                     jaccard_index(w1, x2),
+                     jaccard_index(w1, y2),
+                     jaccard_index(w1, z2),
+                     jaccard_index(w1, w2),
+                     jaccard_index(x2, y2),
+                     jaccard_index(x2, z2),
+                     jaccard_index(x2, w2),
+                     jaccard_index(y2, z2),
+                     jaccard_index(y2, w2),
+                     jaccard_index(z2, w2)]
+            
+            tmp0[rtype] = score
+            #tmp0[rtype] = np.asarray(score, dtype=np.float)#score
+
+
+        txtcache = {}
+    
+
+        def get_text_score(depth):
+            hm = {}  # aggregate rtypes across all usages
+            for fnode in self.features.values():
+                try:
+                    b1 = txtcache[fnode]
+                except:
+                    b1 = set(find_ngrams(fnode.text.lower().split(),depth))
+                    txtcache[fnode] = b1
+
+                for (rtype, dest) in fnode.outgoing_relations:
+                    try:
+                        b2 = txtcache[self.features[dest]]
+                    except:
+                        b2 = set(find_ngrams(self.features[dest].text.lower().split(),depth))
+                        txtcache[self.features[dest]] = b2
+
+                    loses = b1 - b2
+                    gains = b2 - b1
+                    same = b1 & b2
+                    diff = b1 ^ b2
+
+                    if rtype not in hm:
+                        hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                        Counter(), Counter(), Counter(), Counter())
+                    lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
+
+                    for r in loses:
+                        lco[r] += 1
+                    for r in gains:
+                        gco[r] += 1
+                    for r in same:
+                        smo[r] += 1
+                    for r in diff:
+                        dfo[r] += 1
+
+                for (rtype, src) in fnode.incoming_relations:
+                    try:
+                        b2 = txtcache[self.features[dest]]
+                    except:
+                        b2 = set(find_ngrams(self.features[dest].text.lower().split(),depth))
+                        txtcache[self.features[dest]] = b2
+
+                    loses = b1 - b2
+                    gains = b2 - b1
+                    same = b1 & b2
+                    diff = b1 ^ b2
+
+                    if rtype not in hm:
+                        hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                        Counter(), Counter(), Counter(), Counter())
+                    lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
+
+                    for r in loses:
+                        lci[r] += 1
+                    for r in gains:
+                        gci[r] += 1
+                    for r in same:
+                        smi[r] += 1
+                    for r in diff:
+                        dfi[r] += 1
+
+            tmpout = {}
+            for rtype, (lco, gco, smo, dfo, lci, gci, smi, dfi) in hm.items():
+                x1 = set(lco)
+                y1 = set(gco)
+                z1 = set(smo)
+                w1 = set(dfo)
+
+                x2 = set(lci)
+                y2 = set(gci)
+                z2 = set(smi)
+                w2 = set(dfi)
+
+                score = [jaccard_index(x1, y1),
+                            jaccard_index(x1, z1),
+                            jaccard_index(x1, w1),
+                            jaccard_index(x1, x2),
+                            jaccard_index(x1, y2),
+                            jaccard_index(x1, z2),
+                            jaccard_index(x1, w2),
+                            jaccard_index(y1, z1),
+                            jaccard_index(y1, w1),
+                            jaccard_index(y1, x2),
+                            jaccard_index(y1, y2),
+                            jaccard_index(y1, z2),
+                            jaccard_index(y1, w2),
+                            jaccard_index(z1, w1),
+                            jaccard_index(z1, x2),
+                            jaccard_index(z1, y2),
+                            jaccard_index(z1, z2),
+                            jaccard_index(z1, w2),
+                            jaccard_index(w1, x2),
+                            jaccard_index(w1, y2),
+                            jaccard_index(w1, z2),
+                            jaccard_index(w1, w2),
+                            jaccard_index(x2, y2),
+                            jaccard_index(x2, z2),
+                            jaccard_index(x2, w2),
+                            jaccard_index(y2, z2),
+                            jaccard_index(y2, w2),
+                            jaccard_index(z2, w2)]
+
+                tmpout[rtype] = score
+            return tmpout
+
+        tmp1 = get_text_score(2)
+        tmp2 = get_text_score(3)
+        tmp3 = get_text_score(4)
+
+        out = {}#merged aggregate results
+
+        for rtype, score in tmp0.items():
+            ascore = score + tmp1[rtype] + tmp2[rtype] + tmp3[rtype]
+            #out[rtype] = ascore
+            out[rtype] = np.asarray(ascore, dtype=np.float)
 
         return out
-
-    #def index_rtypes(self):
-    #    hm = {}  # aggregate rtypes across all usages
-    #    for fnode in self.features.values():
-    #        for (rtype, dest) in fnode.outgoing_relations:
-    #            loses = fnode.rtypes - self.features[dest].rtypes
-    #            gains = self.features[dest].rtypes - fnode.rtypes
-    #            same = self.features[dest].rtypes & fnode.rtypes
-    #            diff = self.features[dest].rtypes ^ fnode.rtypes
-
-    #            if rtype not in hm:
-    #                hm[rtype] = (Counter(), Counter(), Counter(),
-    #                             Counter(), Counter())
-    #            lco, gco, smo, dfo, gci = hm[rtype]
-
-    #            for r in loses:
-    #                lco[r] += 1
-    #            for r in gains:
-    #                gco[r] += 1
-    #            for r in same:
-    #                smo[r] += 1
-    #            for r in diff:
-    #                dfo[r] += 1
-
-    #        #only incoming gains matters
-    #        for (rtype, src) in fnode.incoming_relations:
-    #            gains = self.features[src].rtypes - fnode.rtypes
-
-    #            if rtype not in hm:
-    #                hm[rtype] = (Counter(), Counter(), Counter(),
-    #                             Counter(), Counter())
-    #            lco, gco, smo, dfo, gci = hm[rtype]
-
-    #            for r in gains:
-    #                gci[r] += 1
-
-
-    #    out = {}  # compute metrics from rtypes
-    #    for rtype, (lco, gco, smo, dfo, gci) in hm.items():
-
-    #        #def adjust(x):  # eliminate outlier data for better results
-    #        #    n = len(x)
-    #        #    total_count = sum(x.values())
-    #        #    return set(a for a, b in x.items() if b / total_count > 1/n)
-    #        #x1 = adjust(lco)
-    #        #y1 = adjust(gco)
-    #        #z1 = adjust(smo)
-    #        #w1 = adjust(dfo)
-    #        #y2 = adjust(gci)
-
-    #        x1 = set(lco)
-    #        y1 = set(gco)
-    #        z1 = set(smo)
-    #        w1 = set(dfo)
-    #        y2 = set(gci)
-
-    #        # new ==> linearly independent columns only
-    #        score = np.asarray((jaccard_index(x1, y1),
-    #                            jaccard_index(x1, z1),
-    #                            jaccard_index(x1, w1),
-    #                            jaccard_index(x1, y2),
-    #                            jaccard_index(y1, z1),
-    #                            jaccard_index(z1, w1)), dtype=np.float)
-
-    #        #normalize the score
-    #        out[rtype] = score #/ sqrt(score.dot(score))
-    #    return out
 
     def get_analogy(self, src_feature, target_feature, target_domain, rmax=1, vmax=1):
         """Get the best analogy between two arbitrary features"""
@@ -435,34 +525,6 @@ class AIMind:
         src_node = self.features[src_feature]
         c_node = target_domain.features[target_feature]
 
-        nc1 = src_node.get_rtype_ratios()
-        nc2 = c_node.get_rtype_ratios()
-
-        #def filter(u):
-        #    #return number of standard deviations away from mean
-        #    x = [v for k,v in u.items()]
-        #    meanx = statistics.mean(x)
-        #    stdx = statistics.stdev(x)
-        #    total = sum
-        #    return {k:abs(v-meanx)/stdx for k,v in u.items()}
-
-
-        #    #try:
-        #    #    stdx = statistics.stdev(x)
-        #    #except:
-        #    #    stdx = meanx
-            
-        #    #if stdx == 0:
-        #    #    return {k:1 for k,v in u.items()}
-        #    #else:
-        #    #    return {k:1 + (v-meanx)/stdx for k,v in u.items()}
-
-        #u1 = filter(self.usage_count)
-        #u2 = filter(target_domain.usage_count)
-
-        #u1 = filter(nc1)
-        #u2 = filter(nc2)
-
         def get_hypotheses():
             svec = src_node.get_vector()
             cvec = c_node.get_vector()
@@ -470,78 +532,50 @@ class AIMind:
 
             # precompute source vectors because this won't change
             src_vec_dict = {}
-
-
             for r1, d1 in src_node.outgoing_relations:
-                src_vec_dict[(d1, 1)] = svec - self.features[d1].get_vector()
-                src_vec_dict[(d1, 2)] = svec - self.rtype_index[r1]
-
-
+                d1vec = self.features[d1].get_vector()
+                diff1 = svec - d1vec
+                src_vec_dict[(d1, True)] = diff1
             for r1, d1 in src_node.incoming_relations:
-                src_vec_dict[(d1, -1)] = svec - self.features[d1].get_vector()
-                src_vec_dict[(d1, -2)] = svec - self.rtype_index[r1]
+                d1vec = self.features[d1].get_vector()
+                diff1 = svec - d1vec
+                src_vec_dict[(d1, False)] = diff1
 
             # for each pair in candidate outgoing
             for r2, d2 in c_node.outgoing_relations:
                 d2vec = target_domain.features[d2].get_vector()
-                vdiff2 = cvec - d2vec
-                rdiff2 = cvec - target_domain.rtype_index[r2]
+                diff2 = cvec - d2vec
                 # find best outgoing rtype to compare with
                 for r1, d1 in src_node.outgoing_relations:
-                    #rscore = cosine_similarity(self.rtype_index[r1],
-                    #                  target_domain.rtype_index[r2])
-
-                    rdiff1 = src_vec_dict[(d1, 2)]
-                    rscore = cosine_similarity(rdiff1,rdiff2)
-
-
-                    #weight matches by usage ratio
-                    #relatively close usage ratios should have higher confidence
-                    rscore *= 1 - abs(nc1[r1] - nc2[r2])**2
-                    #rscore *= 1 - abs(u1[r1] - u2[r2])**2
-
-
-
-
-                    vdiff1 = src_vec_dict[(d1, 1)]
-                    vscore = cosine_similarity(vdiff1, vdiff2)
-                    actual_score = (rscore*rmax + vscore*vmax)
-                    #actual_score = max(rscore, vdiff)
+                    rdiff = cosine_similarity(self.rtype_index[r1],
+                                              target_domain.rtype_index[r2])
+                    diff1 = src_vec_dict[(d1, True)]
+                    vdiff = cosine_similarity(diff1, diff2)
+                    actual_score = (rdiff*rmax + vdiff*vmax)
+                    #actual_score = max(rdiff, vdiff)
 
                     hypotheses.append((actual_score / tscore, r1, d1, r2, d2, True))
-                    #hypotheses.append((rscore*rmax, r1, d1, r2, d2, True))
+                    #hypotheses.append((rdiff*rmax, r1, d1, r2, d2, True))
                     #hypotheses.append((vdiff*vmax, r1, d1, r2, d2, True))
 
             # for each pair in candidate incoming
             for r2, d2 in c_node.incoming_relations:
                 d2vec = target_domain.features[d2].get_vector()
-                vdiff2 = cvec - d2vec
-                rdiff2 = cvec - target_domain.rtype_index[r2]
+                diff2 = cvec - d2vec
                 # find best incoming rtype to compare with
                 for r1, d1 in src_node.incoming_relations:
-                    #rscore = cosine_similarity(self.rtype_index[r1],
-                    #                  target_domain.rtype_index[r2])
-
-                    rdiff1 = src_vec_dict[(d1, -2)]
-                    rscore = cosine_similarity(rdiff1,rdiff2)
-
-                    #weight matches by usage ratio
-                    #relatively close usage ratios should have higher confidence
-                    rscore *= 1 - abs(nc1[r1] - nc2[r2])**2
-                    #rscore *= 1 - abs(u1[r1] - u2[r2])**2
-
-
-                    vdiff1 = src_vec_dict[(d1, -1)]
-                    vscore = cosine_similarity(vdiff1, vdiff2)
-                    actual_score = (rscore*rmax + vscore*vmax)
-                    #actual_score = max(rscore, vdiff)
+                    rdiff = cosine_similarity(self.rtype_index[r1],
+                                              target_domain.rtype_index[r2])
+                    diff1 = src_vec_dict[(d1, False)]
+                    vdiff = cosine_similarity(diff1, diff2)
+                    actual_score = (rdiff*rmax + vdiff*vmax)
+                    #actual_score = max(rdiff, vdiff)
 
                     hypotheses.append((actual_score / tscore, r1, d1, r2, d2, False))
-                    #hypotheses.append((rscore*rmax, r1, d1, r2, d2, False))
+                    #hypotheses.append((rdiff*rmax, r1, d1, r2, d2, False))
                     #hypotheses.append((vdiff*vmax, r1, d1, r2, d2, False))
 
-            hypotheses.sort(reverse=True)
-            return hypotheses
+            return sorted(hypotheses,reverse=True)
 
         rassert = {}
         hmap = {}
@@ -572,68 +606,21 @@ class AIMind:
                     total_rating += tscore
 
         # penalize score for non-matches
-        #for destobj in src_node.connections:
-        #    if (destobj, True) not in hmap.keys():
-        #        total_rating += 2
+        for destobj in src_node.connections:
+            if (destobj, True) not in hmap.keys():
+                total_rating += 2
 
-        #for destobj in c_node.connections:
-        #    if (destobj, False) not in hmap.values():
-        #        total_rating += 2
-
-
-        #confidence score
-        #how confident can you possibly be with an analogy?
-
-        #max numbeer of rtype matches corresponds with
-        #max number of total matches
-
-        # number of distinct relationship types
-        # number of total relationships
-
-        #score based on relative numbers
-
-
-        
-
-        tr1 = len(nc1.keys())
-        tr2 = len(nc2.keys())
-
-        sr1 = sum(src_node.rtype_count.values())
-        sr2 = sum(c_node.rtype_count.values())
-
-        v = max(sr1, sr2)
-        z = max(tr1, tr2)
-
-        confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
-
-        #confidence = 1 - (abs(tr1-tr2)/z)**2 * (abs(sr1-sr2)/v)**2
-
-
-        #print(target_feature, "confidence: ", confidence)
-
-
-
-        #t1 = kulczynski_2(set(rassert.keys()), p1)
-        #t2 = kulczynski_2(set(rassert.values()), p2)
-        #weight = (t1 + t2) / 2
-
-
+        for destobj in c_node.connections:
+            if (destobj, False) not in hmap.values():
+                total_rating += 2
 
         if total_rating == 0:  # prevent divide by zero error
             return None
 
         normalized_rating = rating / total_rating
 
-        #normalized_rating *= confidence
-        total_score = confidence * normalized_rating #(confidence/3 + normalized_rating*2/3 + weight/3)
-
-        #return (normalized_rating, rating, total_rating,
-        #        (src_feature, target_feature), rassert, best)
-
-        return (total_score, confidence, normalized_rating,
+        return (normalized_rating, rating, total_rating,
                 (src_feature, target_feature), rassert, best)
-
-        #return (total_score, normalized_rating, confidence, target_feature)
 
     def find_best_analogy(self, src_feature, target_domain, filter_list=None, rmax=1, vmax=1):
         """
@@ -660,12 +647,8 @@ class AIMind:
         if not candidate_results:
             return None
         else:
-
-            tmp = sorted(candidate_results, key=lambda x: x[0])
-            #tmp2 = [(x[0],x[1],x[2],x[3][1]) for x in tmp]
-            #pprint(tmp2)
             # return the best global analogy
-            return tmp[-1]
+            return sorted(candidate_results, key=lambda x: x[0])[-1]
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """
