@@ -7,9 +7,10 @@ module for making analogies between standard graph structures
 """
 
 import numpy as np
-from utils import permute_rtype_vector, cosine_similarity
+from utils import permute_rtype_vector, cosine_similarity, euclidean_distance
+import math
 
-
+from pprint import pprint
 
 '''
 To make analogies:
@@ -27,13 +28,15 @@ Need to incrementally make inferences
 
 '''
 
-def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, threshold=0.5):
+def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, threshold=None):
     '''Makes the best analogy between two concepts in two domains
 
     src_domain is the KNOWN domain
     target_domain is the NOVEL domain
 
     returns the best analogy or None if no analogy could be made
+
+    if threshold is set, match hypotheses with scores below the threshold will not count
 
     '''
     
@@ -53,11 +56,41 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     nc1 = cnode.get_rtype_ratios()
     nc2 = tnode.get_rtype_ratios()
 
+    tv1 = sum([len(x) for x in src_domain.usage_map.values()])
+    tv2 = sum([len(x) for x in target_domain.usage_map.values()])
+
     tscore = rmax + vmax
+
+    def get_confidence(r1,r2):
+        #get the relative confidence between two relationship types
+
+        ##confidence based on total knowledge
+        #c1 = len(src_domain.usage_map[r1])
+        #c2 = len(target_domain.usage_map[r2])
+
+        #ratio1 = c1/tv1
+        #ratio2 = c2/tv2
+
+        #diff1 = (ratio1 - ratio2)**2
+
+        ##confidence based on relative usage
+        #diff2 = (nc1[r1] - nc2[r2])**2
+
+        #return 1 - (diff1+diff2)/2
+
+        return 1 - (nc1[r1] - nc2[r2])**2
+
+    def weigh_score(x,c):
+        #return math.exp((3*x-3))
+        #return math.tanh((6*x-6) + 2)
+        return math.tanh(2*c*x - c)
 
     def get_hypotheses():
         svec = src_domain.node_vectors[src_concept]
         tvec = target_domain.node_vectors[target_concept]
+
+        offset = svec - tvec
+
         hypotheses = []
 
         # precompute source vectors because this won't change
@@ -72,8 +105,10 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
         #precompute vectors for inner loop
         for r, d, v in net1:
+            #vector from src node to src neighbor
             src_vec_dict[d] = svec - src_domain.node_vectors[d]
 
+            #vector from src node to src rtype
             if v: #if outgoing rtype
                 src_vec_dict[(r,v)] = svec - src_domain.rtype_vectors[r]
             else: #if incoming rtype
@@ -83,8 +118,10 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
         # for each pair in candidate outgoing
         for r2, d2, v2 in net2:
 
+            #vector from target node to target neighbor
             vdiff2 = tvec - target_domain.node_vectors[d2]
 
+            #vector from target node to target rtype
             if v2: #if outgoing rtype
                 rdiff2 = tvec - target_domain.rtype_vectors[r2]
             else: #if incoming rtype
@@ -93,20 +130,30 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             # find best outgoing rtype to compare with
             for r1, d1, v1 in net1:
 
-
                 #compute relative rtype score
                 rscore = cosine_similarity(src_vec_dict[(r1,v1)], rdiff2)
 
                 #adjust rtype score by confidence
-                rscore *= 1 - abs(nc1[r1] - nc2[r2])**2
+                rscore *= get_confidence(r1,r2)
 
-                #compute node score
+                #weigh rscore
+                #rscore *= weigh_score(rscore,5)
+
+                #compute relative node score
                 vscore = cosine_similarity(src_vec_dict[d1], vdiff2)
 
-                actual_score = (rscore*rmax + vscore*vmax)
+                #vscore *= weigh_score(vscore,2)
 
-                if actual_score >= threshold:
-                    hypotheses.append((actual_score / tscore, r1, d1, r2, d2, v1, v2))
+                #actual_score = weigh_score((rscore*rmax + vscore*vmax)/tscore)
+                actual_score = (rscore*rmax + vscore*vmax)/tscore
+
+                if threshold != None:
+                    if actual_score >= threshold:
+                        hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
+                    else:
+                        hypotheses.append((-actual_score, r1, d1, r2, d2, v1, v2))
+                else:
+                    hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
 
         hypotheses.sort(reverse=True)
         return hypotheses
@@ -117,52 +164,75 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     rating = 0
     total_rating = 0
 
+    #use dict views to avoid copying
+    hkeys = hmap.keys()
+    hvals = hmap.values()
+    rkeys = rassert.keys()
+    rvals = rassert.values()
+
     # for each mh, pick the best then pick the next best non-conflicting
+    
+    # total number of hypotheses is O(n^2) with a max of n matches
+    # total score is based on possible non-conflicts
+    # only penalize on conflicts
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
-        #score = score * tscore
-        key = (src, v1)
-        if (hmap.get(key) == target) or (key not in hmap.keys() and\
-                                            target not in hmap.values()):
-            if r1 != r2 and r1 not in rassert.keys() and\
-                    r2 not in rassert.values():
-                #if r1 not in tnode.rtypes and\
-                #    r2 not in cnode.rtypes:  # prevent crossmatching
-                    rassert[r1] = r2
-            if key not in hmap.keys() and target not in hmap.values():
-                hmap[key] = target
-                total_rating += tscore
-            if r1 == r2 or rassert.get(r1) == r2:
-                if v1:
-                    if v2:
-                        otype = "OUT-OUT"
-                    else:
-                        otype = "OUT-IN"
-                else:
-                    if v2:
-                        otype = "IN-OUT"
-                    else:
-                        otype = "IN-IN"
+        vkey = (src, r1)
+        rkey1 = (r1, v1)
+        rkey2 = (r2, v2)
 
+        if v1:
+            if v2:
+                otype = "OUT-OUT"
+            else:
+                otype = "OUT-IN"
+        else:
+            if v2:
+                otype = "IN-OUT"
+            else:
+                otype = "IN-IN"
+
+
+        #for a new mapping
+        if vkey not in hkeys and target not in hvals:
+            if rkey1 not in rkeys and rkey2 not in rvals:
+                rassert[rkey1] = rkey2
+            hmap[vkey] = target
+            total_rating += tscore
+        
+        #if the src/target has already been mapped to
+        if hmap.get(vkey) == target:
+            #check for conflict with relationship types
+            if rassert.get(rkey1) == rkey2:
+                #track best match
                 best[(otype, r1, src)] = (r2, target, score)
+                #increase score for match
                 rating += score
-            else:  # penalize inconsistent rtype matchup
-                total_rating += tscore      
+            #else:
+                #penalize score for mismatch
+                #rating -= score
 
+
+    #print(rating, total_rating)
+    
+    #total number of rtypes for each node
     tr1 = len(nc1.keys())
     tr2 = len(nc2.keys())
 
+    #total number of relationships for each node
     sr1 = sum(cnode.rtype_count.values())
     sr2 = sum(tnode.rtype_count.values())
 
+    #get max number of each (ideal number)
     v = max(sr1, sr2)
     z = max(tr1, tr2)
 
+    #confidence is based on difference from ideal
     confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
 
     if total_rating == 0:  # prevent divide by zero error
         return None
 
-    normalized_rating = rating #/ total_rating
+    normalized_rating = rating / total_rating
 
     total_score = confidence * normalized_rating
 
@@ -205,9 +275,9 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
         
         
         tmp = sorted(candidate_results, key=lambda x: x["total_score"])
-        from pprint import pprint
-        tmp2 = [(x["total_score"],x["confidence"],x["rating"],x["target_concept"]) for x in tmp]
-        pprint(tmp2)
+        #from pprint import pprint
+        #tmp2 = [(x["total_score"],x["confidence"],x["rating"],x["target_concept"]) for x in tmp]
+        #pprint(tmp2)
 
         # return the best global analogy
         return tmp[-1]

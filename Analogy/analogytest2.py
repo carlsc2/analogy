@@ -163,9 +163,12 @@ d2 = a2.as_domain()
 
 #pprint(make_analogy("Augustus",d1,"Adolf Hitler",d2))
 
-start = time.time()
-pprint(find_best_analogy("Augustus",d1,d2,rmax=1,vmax=1,threshold=0.75))
-print("time: %.7f"%(time.time() - start))
+pprint(make_analogy("Augustus",d1,"Augustus",d1))
+
+#start = time.time()
+#pprint(find_best_analogy("Augustus",d1,d2,rmax=1,vmax=1,threshold=None))
+##pprint(find_best_analogy("Adolf Hitler",d2,d1,rmax=1,vmax=1,threshold=0.5))
+#print("time: %.7f"%(time.time() - start))
 
 
 #import numpy as np
