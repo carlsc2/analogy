@@ -10,12 +10,18 @@ import sys
 import argparse
 from pprint import pformat
 from analogy import AIMind
+import os.path
 
 cache = {}
 
+data_dir = "./data files/"
+def full_filename(filename):
+    #add path to filename
+    return os.path.join(data_dir, filename)
 
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
@@ -38,9 +44,31 @@ def list_files():
 def get_features():
     f = request.form['file']
     return json.dumps(list(cache[f].features.keys()))
-    
 
+@app.route('/check_file', methods=['POST'])
+def check_file():
+    #check if a file exists
+    filename = full_filename(request.form['file'])
+    if os.path.isfile(filename):
+        return "true"
+    else:
+        return "false"
 
+@app.route('/add_file', methods=['POST'])
+def add_file():
+    filename = full_filename(request.form['file'])
+    #add a file if it doesn't already exist
+    if os.path.isfile(filename):
+        if not request.form['override'] == "true":
+            return "File already exists"
+    data = request.form['data']
+    with open(filename,"w+") as f:
+        f.write(data)
+    try:
+        cache[f] = AIMind(filename=filename)
+    except:
+        return "Invalid file format"
+    return "File added"
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Analogy web interface server.')
@@ -49,7 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', help='Flask debug mode (default off)')
     args = parser.parse_args()
     for f in list_files():
-        cache[f] = AIMind(filename='./data files/'+f)
+        cache[f] = AIMind(filename=full_filename(f))
     print("Files loaded")
     for key in cache.keys():
         print("\t%s"%key)

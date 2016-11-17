@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
-from math import sqrt
+from math import sqrt, log
 from pprint import pprint
 import numpy as np
 from lru import LRU
@@ -104,6 +104,8 @@ class Feature:
 
         self.rtypes = set()  # set of outgoing relation types
 
+        self.rtype_count = Counter() #how many times each rtype is used
+
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
 
@@ -112,8 +114,14 @@ class Feature:
 
         self.text = ""
 
+    def get_rtype_ratios(self):
+        total = sum(self.rtype_count.values())
+        return {x:self.rtype_count[x]/total for x in self.rtype_count}
+
+
     def add_predecessor(self, rtype, pred):
         self.incoming_relations.add((rtype, pred))
+        self.rtype_count[rtype] += 1
         self.predecessors.add(pred)
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
@@ -124,6 +132,7 @@ class Feature:
         self.connections.add(dest)
         self.outgoing_relations.add((rtype, dest))
         self.rtypes.add(rtype)
+        self.rtype_count[rtype] += 1
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
@@ -335,6 +344,17 @@ class AIMind:
 
         out = {}  # compute metrics from rtypes
         for rtype, (lco, gco, smo, dfo, gci) in hm.items():
+
+            #def adjust(x):  # eliminate outlier data for better results
+            #    n = len(x)
+            #    total_count = sum(x.values())
+            #    return set(a for a, b in x.items() if b / total_count > 1/n)
+            #x1 = adjust(lco)
+            #y1 = adjust(gco)
+            #z1 = adjust(smo)
+            #w1 = adjust(dfo)
+            #y2 = adjust(gci)
+
             x1 = set(lco)
             y1 = set(gco)
             z1 = set(smo)
@@ -384,6 +404,10 @@ class AIMind:
         src_node = self.features[src_feature]
         c_node = target_domain.features[target_feature]
 
+        nc1 = src_node.get_rtype_ratios()
+        nc2 = c_node.get_rtype_ratios()
+
+
         def get_hypotheses():
             svec = src_node.get_vector2()
             cvec = c_node.get_vector2()
@@ -408,6 +432,13 @@ class AIMind:
                 for r1, d1 in src_node.outgoing_relations:
                     rdiff = cosine_similarity(self.rtype_index[r1],
                                               target_domain.rtype_index[r2])
+
+                    #weight matches by usage ratio
+                    #relatively close usage ratios should have higher confidence
+                    rdiff *= 1 - abs(nc1[r1] - nc2[r2])**2
+
+
+
                     diff1 = src_vec_dict[(d1, True)]
                     vdiff = cosine_similarity(diff1, diff2)
                     actual_score = (rdiff*rmax + vdiff*vmax)
@@ -425,6 +456,12 @@ class AIMind:
                 for r1, d1 in src_node.incoming_relations:
                     rdiff = cosine_similarity(self.rtype_index[r1],
                                               target_domain.rtype_index[r2])
+
+
+                    #weight matches by usage ratio
+                    #relatively close usage ratios should have higher confidence
+                    rdiff *= 1 - abs(nc1[r1] - nc2[r2])**2
+
                     diff1 = src_vec_dict[(d1, False)]
                     vdiff = cosine_similarity(diff1, diff2)
                     actual_score = (rdiff*rmax + vdiff*vmax)
@@ -466,21 +503,71 @@ class AIMind:
                     total_rating += tscore
 
         # penalize score for non-matches
-        for destobj in src_node.connections:
-            if (destobj, True) not in hmap.keys():
-                total_rating += 2
+        #for destobj in src_node.connections:
+        #    if (destobj, True) not in hmap.keys():
+        #        total_rating += 2
 
-        for destobj in c_node.connections:
-            if (destobj, False) not in hmap.values():
-                total_rating += 2
+        #for destobj in c_node.connections:
+        #    if (destobj, False) not in hmap.values():
+        #        total_rating += 2
+
+
+        #confidence score
+        #how confident can you possibly be with an analogy?
+
+        #max numbeer of rtype matches corresponds with
+        #max number of total matches
+
+        # number of distinct relationship types
+        # number of total relationships
+
+        #score based on relative numbers
+
+
+        
+
+        tr1 = len(nc1.keys())
+        tr2 = len(nc2.keys())
+
+        sr1 = sum(src_node.rtype_count.values())
+        sr2 = sum(c_node.rtype_count.values())
+
+        v = max(sr1, sr2)
+        z = max(tr1, tr2)
+
+        confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
+
+
+        #print(target_feature, "confidence: ", confidence)
+
+
+
+        #t1 = kulczynski_2(set(rassert.keys()), p1)
+        #t2 = kulczynski_2(set(rassert.values()), p2)
+        #weight = (t1 + t2) / 2
+
+
 
         if total_rating == 0:  # prevent divide by zero error
             return None
 
         normalized_rating = rating / total_rating
 
-        return (normalized_rating, rating, total_rating,
-                (src_feature, target_feature), rassert, best)
+        #normalized_rating *= confidence
+        total_score = confidence * normalized_rating #(confidence/3 + normalized_rating*2/3 + weight/3)
+
+        #return (normalized_rating, rating, total_rating,
+        #        (src_feature, target_feature), rassert, best)
+
+        return {"total_score":total_score,
+                "confidence":confidence,
+                "rating":normalized_rating,
+                "src":src_feature,
+                "target":target_feature,
+                "asserts":rassert,
+                "mapping":best}
+
+        #return (total_score, normalized_rating, confidence, target_feature)
 
     def find_best_analogy(self, src_feature, target_domain, filter_list=None, rmax=1, vmax=1):
         """
@@ -507,8 +594,12 @@ class AIMind:
         if not candidate_results:
             return None
         else:
+
+            tmp = sorted(candidate_results, key=lambda x: x[0])
+            tmp2 = [(x[0],x[1],x[2],x[3][1]) for x in tmp]
+            pprint(tmp2)
             # return the best global analogy
-            return sorted(candidate_results, key=lambda x: x[0])[-1]
+            return tmp[-1]
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """
