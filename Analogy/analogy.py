@@ -473,26 +473,19 @@ class AIMind:
 
 
             for r1, d1 in src_node.outgoing_relations:
-                src_vec_dict[(d1, 1)] = svec - self.features[d1].get_vector()
-                src_vec_dict[(d1, 2)] = svec - self.rtype_index[r1]
-
+                src_vec_dict[(d1, True)] = svec - self.features[d1].get_vector()
 
             for r1, d1 in src_node.incoming_relations:
-                src_vec_dict[(d1, -1)] = svec - self.features[d1].get_vector()
-                src_vec_dict[(d1, -2)] = svec - self.rtype_index[r1]
+                src_vec_dict[(d1, False)] = svec - self.features[d1].get_vector()
 
             # for each pair in candidate outgoing
             for r2, d2 in c_node.outgoing_relations:
                 d2vec = target_domain.features[d2].get_vector()
                 vdiff2 = cvec - d2vec
-                rdiff2 = cvec - target_domain.rtype_index[r2]
                 # find best outgoing rtype to compare with
                 for r1, d1 in src_node.outgoing_relations:
-                    #rscore = cosine_similarity(self.rtype_index[r1],
-                    #                  target_domain.rtype_index[r2])
-
-                    rdiff1 = src_vec_dict[(d1, 2)]
-                    rscore = cosine_similarity(rdiff1,rdiff2)
+                    rscore = cosine_similarity(self.rtype_index[r1],
+                                      target_domain.rtype_index[r2])
 
 
                     #weight matches by usage ratio
@@ -503,7 +496,7 @@ class AIMind:
 
 
 
-                    vdiff1 = src_vec_dict[(d1, 1)]
+                    vdiff1 = src_vec_dict[(d1, True)]
                     vscore = cosine_similarity(vdiff1, vdiff2)
                     actual_score = (rscore*rmax + vscore*vmax)
                     #actual_score = max(rscore, vdiff)
@@ -516,14 +509,10 @@ class AIMind:
             for r2, d2 in c_node.incoming_relations:
                 d2vec = target_domain.features[d2].get_vector()
                 vdiff2 = cvec - d2vec
-                rdiff2 = cvec - target_domain.rtype_index[r2]
                 # find best incoming rtype to compare with
                 for r1, d1 in src_node.incoming_relations:
-                    #rscore = cosine_similarity(self.rtype_index[r1],
-                    #                  target_domain.rtype_index[r2])
-
-                    rdiff1 = src_vec_dict[(d1, -2)]
-                    rscore = cosine_similarity(rdiff1,rdiff2)
+                    rscore = cosine_similarity(self.rtype_index[r1],
+                                      target_domain.rtype_index[r2])
 
                     #weight matches by usage ratio
                     #relatively close usage ratios should have higher confidence
@@ -531,7 +520,7 @@ class AIMind:
                     #rscore *= 1 - abs(u1[r1] - u2[r2])**2
 
 
-                    vdiff1 = src_vec_dict[(d1, -1)]
+                    vdiff1 = src_vec_dict[(d1, False)]
                     vscore = cosine_similarity(vdiff1, vdiff2)
                     actual_score = (rscore*rmax + vscore*vmax)
                     #actual_score = max(rscore, vdiff)
