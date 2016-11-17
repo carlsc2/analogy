@@ -283,3 +283,44 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
         return tmp[-1]
 
 
+def explain_analogy(analogy, verbose=False):
+    # only explain main relation
+    if not analogy:
+        return
+
+    src = analogy["src_concept"]
+    trg = analogy["target_concept"]
+    mapping = analogy["mapping"]
+
+
+    narrative = ""
+    narrative += "\t%s is like %s. " % (src, trg)
+
+    narrative += "This is because"
+    nchunks = []
+
+    mentioned = set()
+
+    for (x, r1, d1), (r2, d2, s) in mapping.items():
+        if not verbose and r1 in mentioned:
+            continue
+        if x == "IN-IN":
+            nchunks.append((s, d1, r1, src, d2, r2, trg))
+        if x == "IN-OUT":
+            nchunks.append((s, d1, r1, src, trg, r2, d2))
+        if x == "OUT-IN":
+            nchunks.append((s, src, r1, d1, d2, r2, trg))
+        if x == "OUT-OUT":
+            nchunks.append((s, src, r1, d1, trg, r2, d2))
+        mentioned.add(r1)
+    nchunks.sort(reverse=True)
+    #order by score to give most important matches first 
+    for i, nc in enumerate(nchunks):
+        s, a, b, c, d, e, f = nc
+        if i == len(nchunks) - 1:
+            narrative += " and '%s' <%s> '%s' in the same way that '%s' <%s> '%s'.\n" % (
+                a, b, c, d, e, f)
+        else:
+            narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'," % (
+                a, b, c, d, e, f)
+    return narrative
