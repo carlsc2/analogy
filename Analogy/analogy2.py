@@ -28,15 +28,13 @@ Need to incrementally make inferences
 
 '''
 
-def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, threshold=None):
+def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1):
     '''Makes the best analogy between two concepts in two domains
 
     src_domain is the KNOWN domain
     target_domain is the NOVEL domain
 
     returns the best analogy or None if no analogy could be made
-
-    if threshold is set, match hypotheses with scores below the threshold will not count
 
     '''
     
@@ -65,20 +63,20 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
         #get the relative confidence between two relationship types
 
         ##confidence based on total knowledge
-        #c1 = len(src_domain.usage_map[r1])
-        #c2 = len(target_domain.usage_map[r2])
+        c1 = len(src_domain.usage_map[r1])
+        c2 = len(target_domain.usage_map[r2])
 
-        #ratio1 = c1/tv1
-        #ratio2 = c2/tv2
+        ratio1 = c1/tv1
+        ratio2 = c2/tv2
 
-        #diff1 = (ratio1 - ratio2)**2
+        diff1 = (ratio1 - ratio2)**2
 
-        ##confidence based on relative usage
-        #diff2 = (nc1[r1] - nc2[r2])**2
+        #confidence based on relative usage
+        diff2 = (nc1[r1] - nc2[r2])**2
 
-        #return 1 - (diff1+diff2)/2
+        return 1 - (diff1+diff2)/2
 
-        return 1 - (nc1[r1] - nc2[r2])**2
+        #return 1 - (nc1[r1] - nc2[r2])**2
 
     def weigh_score(x,c):
         #return math.exp((3*x-3))
@@ -136,24 +134,28 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
                 #adjust rtype score by confidence
                 rscore *= get_confidence(r1,r2)
 
+                #rscore = rscore**3
+                rscore = math.tanh(2*math.e*rscore - math.e)
+
                 #weigh rscore
-                #rscore *= weigh_score(rscore,5)
+                #rscore *= weigh_score(rscore,15)
 
                 #compute relative node score
                 vscore = cosine_similarity(src_vec_dict[d1], vdiff2)
 
-                #vscore *= weigh_score(vscore,2)
+                #vscore = vscore**3
+                
+                #vscore = math.tanh(2*math.e*vscore - math.e)
 
-                #actual_score = weigh_score((rscore*rmax + vscore*vmax)/tscore)
+
+
+                #vscore *= weigh_score(vscore,13)
+
                 actual_score = (rscore*rmax + vscore*vmax)/tscore
 
-                if threshold != None:
-                    if actual_score >= threshold:
-                        hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
-                    else:
-                        hypotheses.append((-actual_score, r1, d1, r2, d2, v1, v2))
-                else:
-                    hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
+                #actual_score = math.tanh(2*math.e*actual_score - math.e)
+
+                hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
 
         hypotheses.sort(reverse=True)
         return hypotheses
@@ -169,16 +171,20 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     hvals = hmap.values()
     rkeys = rassert.keys()
     rvals = rassert.values()
+    ritems = rassert.items()
 
     # for each mh, pick the best then pick the next best non-conflicting
     
-    # total number of hypotheses is O(n^2) with a max of n matches
+    # total number of hypotheses is O(m*n) with max(n,m) matches
     # total score is based on possible non-conflicts
     # only penalize on conflicts
+
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
-        vkey = (src, r1)
+        vkey = (src, v1)
         rkey1 = (r1, v1)
         rkey2 = (r2, v2)
+
+        
 
         if v1:
             if v2:
@@ -191,25 +197,32 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             else:
                 otype = "IN-IN"
 
-
         #for a new mapping
-        if vkey not in hkeys and target not in hvals:
+        if vkey not in hkeys:# and target not in hvals:
+            
+            #print("new mapping: ", vkey, target)
+            hmap[vkey] = target
+            rating += score
+            if (r1,r2) not in ritems:
+                total_rating += tscore
             if rkey1 not in rkeys and rkey2 not in rvals:
                 rassert[rkey1] = rkey2
-            hmap[vkey] = target
+
+        if target not in hvals:
             total_rating += tscore
-        
+
         #if the src/target has already been mapped to
-        if hmap.get(vkey) == target:
+        #if hmap.get(vkey) == target:
+        if hmap.get(vkey) == target:# or target not in hvals:
             #check for conflict with relationship types
             if rassert.get(rkey1) == rkey2:
                 #track best match
                 best[(otype, r1, src)] = (r2, target, score)
                 #increase score for match
                 rating += score
-            #else:
-                #penalize score for mismatch
-                #rating -= score
+
+        #else:
+            #print("mismatch: ", vkey, target, hmap.get(vkey))
 
 
     #print(rating, total_rating)
@@ -226,13 +239,15 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     v = max(sr1, sr2)
     z = max(tr1, tr2)
 
+    weight = z*v
+
     #confidence is based on difference from ideal
-    confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
+    confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
 
     if total_rating == 0:  # prevent divide by zero error
         return None
 
-    normalized_rating = rating / total_rating
+    normalized_rating = rating / total_rating * math.log(weight)
 
     total_score = confidence * normalized_rating
 
@@ -242,10 +257,11 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             "src_concept":src_concept,
             "target_concept":target_concept,
             "asserts":rassert,
-            "mapping":best}
+            "mapping":best,
+            "weight":weight}
 
 
-def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1, threshold=1):
+def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
     """Makes the best analogy between two concepts in two domains
 
     Finds the best analogy between a specific concept in the source domain
@@ -265,7 +281,7 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
         # otherwise best analogy would always be self
         if target_domain == src_domain and target_concept == src_concept:
             continue
-        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax, threshold)
+        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
         if result:
             candidate_results.append(result)
 
@@ -318,7 +334,9 @@ def explain_analogy(analogy, verbose=False):
     for i, nc in enumerate(nchunks):
         s, a, b, c, d, e, f = nc
         if i == len(nchunks) - 1:
-            narrative += " and '%s' <%s> '%s' in the same way that '%s' <%s> '%s'.\n" % (
+            if i > 1: #only add and if more than one thing
+                narrative += " and"
+            narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'.\n" % (
                 a, b, c, d, e, f)
         else:
             narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'," % (
