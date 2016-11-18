@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
 from math import sqrt, log
-from pprint import pprint
 import numpy as np
 from lru import LRU
 
@@ -9,25 +8,6 @@ from lru import LRU
 JACCARD_DIMENSIONS = 6
 NULL_VEC = np.zeros(JACCARD_DIMENSIONS)
 NULL_VEC2 = np.zeros(JACCARD_DIMENSIONS * 2)
-
-
-ENABLE_CONCEPTNET = False
-
-if ENABLE_CONCEPTNET:
-    import json
-    import pickle
-    import re
-    from urllib.request import urlopen
-    from urllib.parse import quote
-    from conceptnet5 import nodes
-    from conceptnet5 import query
-    from conceptnet5.uri import split_uri
-    from conceptnet5.readers import dbpedia
-    from conceptnet5.language.token_utils import un_camel_case
-    from conceptnet5.nodes import standardized_concept_uri
-
-    pattern = re.compile('\[/r/(.+)/,/c/en/([^/]*).*/c/en/([^/]*)')
-
 
 def kulczynski_2(a, b):
     '''Computes the Kulczynski-2 measure between two sets
@@ -212,11 +192,6 @@ class AIMind:
                                                              dest))
                 self.features[dest].add_predecessor(rtype,
                                                     feature.name)
-
-        if ENABLE_CONCEPTNET:
-            # augment knowledge with conceptnet
-            self._augment_knowledge()
-
         # calculate rtype jaccard index
         self.rtype_index = self.index_rtypes()
 
@@ -226,59 +201,7 @@ class AIMind:
     def get_feature(self, fid):
         return self.feature_id_table[fid]
 
-    def _augment_knowledge(self):
-        try:
-            with open("conceptnetquerycache.pkl", "rb") as f:
-                cache = pickle.load(f)
-        except:
-            cache = {}
-
-        # use conceptnet to augment knowledge
-        def get_results(feature):
-            feature = feature.lower()
-
-            if feature in cache:
-                ret = cache[feature]
-            else:
-                with urlopen('http://conceptnet5.media.mit.edu/data/5.4%s?limit=1000' % quote('/c/en/' + feature)) as response:
-                    html = response.read().decode('utf8')
-                    result = json.loads(html)
-                    ret = []
-                    for x in result['edges']:
-                        r = pattern.match(x['uri'][3:])
-                        if r:
-                            ret.append(r.groups())
-                cache[feature] = ret
-            return ret
-
-        current_features = list(self.features)
-
-        for feature in current_features:
-            # convert dbpedia entry to conceptnet uri
-            pieces = dbpedia.parse_topic_name(feature)
-            pieces[0] = un_camel_case(pieces[0])
-            cneturi = standardized_concept_uri('en', *pieces)
-
-            ret = get_results(cneturi)
-            for (rtype, src, dest) in ret:
-                if src not in self.features:
-                    self.features[src] = Feature(src, self)
-                if dest not in self.features:
-                    self.features[dest] = Feature(dest, self)
-
-                self.usage_map.setdefault(rtype, set()).add((src, dest))
-                self.features[src].add_relation(rtype, dest)
-                self.features[dest].add_predecessor(rtype, src)
-
-        with open("conceptnetquerycache.pkl", "wb") as f:
-            pickle.dump(cache, f)
-
-    def explain_analogy(self, analogy, verbose=False):
-        # only explain main relation
-        if not analogy:
-            return
-
-        nrating, rating, total_rating, (src, trg), rassert, mapping = analogy
+    def explain_analogy(self, src, trg, mapping, verbose=False):
 
         narrative = ""
         narrative += "\t%s is like %s. " % (src, trg)
@@ -565,7 +488,8 @@ class AIMind:
                 "src":src_feature,
                 "target":target_feature,
                 "asserts":rassert,
-                "mapping":best}
+                "mapping":best,
+                "explanation":self.explain_analogy(src_feature, target_feature, best)}
 
         #return (total_score, normalized_rating, confidence, target_feature)
 
@@ -594,12 +518,8 @@ class AIMind:
         if not candidate_results:
             return None
         else:
-
-            tmp = sorted(candidate_results, key=lambda x: x[0])
-            tmp2 = [(x[0],x[1],x[2],x[3][1]) for x in tmp]
-            pprint(tmp2)
-            # return the best global analogy
-            return tmp[-1]
+            #return best global analogy
+            return sorted(candidate_results, key=lambda x: x[0])[-1]
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """
