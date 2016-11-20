@@ -55,14 +55,18 @@ def check_file():
 
 @app.route('/add_file', methods=['POST'])
 def add_file():
-    filename = full_filename(request.form['file'])
+    data = request.get_json()
+    filename = full_filename(data['file'])
+    
+    #filename = full_filename(request.form['file'])
+    print("adding file: ",filename)
     #add a file if it doesn't already exist
     if os.path.isfile(filename):
-        if not request.form['override'] == "true":
+        if not data['override'] == "true":
+            print("file %s already exists"%filename)
             return "File already exists"
-    data = request.form['data']
-    with open(filename,"w+") as f:
-        f.write(data)
+    with open(filename,"wb+") as f:
+        f.write(data["data"].encode("utf-8"))
     try:
         cache[f] = AIMind(filename=filename)
     except:
@@ -76,7 +80,13 @@ parser.add_argument('--port', nargs='?', const='5000', help='the port (default: 
 parser.add_argument('--debug', action='store_true', help='Flask debug mode (default off)')
 args = parser.parse_args()
 for f in list_files():
-    cache[f] = AIMind(filename=full_filename(f))
+    fname = full_filename(f)
+    try:
+        cache[f] = AIMind(filename=fname)
+    except:
+        print("file %s is corrupt, ignoring"%fname)
+        os.rename(fname, fname + "broken")
+        
 print("Files loaded")
 for key in cache.keys():
     print("\t%s"%key)
