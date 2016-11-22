@@ -14,6 +14,14 @@ import os.path
 
 cache = {}
 
+#have to do this because of flask nonsense
+def cache_load(f):
+    try:
+        return cache[f]
+    except:
+        cache[f] = AIMind(filename=f)
+        return cache[f]
+
 data_dir = "./data files/"
 def full_filename(filename):
     #add path to filename
@@ -32,21 +40,24 @@ def get_analogy():
     #print("file2: ", request.form['file2'])
     #print("feature1: ", request.form['feature1'])
     #print("feature2: ", request.form['feature2'])
-    return json.dumps(cache[request.form['file1']].get_analogy(request.form['feature1'],
-                                                        request.form['feature2'],
-                                                        cache[request.form['file2']]))
+    return json.dumps(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
+                                                                    request.form['feature2'],
+                                                                    cache_load(request.form['file2'])))
+    return "shite"
 
 
 @app.route('/print_analogy', methods=['POST'])
 def print_analogy():
-    return pformat(cache[request.form['file1']].get_analogy(request.form['feature1'],
+    return pformat(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
                                                         request.form['feature2'],
-                                                        cache[request.form['file2']]), indent=4, width=80)
+                                                        cache_load(request.form['file2'])), indent=4, width=80)
 
 
 @app.route('/find_best_analogy', methods=['POST'])
 def find_best_analogy():
-    return pformat(cache[request.form['file1']].find_best_analogy(request.form['feature'], cache[request.form['file2']]), indent=4, width=300)
+    return pformat(cache_load(request.form['file1']).find_best_analogy(request.form['feature'],
+                                                                       cache_load(request.form['file2'])),
+                   indent=4, width=300)
 
 def list_files():
     return [f[13:] for f in glob.glob('./data files/*.xml')]
@@ -55,7 +66,7 @@ def list_files():
 def get_features():
     f = request.form['file']
     print("get_features: ", f)
-    return json.dumps(list(cache[f].features.keys()))
+    return json.dumps(list(cache_load(f).features.keys()))
 
 @app.route('/check_file', methods=['POST'])
 def check_file():

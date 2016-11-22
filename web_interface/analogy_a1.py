@@ -488,7 +488,7 @@ class AIMind:
                 "src":src_feature,
                 "target":target_feature,
                 "asserts":rassert,
-                "mapping":best,
+                "mapping":list(best.items()), #have to be json friendly
                 "explanation":self.explain_analogy(src_feature, target_feature, best)}
 
         #return (total_score, normalized_rating, confidence, target_feature)
