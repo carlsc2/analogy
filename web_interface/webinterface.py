@@ -28,9 +28,21 @@ def index():
 
 @app.route('/get_analogy', methods=['POST'])
 def get_analogy():
+    #print("file1: ", request.form['file1'])
+    #print("file2: ", request.form['file2'])
+    #print("feature1: ", request.form['feature1'])
+    #print("feature2: ", request.form['feature2'])
+    return json.dumps(cache[request.form['file1']].get_analogy(request.form['feature1'],
+                                                        request.form['feature2'],
+                                                        cache[request.form['file2']]))
+
+
+@app.route('/print_analogy', methods=['POST'])
+def print_analogy():
     return pformat(cache[request.form['file1']].get_analogy(request.form['feature1'],
                                                         request.form['feature2'],
-                                                        cache[request.form['file2']]), indent=4, width=300)
+                                                        cache[request.form['file2']]), indent=4, width=80)
+
 
 @app.route('/find_best_analogy', methods=['POST'])
 def find_best_analogy():
@@ -42,6 +54,7 @@ def list_files():
 @app.route('/get_features', methods=['POST'])
 def get_features():
     f = request.form['file']
+    print("get_features: ", f)
     return json.dumps(list(cache[f].features.keys()))
 
 @app.route('/check_file', methods=['POST'])
