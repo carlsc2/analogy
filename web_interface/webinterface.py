@@ -43,7 +43,6 @@ def get_analogy():
     return json.dumps(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
                                                                     request.form['feature2'],
                                                                     cache_load(request.form['file2'])))
-    return "shite"
 
 
 @app.route('/print_analogy', methods=['POST'])
