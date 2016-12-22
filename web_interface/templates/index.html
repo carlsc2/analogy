@@ -162,12 +162,12 @@
 				alert("please select a valid concept for domain 1");
 			}else{
 				$.ajax({
-					url: '/find_best_analogy',
+					url: '/print_best_analogy',
 					data: {
 						file1: d1,
 						file2: d2,
-						feature: feature
-					
+						feature: feature,
+						sanitize: true
 					},
 					type: 'POST',
 					success: function(response) {
@@ -186,12 +186,12 @@
 				alert("please select a valid concept for domain 2");
 			}else{
 				$.ajax({
-					url: '/find_best_analogy',
+					url: '/print_best_analogy',
 					data: {
 						file1: d2,
 						file2: d1,
-						feature: feature
-					
+						feature: feature,
+						sanitize: true
 					},
 					type: 'POST',
 					success: function(response) {
@@ -221,8 +221,8 @@
 						file1: d1,
 						file2: d2,
 						feature1: f1,
-						feature2: f2
-					
+						feature2: f2,
+						sanitize: true
 					},
 					type: 'POST',
 					success: function(response) {

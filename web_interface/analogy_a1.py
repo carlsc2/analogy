@@ -519,7 +519,7 @@ class AIMind:
             return None
         else:
             #return best global analogy
-            return sorted(candidate_results, key=lambda x: x[0])[-1]
+            return sorted(candidate_results, key=lambda x: x["total_score"])[-1]
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """

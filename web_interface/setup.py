@@ -24,7 +24,7 @@ setup(name="Analogy Web Interface",
           'build_exe': {
               'optimize':2,
               'packages': ['jinja2.ext'],
-              'excludes' : ['numpy.core._dotblas'],
+              #'excludes' : ['numpy.core._dotblas'],
               'include_files': includefiles,
               'include_msvcr': True}},
       executables=[main_executable], requires=['flask'])
