@@ -49,8 +49,11 @@ def main():
 
     #fba("Trajan",a1,a1)
 
+
     #fba("Byzantine Empire",a1,a2)
-    fba("Nazi Germany",a2,a1)
+    #fba("Nazi Germany",a2,a1)
+
+    fba("Adolf Hitler",a2,a1)
 
     #fba("Augustus",a1,a2)
 

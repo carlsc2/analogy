@@ -1,11 +1,12 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
-from math import sqrt, log
+from math import sqrt
+from pprint import pprint
 import numpy as np
 from lru import LRU
 
 
-JACCARD_DIMENSIONS = 6
+JACCARD_DIMENSIONS = 28
 NULL_VEC = np.zeros(JACCARD_DIMENSIONS)
 NULL_VEC2 = np.zeros(JACCARD_DIMENSIONS * 2)
 
@@ -70,7 +71,6 @@ def cosine_similarity(v1, v2):
         similarity_cache[key] = value
         return value
 
-
 class Feature:
 
     def __init__(self, name, domain):
@@ -84,8 +84,6 @@ class Feature:
 
         self.rtypes = set()  # set of outgoing relation types
 
-        self.rtype_count = Counter() #how many times each rtype is used
-
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
 
@@ -94,14 +92,8 @@ class Feature:
 
         self.text = ""
 
-    def get_rtype_ratios(self):
-        total = sum(self.rtype_count.values())
-        return {x:self.rtype_count[x]/total for x in self.rtype_count}
-
-
     def add_predecessor(self, rtype, pred):
         self.incoming_relations.add((rtype, pred))
-        self.rtype_count[rtype] += 1
         self.predecessors.add(pred)
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
@@ -112,7 +104,6 @@ class Feature:
         self.connections.add(dest)
         self.outgoing_relations.add((rtype, dest))
         self.rtypes.add(rtype)
-        self.rtype_count[rtype] += 1
         self.knowledge_level = len(
             self.outgoing_relations) + len(self.incoming_relations)
         self._vector = None
@@ -127,6 +118,12 @@ class Feature:
                     for rtype, prev in self.incoming_relations] or [NULL_VEC]
             self._vector = np.concatenate((np.asarray(tmp1).mean(axis=0),
                                            np.asarray(tmp2).mean(axis=0)))
+            #a = np.asarray(tmp1).mean(axis=0)
+            #b = np.asarray(tmp2).mean(axis=0)
+            #c = np.empty((a.size + b.size,), dtype=a.dtype)
+            #c[0::2] = a
+            #c[1::2] = b
+            #self._vector = c
         return self._vector
 
     def get_vector2(self):
@@ -192,6 +189,7 @@ class AIMind:
                                                              dest))
                 self.features[dest].add_predecessor(rtype,
                                                     feature.name)
+
         # calculate rtype jaccard index
         self.rtype_index = self.index_rtypes()
 
@@ -201,7 +199,12 @@ class AIMind:
     def get_feature(self, fid):
         return self.feature_id_table[fid]
 
-    def explain_analogy(self, src, trg, mapping, verbose=False):
+    def explain_analogy(self, analogy, verbose=False):
+        # only explain main relation
+        if not analogy:
+            return
+
+        nrating, rating, total_rating, (src, trg), rassert, mapping = analogy
 
         narrative = ""
         narrative += "\t%s is like %s. " % (src, trg)
@@ -239,9 +242,9 @@ class AIMind:
                 diff = self.features[dest].rtypes ^ fnode.rtypes
 
                 if rtype not in hm:
-                    hm[rtype] = (Counter(), Counter(), Counter(),
-                                 Counter(), Counter())
-                lco, gco, smo, dfo, gci = hm[rtype]
+                    hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                 Counter(), Counter(), Counter(), Counter())
+                lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
 
                 for r in loses:
                     lco[r] += 1
@@ -252,66 +255,85 @@ class AIMind:
                 for r in diff:
                     dfo[r] += 1
 
-            #only incoming gains matters
             for (rtype, src) in fnode.incoming_relations:
+                loses = fnode.rtypes - self.features[src].rtypes
                 gains = self.features[src].rtypes - fnode.rtypes
+                same = self.features[src].rtypes & fnode.rtypes
+                diff = self.features[src].rtypes ^ fnode.rtypes
 
                 if rtype not in hm:
-                    hm[rtype] = (Counter(), Counter(), Counter(),
-                                 Counter(), Counter())
-                lco, gco, smo, dfo, gci = hm[rtype]
+                    hm[rtype] = (Counter(), Counter(), Counter(), Counter(),
+                                 Counter(), Counter(), Counter(), Counter())
+                lco, gco, smo, dfo, lci, gci, smi, dfi = hm[rtype]
 
+                for r in loses:
+                    lci[r] += 1
                 for r in gains:
                     gci[r] += 1
-
+                for r in same:
+                    smi[r] += 1
+                for r in diff:
+                    dfi[r] += 1
 
         out = {}  # compute metrics from rtypes
-        for rtype, (lco, gco, smo, dfo, gci) in hm.items():
-
-            #def adjust(x):  # eliminate outlier data for better results
-            #    n = len(x)
-            #    total_count = sum(x.values())
-            #    return set(a for a, b in x.items() if b / total_count > 1/n)
-            #x1 = adjust(lco)
-            #y1 = adjust(gco)
-            #z1 = adjust(smo)
-            #w1 = adjust(dfo)
-            #y2 = adjust(gci)
-
+        for rtype, (lco, gco, smo, dfo, lci, gci, smi, dfi) in hm.items():
             x1 = set(lco)
             y1 = set(gco)
             z1 = set(smo)
             w1 = set(dfo)
-            y2 = set(gci)
 
-            # new ==> linearly independent columns only
+            x2 = set(lci)
+            y2 = set(gci)
+            z2 = set(smi)
+            w2 = set(dfi)
+
+            #def adjust(x):  # eliminate outlier data for better results
+            #    total_count = sum(x.values())
+            #    return set(a for a, b in x.items() if b / total_count > .25)
+
+            #x1 = adjust(lco)
+            #y1 = adjust(gco)
+            #z1 = adjust(smo)
+            #w1 = adjust(dfo)
+
+            #x2 = adjust(lci)
+            #y2 = adjust(gci)
+            #z2 = adjust(smi)
+            #w2 = adjust(dfi)
+
             score = (jaccard_index(x1, y1),
                      jaccard_index(x1, z1),
                      jaccard_index(x1, w1),
+                     jaccard_index(x1, x2),
                      jaccard_index(x1, y2),
+                     jaccard_index(x1, z2),
+                     jaccard_index(x1, w2),
                      jaccard_index(y1, z1),
-                     jaccard_index(z1, w1))
-
-            
-
-            #score = (kulczynski_2(x1, y1),
-            #        kulczynski_2(x1, z1),
-            #        kulczynski_2(x1, w1),
-            #        kulczynski_2(x1, y2),
-            #        kulczynski_2(y1, z1),
-            #        kulczynski_2(z1, w1))
-
-            #score = (dice_coefficient(x1, y1),
-            #        dice_coefficient(x1, z1),
-            #        dice_coefficient(x1, w1),
-            #        dice_coefficient(x1, y2),
-            #        dice_coefficient(y1, z1),
-            #        dice_coefficient(z1, w1))
+                     jaccard_index(y1, w1),
+                     jaccard_index(y1, x2),
+                     jaccard_index(y1, y2),
+                     jaccard_index(y1, z2),
+                     jaccard_index(y1, w2),
+                     jaccard_index(z1, w1),
+                     jaccard_index(z1, x2),
+                     jaccard_index(z1, y2),
+                     jaccard_index(z1, z2),
+                     jaccard_index(z1, w2),
+                     jaccard_index(w1, x2),
+                     jaccard_index(w1, y2),
+                     jaccard_index(w1, z2),
+                     jaccard_index(w1, w2),
+                     jaccard_index(x2, y2),
+                     jaccard_index(x2, z2),
+                     jaccard_index(x2, w2),
+                     jaccard_index(y2, z2),
+                     jaccard_index(y2, w2),
+                     jaccard_index(z2, w2))
 
             out[rtype] = np.asarray(score, dtype=np.float)
         return out
 
-    def get_analogy(self, src_feature, target_feature, target_domain, rmax=1, vmax=1):
+    def get_analogy(self, src_feature, target_feature, target_domain, assertions=None, rmax=1, vmax=1):
         """Get the best analogy between two arbitrary features"""
 
         # ensure features exist
@@ -322,19 +344,17 @@ class AIMind:
             print("Feature %s not in target domain" % target_feature)
             return None
 
-        tscore = rmax+vmax
-        #tscore = 1 
+        if not assertions:
+            assertions = {}
+
         src_node = self.features[src_feature]
-        c_node = target_domain.features[target_feature]
+        target_node = target_domain.features[target_feature]
 
-        nc1 = src_node.get_rtype_ratios()
-        nc2 = c_node.get_rtype_ratios()
-
-
-        def get_hypotheses():
+        def get_hypotheses(src_node,target_node):
             svec = src_node.get_vector2()
-            cvec = c_node.get_vector2()
-            hypotheses = []
+            cvec = target_node.get_vector2()
+            hypotheses = Counter()
+            h2 = Counter()
 
             # precompute source vectors because this won't change
             src_vec_dict = {}
@@ -348,150 +368,60 @@ class AIMind:
                 src_vec_dict[(d1, False)] = diff1
 
             # for each pair in candidate outgoing
-            for r2, d2 in c_node.outgoing_relations:
+            for r2, d2 in target_node.outgoing_relations:
                 d2vec = target_domain.features[d2].get_vector2()
                 diff2 = cvec - d2vec
                 # find best outgoing rtype to compare with
                 for r1, d1 in src_node.outgoing_relations:
+
+                    if d1 != d2 and (d1 in assertions.keys() or d2 in assertions.values()):
+                        if assertions.get(d1) != d2:
+                            continue
+
+                    if r1 != r2 and (r1 in assertions.keys() or r2 in assertions.values()):
+                        if assertions.get(r1) != r2:
+                            continue
+
                     rdiff = cosine_similarity(self.rtype_index[r1],
-                                              target_domain.rtype_index[r2])
-
-                    #weight matches by usage ratio
-                    #relatively close usage ratios should have higher confidence
-                    rdiff *= 1 - abs(nc1[r1] - nc2[r2])**2
-
-
-
+                                                target_domain.rtype_index[r2])
                     diff1 = src_vec_dict[(d1, True)]
                     vdiff = cosine_similarity(diff1, diff2)
-                    actual_score = (rdiff*rmax + vdiff*vmax)
-                    #actual_score = max(rdiff, vdiff)
 
-                    hypotheses.append((actual_score / tscore, r1, d1, r2, d2, True))
-                    #hypotheses.append((rdiff*rmax, r1, d1, r2, d2, True))
-                    #hypotheses.append((vdiff*vmax, r1, d1, r2, d2, True))
+                    hypotheses[(r1, r2)] += rdiff*rmax
+                    h2[(r1, r2)] += 1
+                    hypotheses[(d1, d2)] += vdiff*vmax
+                    h2[(d1, d2)] += 1
 
             # for each pair in candidate incoming
-            for r2, d2 in c_node.incoming_relations:
+            for r2, d2 in target_node.incoming_relations:
                 d2vec = target_domain.features[d2].get_vector2()
                 diff2 = cvec - d2vec
                 # find best incoming rtype to compare with
                 for r1, d1 in src_node.incoming_relations:
+
+                    if d1 != d2 and (d1 in assertions.keys() or d2 in assertions.values()):
+                        if assertions.get(d1) != d2:
+                            continue
+
+                    if r1 != r2 and (r1 in assertions.keys() or r2 in assertions.values()):
+                        if assertions.get(r1) != r2:
+                            continue
+
+
+
                     rdiff = cosine_similarity(self.rtype_index[r1],
-                                              target_domain.rtype_index[r2])
-
-
-                    #weight matches by usage ratio
-                    #relatively close usage ratios should have higher confidence
-                    rdiff *= 1 - abs(nc1[r1] - nc2[r2])**2
-
+                                                target_domain.rtype_index[r2])
                     diff1 = src_vec_dict[(d1, False)]
                     vdiff = cosine_similarity(diff1, diff2)
-                    actual_score = (rdiff*rmax + vdiff*vmax)
-                    #actual_score = max(rdiff, vdiff)
 
-                    hypotheses.append((actual_score / tscore, r1, d1, r2, d2, False))
-                    #hypotheses.append((rdiff*rmax, r1, d1, r2, d2, False))
-                    #hypotheses.append((vdiff*vmax, r1, d1, r2, d2, False))
+                    hypotheses[(r2, r1)] += rdiff*rmax
+                    h2[(r2, r1)] += 1
+                    hypotheses[(d2, d1)] += vdiff*vmax
+                    h2[(d2, d1)] += 1
 
-            hypotheses.sort(reverse=True)
-            return hypotheses
+            return hypotheses,h2
 
-        rassert = {}
-        hmap = {}
-        best = {}
-        rating = 0
-        total_rating = 0
-
-        # for each mh, pick the best then pick the next best non-conflicting
-        for score, r1, src, r2, target, outgoing in get_hypotheses():
-            score = score * tscore
-            key = (src, outgoing)
-            if (hmap.get(key) == target) or (key not in hmap.keys() and\
-                                             target not in hmap.values()):
-                if r1 != r2 and r1 not in rassert.keys() and\
-                        r2 not in rassert.values():
-                    if r1 not in c_node.rtypes and\
-                       r2 not in src_node.rtypes:  # prevent crossmatching
-                        rassert[r1] = r2
-                if key not in hmap.keys() and target not in hmap.values():
-                    hmap[key] = target
-                    total_rating += tscore
-                if r1 == r2 or rassert.get(r1) == r2:
-                    otype = "OUTGOING" if outgoing else "INCOMING"
-                    best[(otype, r1, src)] = (
-                        r2, target, score, score / tscore)
-                    rating += score
-                else:  # penalize inconsistent rtype matchup
-                    total_rating += tscore
-
-        # penalize score for non-matches
-        #for destobj in src_node.connections:
-        #    if (destobj, True) not in hmap.keys():
-        #        total_rating += 2
-
-        #for destobj in c_node.connections:
-        #    if (destobj, False) not in hmap.values():
-        #        total_rating += 2
-
-
-        #confidence score
-        #how confident can you possibly be with an analogy?
-
-        #max numbeer of rtype matches corresponds with
-        #max number of total matches
-
-        # number of distinct relationship types
-        # number of total relationships
-
-        #score based on relative numbers
-
-
-        
-
-        tr1 = len(nc1.keys())
-        tr2 = len(nc2.keys())
-
-        sr1 = sum(src_node.rtype_count.values())
-        sr2 = sum(c_node.rtype_count.values())
-
-        v = max(sr1, sr2)
-        z = max(tr1, tr2)
-
-        confidence = 1 - abs(tr1-tr2)/z * abs(sr1-sr2)/v
-
-
-        #print(target_feature, "confidence: ", confidence)
-
-
-
-        #t1 = kulczynski_2(set(rassert.keys()), p1)
-        #t2 = kulczynski_2(set(rassert.values()), p2)
-        #weight = (t1 + t2) / 2
-
-
-
-        if total_rating == 0:  # prevent divide by zero error
-            return None
-
-        normalized_rating = rating / total_rating
-
-        #normalized_rating *= confidence
-        total_score = confidence * normalized_rating #(confidence/3 + normalized_rating*2/3 + weight/3)
-
-        #return (normalized_rating, rating, total_rating,
-        #        (src_feature, target_feature), rassert, best)
-
-        return {"total_score":total_score,
-                "confidence":confidence,
-                "rating":normalized_rating,
-                "src":src_feature,
-                "target":target_feature,
-                "asserts":rassert,
-                "mapping":list(best.items()), #have to be json friendly
-                "explanation":self.explain_analogy(src_feature, target_feature, best)}
-
-        #return (total_score, normalized_rating, confidence, target_feature)
+        return get_hypotheses(src_node,target_node)
 
     def find_best_analogy(self, src_feature, target_domain, filter_list=None, rmax=1, vmax=1):
         """
@@ -505,21 +435,48 @@ class AIMind:
         """
 
         candidate_pool = filter_list if filter_list is not None else target_domain.features
-        candidate_results = []
+
+        net_hypos = Counter()
+        net_counts = Counter()
+
 
         for c_feature in candidate_pool:
             # find novel within same domain
             if target_domain == self and c_feature == src_feature:
                 continue
-            result = self.get_analogy(src_feature, c_feature, target_domain, rmax, vmax)
+            result = self.get_analogy(src_feature, c_feature, target_domain, None, rmax, vmax)
             if result:
-                candidate_results.append(result)
+                net_hypos += result[0]
+                net_counts += result[1]
 
-        if not candidate_results:
-            return None
-        else:
-            #return best global analogy
-            return sorted(candidate_results, key=lambda x: x["total_score"])[-1]
+        ret =  Counter({a:b / net_counts[a] for a, b in net_hypos.items()})
+
+        asserts = {}
+        for (v1,v2),b in ret.most_common():
+            if v1 not in asserts.keys() and v2 not in asserts.values():
+                asserts[v1] = v2
+
+
+        for src_feature in asserts.keys():
+            for target_feature in asserts.values():
+                result = self.get_analogy(src_feature, target_feature, target_domain, asserts, rmax, vmax)
+                if result:
+                    net_hypos += result[0]
+                    net_counts += result[1]
+                else:
+                    result = self.get_analogy(target_feature, src_feature, target_domain, asserts, rmax, vmax)
+                    if result:
+                        net_hypos += result[0]
+                        net_counts += result[1]
+
+        ret =  Counter({a:b / net_counts[a] for a, b in net_hypos.items()})
+
+        asserts2 = {}
+        for (v1,v2),b in ret.most_common():
+            if v1 not in asserts2.keys() and v2 not in asserts2.values():
+                asserts2[v1] = v2
+
+        return asserts2
 
     def get_all_analogies(self, src_feature, target_domain, filter_list=None):
         """

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <AIMind>
-  <Root id="0"/>
+  <Root id="1"/>
   <Features>
     <Feature data="Rock music" zh-data="" id="1" uri="http://dbpedia.org/resource/Rock_music">
       <neighbors>

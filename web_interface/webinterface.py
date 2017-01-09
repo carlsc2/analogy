@@ -8,7 +8,7 @@ import cgi
 import glob
 import sys
 import argparse
-from pprint import pformat
+from pprint import pformat, pprint
 from analogy_a1 import AIMind
 import os.path
 
@@ -43,21 +43,34 @@ def get_analogy():
     return json.dumps(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
                                                                     request.form['feature2'],
                                                                     cache_load(request.form['file2'])))
-    return "shite"
-
-
-@app.route('/print_analogy', methods=['POST'])
-def print_analogy():
-    return pformat(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
-                                                        request.form['feature2'],
-                                                        cache_load(request.form['file2'])), indent=4, width=80)
-
 
 @app.route('/find_best_analogy', methods=['POST'])
 def find_best_analogy():
-    return pformat(cache_load(request.form['file1']).find_best_analogy(request.form['feature'],
-                                                                       cache_load(request.form['file2'])),
-                   indent=4, width=300)
+    return json.dumps(cache_load(request.form['file1']).find_best_analogy(request.form['feature'],
+                                                                          cache_load(request.form['file2'])))
+
+@app.route('/print_analogy', methods=['POST'])
+def print_analogy():
+    x = pformat(cache_load(request.form['file1']).get_analogy(request.form['feature1'],
+                                                      request.form['feature2'],
+                                                      cache_load(request.form['file2'])),
+                indent=4,
+                width=80)
+    if request.form['sanitize'] == "true":
+        x = x.replace("<","&lt;")
+        x = x.replace(">","&gt;")
+    return x
+
+@app.route('/print_best_analogy', methods=['POST'])
+def print_best_analogy():
+    x = pformat(cache_load(request.form['file1']).find_best_analogy(request.form['feature'],
+                                                            cache_load(request.form['file2'])),
+                indent=4,
+                width=80)
+    if request.form['sanitize'] == "true":
+        x = x.replace("<","&lt;")
+        x = x.replace(">","&gt;")
+    return x
 
 def list_files():
     return [f[13:] for f in glob.glob('./data files/*.xml')]

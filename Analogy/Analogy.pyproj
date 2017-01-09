@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19a1be1e-7028-4c63-9ac0-0d5571a0145a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>analogytest.py</StartupFile>
+    <StartupFile>analogytest2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,10 +25,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="abstractiontest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="analogy.py" />
+    <Compile Include="analogy2.py" />
     <Compile Include="analogytest.py" />
+    <Compile Include="analogytest2.py" />
     <Compile Include="analogyserver.py" />
+    <Compile Include="analogy_boosted.py" />
+    <Compile Include="analogy_multi.py" />
+    <Compile Include="langparsetest.py" />
     <Compile Include="semantic_analysis.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="utils.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
