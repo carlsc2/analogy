@@ -53,9 +53,9 @@ def main():
     #fba("Byzantine Empire",a1,a2)
     #fba("Nazi Germany",a2,a1)
 
-    fba("Adolf Hitler",a2,a1)
+    #fba("Adolf Hitler",a2,a1)
 
-    #fba("Augustus",a1,a2)
+    fba("Augustus",a1,a2)
 
     #fba("Rock music",a2,a1)
 
