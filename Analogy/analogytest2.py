@@ -1,5 +1,5 @@
 ﻿from analogy2 import make_analogy, find_best_analogy, explain_analogy
-from utils import Domain, AIMind, kulczynski_2
+from utils.utils import Domain, AIMind, kulczynski_2
 from pprint import pprint
 import random
 
@@ -155,6 +155,10 @@ import time
 
 a1 = AIMind("data files/roman_empire_1000.xml")
 a2 = AIMind("data files/ww2.xml")
+
+
+#a2 = AIMind("data files/testy.xml")
+
 #a2 = AIMind("data files/ww2_1000_AIMind.xml")
 #a1 = AIMind("data files/big_unrestricted_techdata.xml")
 #a2 = AIMind("data files/connected_plang_extended.xml")
@@ -162,8 +166,8 @@ a2 = AIMind("data files/ww2.xml")
 d1 = a1.as_domain()
 d2 = a2.as_domain()
 
-#tmp = make_analogy("Augustus",d1,"Adolf Hitler",d2)
-#pprint(tmp)
+tmp = make_analogy("Augustus",d1,"Adolf Hitler",d2)
+pprint(tmp)
 #pprint(explain_analogy(tmp))
 
 #pprint(make_analogy("Augustus",d1,"Augustus",d1))
@@ -201,3 +205,27 @@ best = max(t, key = lambda x: x["total_score"])
 pprint(best)
 print(explain_analogy(best))
 pprint(explain_analogy(best))
+
+#from utils import permute_rtype_vector, cosine_similarity
+
+##pprint(d2.get_closest_node(d2.node_vectors["Adolf Hitler"],5))
+##pprint(d2.get_closest_node(d2.node_vectors["Joseph Stalin"],5))
+#pprint(d2.get_closest_relationship(d2.rtype_vectors["predecessor"],15))
+#pprint(d2.get_closest_relationship(permute_rtype_vector(d2.rtype_vectors["predecessor"]),15))
+
+
+##print(cosine_similarity(d2.node_vectors["Adolf Hitler"],
+##                        d2.node_vectors["Franklin D. Roosevelt"]))
+
+#print(cosine_similarity(d2.rtype_vectors["predecessor"],
+#                        d2.rtype_vectors["successor"]))
+
+#print(cosine_similarity(d2.rtype_vectors["predecessor"],
+#                        permute_rtype_vector(d2.rtype_vectors["successor"])))
+
+
+##print(cosine_similarity(d2.rtype_vectors["before"],
+##                        d2.rtype_vectors["after"]))
+
+##print(cosine_similarity(d2.rtype_vectors["before"],
+##                        permute_rtype_vector(d2.rtype_vectors["after"])))

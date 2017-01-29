@@ -55,12 +55,10 @@ def dice_coefficient(a, b):
 
 def permute_rtype_vector(x):
     """convert incoming relationship to outgoing and vice versa"""
-    return np.array([x[0],x[3],x[2],x[1],x[5],x[4],x[6],x[8],x[7]], dtype=np.float)
+    return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
+                     x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17]],dtype=np.float)
 
-
-
-
-JACCARD_DIMENSIONS = 9
+JACCARD_DIMENSIONS = 18
 NULL_VEC = lambda : np.zeros(JACCARD_DIMENSIONS)
 NULL_VEC2 = lambda : np.zeros(JACCARD_DIMENSIONS * 2)
 
@@ -152,26 +150,34 @@ class Domain:
             current options are jaccard_index, dice_coefficient, kulczynski_2
 
     '''
-    def __init__(self, nodes, index_metric=jaccard_index):
-        #mapping between the name of each node and its object
-        self.nodes = {n.name:n for n in nodes}
+    def __init__(self, nodes=None, index_metric=jaccard_index):
+        if nodes != None:
+            #mapping between the name of each node and its object
+            self.nodes = {n.name:n for n in nodes}
+        else:
+            self.nodes = {}
         #the function to use for indexing the relationship type vectors
         self.index_metric = index_metric
-
         #maps each relationship type to all its uses
         self.usage_map = self.map_uses()
         #maps each rtype to its vector
         self.rtype_vectors = self.index_rtypes()
         #maps each node to its vector
         self.node_vectors = self.index_nodes()
-        #nearest rtype fast lookup
-        self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-        self.rkdtree = cKDTree(_rvalues)
-        #nearest node fast lookup
-        self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-        self.nkdtree = cKDTree(_nvalues)
+        if len(self.nodes) > 0:
+            #nearest rtype fast lookup
+            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
+            self.rkdtree = cKDTree(_rvalues)
+            #nearest node fast lookup
+            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
+            self.nkdtree = cKDTree(_nvalues)
         #dirty flag -- if graph has changed, should re-evaluate things
         self.dirty = False
+
+    @property
+    def size(self):
+        """Return the number of nodes and edges in the graph"""
+        return (len(self.nodes), sum([len(x.outgoing_relations) for x in self.nodes.values()]))
 
     def add_node(self, node):
         """Adds a node object <node> to the map of nodes"""
@@ -265,26 +271,45 @@ class Domain:
             # all object anyways, so will cover everything
             for (rtype, dest) in fnode.outgoing_relations:
                 dnode = self.nodes[dest]
-                x = fnode.rtypes - dnode.rtypes
-                y = dnode.rtypes - fnode.rtypes
-                z = dnode.rtypes & fnode.rtypes
-                w = dnode.rtypes ^ fnode.rtypes
-                k = dnode.rtypes | fnode.rtypes
+                a = fnode.rtypes
+                b = dnode.rtypes
+                c = a - b
+                d = b - a
+                e = b & a
+                f = b ^ a
+                g = b | a
+                h = c | d
+
+                """
+                TODO: add similarity measure between node and prototype nodes
+
+                Idea is to get a ground-truth value for the rtype by measuring
+                how src --<rtype>--> dest compares to prototype transformations
+
+                
+                
+                """
 
                 rval = out.setdefault(rtype, NULL_VEC())
 
-                score = np.array([metric(x, y),
-                                  metric(x, w), #flip 1
-                                  metric(y, z),
-                                  metric(y, w), #flip 1
-                                  x <= y, #flip 2
-                                  y <= x, #flip 2
-                                  z <= x, 
-                                  metric(x, k),#flip 3
-                                  metric(y, k),#flip 3
-                                  ], dtype=np.float)
-                #permute: [x[0],x[3],x[2],x[1],x[5],x[4],x[6],x[8],x[7]]
-
+                score = np.array([metric(a, b),
+                                  metric(a, c),
+                                  metric(a, e),
+                                  metric(a, f),
+                                  metric(a, g),
+                                  metric(b, d),
+                                  metric(b, e),
+                                  metric(b, f),
+                                  metric(b, g),
+                                  metric(c, d),
+                                  metric(c, e),
+                                  metric(c, f),
+                                  metric(c, g),
+                                  metric(d, e),
+                                  metric(d, f),
+                                  metric(d, g),
+                                  metric(f, g),
+                                  metric(f, h)], dtype=np.float)
 
                 out[rtype] = rval + score
 
