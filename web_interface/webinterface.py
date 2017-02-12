@@ -158,23 +158,26 @@ def check_file():
 
 @app.route('/add_file', methods=['POST'])
 def add_file():
-    data = request.get_json()
-    filename = full_filename(data['file'])
-    
-    #filename = full_filename(request.form['file'])
-    print("adding file: ",filename)
-    #add a file if it doesn't already exist
-    if os.path.isfile(filename):
-        if not data['override'] == "true":
-            print("file %s already exists"%filename)
-            return "File already exists"
-    with open(filename,"wb+") as f:
-        f.write(data["data"].encode("utf-8"))
-    try:
-        cache[f] = AIMind(filename=filename)
-    except:
-        return "Invalid file format"
-    return "File added"
+    if allow_file_write:
+        data = request.get_json()
+        filename = full_filename(data['file'])
+        
+        #filename = full_filename(request.form['file'])
+        print("adding file: ",filename)
+        #add a file if it doesn't already exist
+        if os.path.isfile(filename):
+            if not data['override'] == "true":
+                print("file %s already exists"%filename)
+                return "File already exists"
+        with open(filename,"wb+") as f:
+            f.write(data["data"].encode("utf-8"))
+        try:
+            cache[f] = AIMind(filename=filename)
+        except:
+            return "Invalid file format"
+        return "File added"
+    else:
+        return "File write disabled"
     
 
 parser = argparse.ArgumentParser(description='Analogy web interface server.')
