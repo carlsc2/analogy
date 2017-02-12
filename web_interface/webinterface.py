@@ -53,10 +53,10 @@ def get_analogy_explain():
     explanation = analogy2_a1.explain_analogy(analogy)
     
     def clean(x):
-        if request.form['sanitize'] == "true":
+        if request.form.get('sanitize') == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
-        if request.form['clear'] == "true":
+        if request.form.get('clear') == "true":
             x = x.replace("<","")
             x = x.replace(">","")
         return x
@@ -76,16 +76,17 @@ def find_best_analogy():
 
 @app.route('/find_best_analogy_explain', methods=['POST'])
 def find_best_analogy_explain():
+    print(request.form)
     analogy = analogy2_a1.find_best_analogy(request.form['feature'],
                                             cache_load(request.form['file1']),
                                             cache_load(request.form['file2']))
     explanation = analogy2_a1.explain_analogy(analogy)
 
     def clean(x):
-        if request.form['sanitize'] == "true":
+        if request.form.get('sanitize') == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
-        if request.form['clear'] == "true":
+        if request.form.get('clear') == "true":
             x = x.replace("<","")
             x = x.replace(">","")
         return x
@@ -105,10 +106,10 @@ def print_analogy():
                                        cache_load(request.form['file2']))
 
     def clean(x):
-        if request.form['sanitize'] == "true":
+        if request.form.get('sanitize') == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
-        if request.form['clear'] == "true":
+        if request.form.get('clear') == "true":
             x = x.replace("<","")
             x = x.replace(">","")
         return x
@@ -125,10 +126,10 @@ def print_best_analogy():
                                             cache_load(request.form['file2']))
 
     def clean(x):
-        if request.form['sanitize'] == "true":
+        if request.form.get('sanitize') == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
-        if request.form['clear'] == "true":
+        if request.form.get('clear') == "true":
             x = x.replace("<","")
             x = x.replace(">","")
         return x
