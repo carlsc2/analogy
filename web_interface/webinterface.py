@@ -49,8 +49,20 @@ def get_analogy_explain():
                                        cache_load(request.form['file1']),
                                        request.form['feature2'],
                                        cache_load(request.form['file2']))
+
+    explanation = analogy2_a1.explain_analogy(analogy)
+    
+    def clean(x):
+        if request.form['sanitize'] == "true":
+            x = x.replace("<","&lt;")
+            x = x.replace(">","&gt;")
+        if request.form['clear'] == "true":
+            x = x.replace("<","")
+            x = x.replace(">","")
+        return x
+    
     if analogy != None:
-        return json.dumps({"explanation":analogy2_a1.explain_analogy(analogy),
+        return json.dumps({"explanation":clean(explanation),
                            "error":""})
     else:
         return json.dumps({"explanation":"",
@@ -67,8 +79,19 @@ def find_best_analogy_explain():
     analogy = analogy2_a1.find_best_analogy(request.form['feature'],
                                             cache_load(request.form['file1']),
                                             cache_load(request.form['file2']))
+    explanation = analogy2_a1.explain_analogy(analogy)
+
+    def clean(x):
+        if request.form['sanitize'] == "true":
+            x = x.replace("<","&lt;")
+            x = x.replace(">","&gt;")
+        if request.form['clear'] == "true":
+            x = x.replace("<","")
+            x = x.replace(">","")
+        return x
+    
     if analogy != None:
-        return json.dumps({"analogy":analogy2_a1.explain_analogy(analogy),
+        return json.dumps({"analogy":clean(explanation),
                            "error":""})
     else:
         return json.dumps({"analogy":"",
@@ -85,6 +108,9 @@ def print_analogy():
         if request.form['sanitize'] == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
+        if request.form['clear'] == "true":
+            x = x.replace("<","")
+            x = x.replace(">","")
         return x
     
     x = {}
@@ -102,6 +128,9 @@ def print_best_analogy():
         if request.form['sanitize'] == "true":
             x = x.replace("<","&lt;")
             x = x.replace(">","&gt;")
+        if request.form['clear'] == "true":
+            x = x.replace("<","")
+            x = x.replace(">","")
         return x
 
     x = {}
