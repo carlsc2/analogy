@@ -50,7 +50,7 @@ def get_analogy_explain():
                                        request.form['feature2'],
                                        cache_load(request.form['file2']))
     if analogy != None:
-        return json.dumps({"explanation":analogy2_a1.explain_analogy(analogy)
+        return json.dumps({"explanation":analogy2_a1.explain_analogy(analogy),
                            "error":""})
     else:
         return json.dumps({"explanation":"",
@@ -68,7 +68,7 @@ def find_best_analogy_explain():
                                             cache_load(request.form['file1']),
                                             cache_load(request.form['file2']))
     if analogy != None:
-        return json.dumps({"analogy":analogy2_a1.explain_analogy(analogy)
+        return json.dumps({"analogy":analogy2_a1.explain_analogy(analogy),
                            "error":""})
     else:
         return json.dumps({"analogy":"",
