@@ -45,10 +45,16 @@ def get_analogy():
 
 @app.route('/get_analogy_explain', methods=['POST'])
 def get_analogy_explain():
-    return analogy2_a1.explain_analogy(analogy2_a1.make_analogy(request.form['feature1'],
-                                                                cache_load(request.form['file1']),
-                                                                request.form['feature2'],
-                                                                cache_load(request.form['file2'])))
+    analogy = analogy2_a1.make_analogy(request.form['feature1'],
+                                       cache_load(request.form['file1']),
+                                       request.form['feature2'],
+                                       cache_load(request.form['file2']))
+    if analogy != None:
+        return json.dumps({"explanation":analogy2_a1.explain_analogy(analogy)
+                           "error":""})
+    else:
+        return json.dumps({"explanation":"",
+                           "error":"No analogy could be made."})
 
 @app.route('/find_best_analogy', methods=['POST'])
 def find_best_analogy():
@@ -58,9 +64,15 @@ def find_best_analogy():
 
 @app.route('/find_best_analogy_explain', methods=['POST'])
 def find_best_analogy_explain():
-    return analogy2_a1.explain_analogy(analogy2_a1.find_best_analogy(request.form['feature'],
-                                                                     cache_load(request.form['file1']),
-                                                                     cache_load(request.form['file2'])))
+    analogy = analogy2_a1.find_best_analogy(request.form['feature'],
+                                            cache_load(request.form['file1']),
+                                            cache_load(request.form['file2']))
+    if analogy != None:
+        return json.dumps({"analogy":analogy2_a1.explain_analogy(analogy)
+                           "error":""})
+    else:
+        return json.dumps({"analogy":"",
+                           "error":"No analogy could be made."})
 
 @app.route('/print_analogy', methods=['POST'])
 def print_analogy():
