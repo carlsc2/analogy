@@ -227,7 +227,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
     normalized_rating = rating / total_rating #* math.log(weight)
 
-    total_score = confidence * normalized_rating
+    total_score = ((confidence *2) + normalized_rating) / 3 #weigh confidence more
 
     return {"total_score":total_score,
             "confidence":confidence,
