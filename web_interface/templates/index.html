@@ -172,7 +172,9 @@
 					},
 					type: 'POST',
 					success: function(response) {
-						$( "#result" ).html(response);
+						data = JSON.parse(response)
+						$( "#result" ).html(data["analogy"]);
+						$( "#explanation" ).html(data["explanation"]);
 					},
 					error: function(error) {
 						console.log(error);
