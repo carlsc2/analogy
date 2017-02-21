@@ -43,17 +43,13 @@ class DomainManager:
         if explicit is True, the DBpedia query must be an exact match
         
         """
-
         ret = keyword_search(concept)
-
         if ret:
             name = get_label(ret)
-
             #check for exact match
             if explicit and name != concept:
                 return None
-
-            domains = self.database.query(Concept).join(Domain).filter(Concept.name == name)
+            domains = self.database.query(Concept.domain, Domain.filepath).join(Domain).filter(Concept.name == name)
             if domains.count() == 0:
                 #if the topic is not yet known, add to list of unknown topics
                 ukn = Unknown.query.filter_by(name=name).first()
@@ -64,7 +60,7 @@ class DomainManager:
                     self.database.commit()
                 return ukn  
             else:
-                return [x for x in domains.all()]
+                return [x.filepath for x in domains.all()]
         else:
             #if the topic is not in DBpedia, return None
             return None  
