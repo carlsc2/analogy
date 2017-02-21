@@ -13,6 +13,7 @@ import numpy as np
 from lru import LRU
 from scipy.spatial.ckdtree import cKDTree
 import numpy as np
+import json
 
 def kulczynski_2(a, b):
     '''Computes the Kulczynski-2 measure between two sets
@@ -57,8 +58,11 @@ def permute_rtype_vector(x):
     """convert incoming relationship to outgoing and vice versa"""
     return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
                      x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17]],dtype=np.float)
+    #return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
+    #                 x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17],x[19],x[18],x[21],x[20]],dtype=np.float)
 
 JACCARD_DIMENSIONS = 18
+#JACCARD_DIMENSIONS = 22
 NULL_VEC = lambda : np.zeros(JACCARD_DIMENSIONS)
 NULL_VEC2 = lambda : np.zeros(JACCARD_DIMENSIONS * 2)
 
@@ -103,6 +107,7 @@ class Node:
 
     def __init__(self, name):
         self.name = name
+        self.attributes = set() #set of (attribute, literal value) pairs
         self.outgoing_relations = set()  # set of relations to other nodes
         self.incoming_relations = set()  # set of relations from other nodes
         self.rtypes = set() #set of types of outgoing relationships
@@ -114,6 +119,12 @@ class Node:
     def get_rtype_ratios(self):
         total = sum(self.rtype_count.values())
         return {x:self.rtype_count[x]/total for x in self.rtype_count}
+
+    def add_attribute(self, atype, value):
+        '''Adds an attribute to the node
+        atype is the type of attribute, value is the literal value        
+        '''
+        self.attributes.add((atype, value))
 
     def add_predecessor(self, rtype, pred):
         '''Adds a predecessor relationship (incoming connection)
@@ -228,8 +239,8 @@ class Domain:
         out = {}
         for node in self.nodes.values():
             for rtype, dest in node.outgoing_relations:
-                out.setdefault(rtype, set()).add((node.name, dest)) 
-                self.nodes[dest].add_predecessor(rtype, node.name)  
+                out.setdefault(rtype, set()).add((node.name, dest))
+                self.nodes[dest].add_predecessor(rtype, node.name) 
         return out   
 
     def get_closest_relationship(self, point, n=1):
@@ -279,6 +290,13 @@ class Domain:
                 f = b ^ a
                 g = b | a
                 h = c | d
+                #i = len(a) - len(b)
+                #j = len(b) - len(a)
+                #k = len(set(a)) / len(a) if len(a) else 0
+                #l = len(set(b)) / len(b) if len(b) else 0
+
+                #i /= len(a) + len(b)
+                #j /= len(a) + len(b)
 
                 """
                 TODO: add similarity measure between node and prototype nodes
@@ -309,15 +327,87 @@ class Domain:
                                   metric(d, f),
                                   metric(d, g),
                                   metric(f, g),
-                                  metric(f, h)], dtype=np.float)
+                                  metric(f, h),
+                                  #i,
+                                  #j,
+                                  #k,
+                                  #l
+                                  ], dtype=np.float)
 
                 out[rtype] = rval + score
 
         #normalize everything
-        #for r,v in out.items():
-        #    out[r] = v / sqrt(v.dot(v))
-        np.save("vectest.npy",np.array(list(out.values())))
+        for r,v in out.items():
+            out[r] = v / sqrt(v.dot(v))
+        np.save("utils/vectest.npy",np.array(list(out.values())))
         return out
+
+    def serialize(self):
+        """Returns a JSON representation of the domain
+        
+        Format:
+
+        {"idmap":{<node_id>:<node_name>},
+         "nodes":[{"name":<node_name>,
+                   "text":<node_description>,
+                   "neighbors":[["relation",
+                                 <relation_type>,
+                                 <node_id>],
+                                ["literal",
+                                <literal_type>,
+                                <literal_value>]
+                               ]
+                   }
+                 ]        
+        }
+        """
+        out = {"nodes":[],
+               "idmap":{str(i):x for i,x in enumerate(self.nodes.keys())}} #map for decoding
+        r_idmap = {x:str(i) for i,x in enumerate(self.nodes.keys())} #map for encoding
+        for name, node in self.nodes.items():
+            tmp = {"name": name,
+                   "text": node.text,
+                   "neighbors": []}
+            for rtype, dest in node.outgoing_relations:
+                if dest in r_idmap:
+                    tmp["neighbors"].append(["relation", rtype, r_idmap[dest]])
+                else:
+                    tmp["neighbors"].append(["literal", rtype, dest])
+            out["nodes"].append(tmp)
+        return json.dumps(out)
+
+def deserialize(data):
+    """Returns a Domain object constructed from JSON data
+    
+    Expected Format:
+
+        {"idmap":{<node_id>:<node_name>},
+         "nodes":[{"name":<node_name>,
+                   "text":<node_description>,
+                   "neighbors":[["relation",
+                                 <relation_type>,
+                                 <node_id>],
+                                ["literal",
+                                <literal_type>,
+                                <literal_value>]
+                               ]
+                   }
+                 ]        
+        }
+    """
+    tmp = json.loads(data)
+    nodelist = []
+    for n in tmp["nodes"]:
+        node = Node(n["name"])
+        node.text = n["text"]
+        for neighbor in n["neighbors"]:
+            if neighbor[0] == "relation":
+                node.add_relation(neighbor[1], tmp["idmap"][neighbor[2]])
+            elif neighbor[0] == "literal":
+                node.add_attribute(neighbor[1], neighbor[2])
+        nodelist.append(node)
+    return Domain(nodelist)
+
 
 
 class AIMind:

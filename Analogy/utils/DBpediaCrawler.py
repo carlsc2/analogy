@@ -108,15 +108,17 @@ def get_label(uri):
 		return uri
 
 def keyword_search(keyword,limit=None):
-	data=urlencode({'QueryString':keyword,
-					'MaxHits':(limit or 10)})
-	req = Request("http://lookup.dbpedia.org/api/search/KeywordSearch?"+data,
-								 headers = {'Accept': 'application/json'})
-	results = json.loads(urlopen(req,timeout=5).read().decode("utf8"))['results']
-	if len(results) > 0:
-		#take first result
-		return results[0]['uri']
-	return None
+    data=urlencode({'QueryString':keyword,
+                 'MaxHits':(limit or 1)})
+    req = Request("http://lookup.dbpedia.org/api/search/KeywordSearch?"+data,
+               headers = {'Accept': 'application/json'})
+    results = json.loads(urlopen(req,timeout=5).read().decode("utf8"))['results']
+    if limit != None:#return all results if specified
+        return [x['uri'] for x in results]
+    elif len(results) > 0:
+        #take first result
+        return results[0]['uri']
+    return None
 
 def get_data(uri):
 	#gets all data for a given uri
