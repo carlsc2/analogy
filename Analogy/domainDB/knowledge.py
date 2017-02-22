@@ -8,8 +8,8 @@ from domainDB.database import init_db
 from domainDB.models import Concept, Domain, Unknown
 from utils.DBpediaCrawler import keyword_search, generate_graph, get_label
 from utils.utils import deserialize
-from os.path import join, isfile, abspath
-from os import listdir
+from os.path import join, isfile, abspath, exists
+from os import listdir, makedirs
 import hashlib
 import base64
 import json
@@ -35,6 +35,11 @@ class DomainManager:
         """
         self.database = init_db(db_file)
         self.datapath = abspath(datapath)
+        if not exists(self.datapath):
+            makedirs(self.datapath)
+
+    def get_uri(self, concept):
+        return keyword_search(concept)
 
     def find_domains(self, concept, explicit=True):
         """Return the domains containing a topic, an Unkown object if it is not yet known,
@@ -97,7 +102,7 @@ class DomainManager:
 
 
 
-    def reconcile_knowledge(self):
+    def reconcile_knowledge(self, limit=100):
         """For each unknown topic, check if it is now known. If not, search for it."""
         unknowns = self.database.query(Unknown)
         total = unknowns.count()
@@ -105,7 +110,7 @@ class DomainManager:
             print("reconciling unknown %d/%d: "%(i+1,total), u.name)
             ret = keyword_search(u.name)
             if ret != None:
-                if self.generate_domain(ret) != None: 
+                if self.generate_domain(ret, limit) != None: 
                     self.database.delete(u)
                     self.database.commit()
             else:
