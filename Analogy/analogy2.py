@@ -44,10 +44,10 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
     # ensure features exist
     if not src_concept in src_domain.nodes:
-        print("Feature %s not in source domain" % src_concept)
+        print("'%s' not in source domain" % src_concept)
         return None
     if not target_concept in target_domain.nodes:
-        print("Feature %s not in target domain" % target_concept)
+        print("'%s' not in target domain" % target_concept)
         return None
 
     cnode = src_domain.nodes[src_concept]
@@ -253,6 +253,10 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
 
     candidate_pool = filter_list if filter_list is not None else target_domain.nodes
     candidate_results = []
+
+    if not src_concept in src_domain.nodes:
+        print("'%s' not in source domain" % src_concept)
+        return None
 
     for target_concept in candidate_pool:
         # find novel within same domain

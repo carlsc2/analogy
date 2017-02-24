@@ -408,22 +408,50 @@ def deserialize(data):
         nodelist.append(node)
     return Domain(nodelist)
 
+class DomainLoader:
+    """
+    Wrapper for loading domains
+    
+    """
+    def __init__(self,filename=None,rawdata=None):
+        self.nodelist = [] #list of all nodes in the domain
+        if filename or rawdata:#convenience method to load file in constructor
+            self.import_data(filename=filename, rawdata=rawdata)
+
+    def import_data(self, filename=None, rawdata=None, append=False):
+        """if append is true, will join together multiple data sources
+           otherwise will overwrite
+        """
+        
+        if filename:
+            with open(filename,"r") as f:
+                data = f.read()
+        elif rawdata:
+            data = rawdata
+        else:
+            raise Exception("No data given")
+
+        if not append:
+            self.nodelist = []
+
+        d = deserialize(data)
+        self.nodelist += list(d.nodes.values())
+
+    def export_data(self):
+        return self.domain.serialize()
+
+    @property
+    def domain(self, metric=jaccard_index):
+        return Domain(self.nodelist, metric)
 
 
-class AIMind:
+
+class AIMind(DomainLoader):
     """
     Wrapper for AIMind file format
     
     """
-    def __init__(self,filename=None,rawdata=None):
-        self.feature_id_table = {}
-        self.featurelist = []
-        if filename or rawdata:
-            self.import_data(filename=filename,rawdata=rawdata)
 
-    def as_domain(self, metric=jaccard_index):
-        return Domain(self.featurelist, metric)
-        
     def import_data(self, filename=None, rawdata=None, append=False):
         """if append is true, will join together multiple data sources
            otherwise will overwrite"""
@@ -433,17 +461,18 @@ class AIMind:
             tree = ET.ElementTree(ET.fromstring(rawdata))
         else:
             raise Exception("No data given")
+
         root = tree.getroot()
         features = root.find("Features")
 
         if not append:
-            self.feature_id_table = {}
+            self.nodelist = []
+
+        feature_id_table = {}
 
         # map all feature ids to name
         for feature in features.iter('Feature'):
-            self.feature_id_table[feature.attrib["id"]] = feature.attrib["data"]
-
-        self.featurelist = []
+            feature_id_table[feature.attrib["id"]] = feature.attrib["data"]
 
         # build relation structure
         for feature in features.iter('Feature'):
@@ -459,9 +488,9 @@ class AIMind:
             for neighbor in neighbors.iter('neighbor'):
                 fobj.add_relation(
                     neighbor.attrib['relationship'],
-                    self.feature_id_table[neighbor.attrib['dest']])
-            self.featurelist.append(fobj)
+                    feature_id_table[neighbor.attrib['dest']])
+            self.nodelist.append(fobj)
 
-    def export_data(self, feature_id_table, domain):
+    def export_data(self):
         #TODO: implement this
         pass
