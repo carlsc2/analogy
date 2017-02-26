@@ -13,66 +13,151 @@ import time
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 sparql.setReturnFormat(JSON)
 
-NUM_WORKERS = 15
-MAX_OUTGOING_LINKS = 100 #maximum number of incoming links to explore per node
-MAX_INCOMING_LINKS = 100 #maximum number of incoming links to explore per node
+NUM_WORKERS = 15 #number of worker threads
 
-def generate_graph(seed, total, debug=True):
+def generate_graph(seeds, total, depth_limit=None,
+                   max_outgoing=None, max_incoming=None, relevance_threshold=0.5, debug=False):
     '''
-    Generates a knowledge graph from a seed keyword, up to <total> nodes
+    Generates a knowledge graph from seed keywords, up to <total> nodes
+
+    if <depth_limit> is specified, only nodes up to <depth_limit> from the
+    seed will be included
+
+    if <max_outgoing> is specified, only <max_outgoing> outgoing connections
+    will be searched for each node
+
+    if <max_incoming> is specified, only <max_incoming> incoming connections
+    will be searched for each node
+
+    if <relevance_threshold> is specified, links which are proportionally unrelated
+    to visited nodes as defined by the threshold will not be explored. Nodes which
+    have a relevance score below the threshold are ignored.
     
     '''
 
     WORKER_COUNT = min(total, NUM_WORKERS)
 
     start_time = time.time()
-    if seed[:19] == "http://dbpedia.org/": #assume proper dbpedia URI
-        uri = seed
-    else:
-        uri = keyword_search(seed) #search for URI from keyword
-        if uri is None:
-            print("ERROR: keyword %s not found"%seed)
-            return
 
+    if type(seeds) != list:
+        seeds = [seeds]
+    print(seeds)
     workers = set()
     visited = set()
-    q = asyncio.Queue() #queue of URIs to process
-    q.put_nowait(uri)
-    visited.add(uri)
+    q = asyncio.PriorityQueue() #queue of URIs to process
+
+    for seed in seeds:
+        if seed[:19] == "http://dbpedia.org/": #assume proper dbpedia URI
+            uri = seed
+        else:
+            uri = keyword_search(seed) #search for URI from keyword
+            if uri is None:
+                print("ERROR: keyword %s not found"%seed)
+                return
+        q.put_nowait((1,(0,uri)))
+        visited.add(uri)#need to add initial to visited
+
     count = 0
     graph = Domain()
 
+    fillcount = 0
+
+    def get_relevance(z):
+        #check relevance of combined incoming and outgoing links
+        return len(z&visited)/min(len(z), len(visited))
+
     async def consume(loop, executor):
-        nonlocal count
+        nonlocal count, fillcount
+
+        #check for deadlocks
+        if q.empty() and fillcount == 0:
+            return
+
         #process next link from queue
-        value = await q.get() #get next URI
+        priority, (depth, value) = await q.get() #get next URI
+
+        fillcount += 1
+
+        #fetch URI data
+        data = await loop.run_in_executor(executor, get_data, value)
+
+        #fetch links
+        linkdata = await loop.run_in_executor(executor, get_links, value)#fetch URI data
+
+        z = linkdata['incoming'] | linkdata['outgoing']
+
+        #if no actual links, don't add to graph
+        if len(z) == 0:
+            fillcount -= 1
+            return
+
+        #check relevance to other nodes
+        r = get_relevance(z)
+
         if debug:
             try:
-                print(value)
+                #check what percent of links tie back
+                if depth > 0:
+                    print(value, depth, r)
+                else:
+                    print(value, depth)
             except UnicodeDecodeError:
                 pass
-        data = await loop.run_in_executor(executor, get_data, value)#fetch URI data
+
+        #add node if relevant enough
+        #slowly build up to specified threshold based on depth
 
         n = Node(get_label(value)) #add node to graph
         for rtype, dest in data.items():
-            n.add_relation(get_label(rtype), get_label(dest))
+            if dest[:19] == "http://dbpedia.org/":#assume uri is node
+                n.add_relation(get_label(rtype), get_label(dest))
+            else:
+                n.add_attribute(get_label(rtype), dest)
         graph.add_node(n)
         count += 1
 
-        #explore links
-        tmp = await loop.run_in_executor(executor, get_links, value)#fetch URI data
+        #stop exploring if too deep
+        if depth_limit != None and depth+1 > depth_limit:
+            fillcount -= 1
+            return
 
-        for link in random.sample(tmp['outgoing'], min(MAX_OUTGOING_LINKS, len(tmp['outgoing']))):
-            if link not in visited:
-                q.put_nowait(link)
-                visited.add(link)
-                
-        for link in random.sample(tmp['incoming'], min(MAX_INCOMING_LINKS, len(tmp['incoming']))):
-            if link not in visited:
-                q.put_nowait(link)
-                visited.add(link)
+        #don't explore links if node isn't relevant enough
+        if relevance_threshold != None and (depth > 0 and r < relevance_threshold):
+            print("==> Skipping irrelevant node:", depth, value, r)
+            fillcount -= 1
+            return            
 
-        return True
+        if max_outgoing != None:
+            for link in random.sample(linkdata['outgoing'], min(max_outgoing, len(linkdata['outgoing']))):
+                if link not in visited:
+                    #negative priority so higher relevance first
+                    #prioritize outgoing over incoming
+                    q.put_nowait((-r*1.5,(depth+1,link)))
+                    visited.add(link)
+        else:
+            for link in linkdata['outgoing']:
+                if link not in visited:
+                    #negative priority so higher relevance first
+                    #prioritize outgoing over incoming
+                    q.put_nowait((-r*1.5,(depth+1,link)))
+                    visited.add(link)
+
+        if max_incoming != None:     
+            for link in random.sample(linkdata['incoming'], min(max_incoming, len(linkdata['incoming']))):
+                if link not in visited:
+                    #negative priority so higher relevance first
+                    q.put_nowait((-r,(depth+1,link)))
+                    visited.add(link)
+        else:
+            for link in linkdata['incoming']:
+                if link not in visited:
+                    #negative priority so higher relevance first
+                    q.put_nowait((-r,(depth+1,link)))
+                    visited.add(link)
+
+        fillcount -= 1
+
+        return
 
     loop = asyncio.get_event_loop()
 
@@ -81,10 +166,16 @@ def generate_graph(seed, total, debug=True):
         for i in range(WORKER_COUNT):
             workers.add(asyncio.ensure_future(consume(loop, executor)))
         while count < total:
+            if q.empty() and fillcount == 0:#prevent dead ends
+                for worker in workers:
+                    worker.cancel()
+                    return
             done,_ = await asyncio.wait(workers,return_when=asyncio.FIRST_COMPLETED)
             for ret in done:
                 workers.remove(ret)
                 while len(workers) < WORKER_COUNT:
+                    if q.empty() and fillcount == 0:#prevent race condition
+                        break
                     if count + len(workers) < total:
                         workers.add(asyncio.ensure_future(consume(loop, executor)))
                     else:
@@ -103,9 +194,14 @@ def generate_graph(seed, total, debug=True):
     signal.signal(signal.SIGTERM, signal_handler)
 
     with ThreadPoolExecutor(max_workers=WORKER_COUNT) as executor:
-        loop.run_until_complete(grow(loop, executor))
+        try:
+            loop.run_until_complete(grow(loop, executor))
+        except Exception as e:
+            print("Error: ", e)
 
     print("Graph constructed in %.5f seconds"%(time.time() - start_time))
+
+    graph.rebuild_graph_data()
 
     return graph
 
@@ -130,14 +226,16 @@ def keyword_search(keyword,limit=None):
 
 def get_data(uri):
     #gets all data for a given uri
-    query = " ".join([
-        "SELECT DISTINCT (?r as ?relationship) (str(?p) as ?property)",
-        "WHERE {",
-        "<" + uri + "> ?r ?p.",
-        "FILTER regex(?r,'dbpedia.org','i').",
-        "FILTER(!isLiteral(?p) || lang(?p) = '' || langMatches(lang(?p), 'en'))",
-        "}"
-    ])
+    query = """
+        SELECT DISTINCT (?r as ?relationship) (str(?p) as ?property) WHERE {
+            <%s> ?r ?p.
+            filter not exists {
+                <%s> dbo:wikiPageRedirects|dbo:wikiPageDisambiguates ?p
+            }
+            FILTER regex(?r,'dbpedia.org','i').
+            FILTER(!isLiteral(?p) || lang(?p) = '' || langMatches(lang(?p), 'en'))
+        }"""%(uri, uri)
+
     sparql.setQuery(query)
     results = sparql.query().convert()
     ret = {}
@@ -147,17 +245,23 @@ def get_data(uri):
 
 def get_links(uri):
     #gets links to other dbpedia entries for a given uri
-    query = " ".join([
-        "SELECT DISTINCT ?r1 ?p1 ?r2 ?p2 WHERE {{",
-        "<http://dbpedia.org/resource/California> ?r1 ?p1.",
-        "?p1 rdfs:label ?pl.",
-        "FILTER regex(?r1,'dbpedia.org','i').",
-        "}UNION{",
-        "?p2 ?r2 <" + uri + ">.",
-        "?p2 rdfs:label ?pl.",
-        "FILTER regex(?r2,'dbpedia.org','i').",
-        "}}"
-    ])
+    query = """
+        SELECT DISTINCT ?r1 ?p1 ?r2 ?p2 WHERE {{
+            <%s> ?r1 ?p1.
+            filter not exists {
+                <%s> dbo:wikiPageRedirects|dbo:wikiPageDisambiguates ?p1
+            }
+            ?p1 rdfs:label ?pl.
+            FILTER regex(?r1,'dbpedia.org','i').
+        }UNION{
+            ?p2 ?r2 <%s>.
+            filter not exists {
+                ?p2 dbo:wikiPageRedirects|dbo:wikiPageDisambiguates <%s>
+            }
+            ?p2 rdfs:label ?pl.
+            FILTER regex(?r2,'dbpedia.org','i').
+        }}"""%(uri, uri, uri, uri)
+
     sparql.setQuery(query)
     results = sparql.query().convert()
     ret = {'incoming':set(),

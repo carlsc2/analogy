@@ -113,7 +113,8 @@ class Node:
         self.rtypes = set() #set of types of outgoing relationships
         self.rtype_count = Counter() #how many times each rtype is used
         self.knowledge_level = len(self.outgoing_relations) +\
-                               len(self.incoming_relations)
+                               len(self.incoming_relations) +\
+                               len(self.attributes)
         self.text = ""
 
     def get_rtype_ratios(self):
@@ -125,6 +126,12 @@ class Node:
         atype is the type of attribute, value is the literal value        
         '''
         self.attributes.add((atype, value))
+
+    def remove_attribute(self, atype, value):
+        '''Removes an attribute from the node
+        atype is the type of attribute, value is the literal value        
+        '''
+        self.attributes.remove((atype, value))
 
     def add_predecessor(self, rtype, pred):
         '''Adds a predecessor relationship (incoming connection)
@@ -147,7 +154,24 @@ class Node:
         self.rtypes.add(rtype)
         self.rtype_count[rtype] += 1
         self.knowledge_level = len(self.outgoing_relations) +\
-                               len(self.incoming_relations)
+                               len(self.incoming_relations) +\
+                               len(self.attributes)
+
+    def remove_relation(self, rtype, dest):
+        '''Removes a neighbor relationship (outgoing connection)
+        
+        Note: This should not be called directly if the feature is already in
+        a Domain
+        '''
+        if (rtype, dest) in self.outgoing_relations:
+            self.outgoing_relations.remove((rtype, dest))
+            self.rtype_count[rtype] -= 1
+            if self.rtype_count[rtype] == 0:
+                self.rtypes.remove(rtype)
+                del self.rtype_count[rtype]
+            self.knowledge_level = len(self.outgoing_relations) +\
+                                   len(self.incoming_relations) +\
+                                   len(self.attributes)
 
     def __repr__(self):
         return "<%s>(%d)" % (self.name, self.knowledge_level)
@@ -235,12 +259,30 @@ class Domain:
         """Create map between relationship type and all of its uses
         
         Also adds references to node incoming relationships for faster lookup 
+        and checks for consistent connections
         """
         out = {}
         for node in self.nodes.values():
+            baddies = set()#track incomplete connections and relegate to attributes
             for rtype, dest in node.outgoing_relations:
-                out.setdefault(rtype, set()).add((node.name, dest))
-                self.nodes[dest].add_predecessor(rtype, node.name) 
+                try:
+                    self.nodes[dest].add_predecessor(rtype, node.name)
+                    out.setdefault(rtype, set()).add((node.name, dest))
+                except KeyError:
+                    baddies.add((rtype, dest))
+            for rtype, dest in baddies:
+                node.remove_relation(rtype, dest)
+                node.add_attribute(rtype, dest)
+
+            atc = node.attributes.copy()
+            #check if any attributes have corresponding nodes
+            for atype, attrib in atc:
+                if attrib in self.nodes:
+                    node.remove_attribute(atype, attrib)
+                    node.add_relation(atype, attrib)
+                    self.nodes[attrib].add_predecessor(atype, node.name)
+                    out.setdefault(atype, set()).add((node.name, attrib))
+        
         return out   
 
     def get_closest_relationship(self, point, n=1):
@@ -373,6 +415,8 @@ class Domain:
                     tmp["neighbors"].append(["relation", rtype, r_idmap[dest]])
                 else:
                     tmp["neighbors"].append(["literal", rtype, dest])
+            for atype, attribute in node.attributes:
+                tmp["neighbors"].append(["literal", atype, attribute])
             out["nodes"].append(tmp)
         return json.dumps(out)
 
@@ -403,10 +447,13 @@ def deserialize(data):
         for neighbor in n["neighbors"]:
             if neighbor[0] == "relation":
                 node.add_relation(neighbor[1], tmp["idmap"][neighbor[2]])
+                node
             elif neighbor[0] == "literal":
                 node.add_attribute(neighbor[1], neighbor[2])
         nodelist.append(node)
-    return Domain(nodelist)
+    d = Domain(nodelist)
+    d.rebuild_graph_data()
+    return d
 
 class DomainLoader:
     """
