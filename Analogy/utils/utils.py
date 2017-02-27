@@ -412,7 +412,7 @@ class Domain:
                    "neighbors": []}
             for rtype, dest in node.outgoing_relations:
                 if dest in r_idmap:
-                    tmp["neighbors"].append(["relation", rtype, r_idmap[dest]])
+                    tmp["neighbors"].append(["relation", rtype, str(r_idmap[dest])])
                 else:
                     tmp["neighbors"].append(["literal", rtype, dest])
             for atype, attribute in node.attributes:
@@ -446,10 +446,10 @@ def deserialize(data):
         node.text = n["text"]
         for neighbor in n["neighbors"]:
             if neighbor[0] == "relation":
-                node.add_relation(neighbor[1], tmp["idmap"][neighbor[2]])
+                node.add_relation(neighbor[1], tmp["idmap"][str(neighbor[2])])
                 node
             elif neighbor[0] == "literal":
-                node.add_attribute(neighbor[1], neighbor[2])
+                node.add_attribute(neighbor[1], str(neighbor[2]))
         nodelist.append(node)
     d = Domain(nodelist)
     d.rebuild_graph_data()

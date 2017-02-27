@@ -44,7 +44,11 @@ def generate_graph(seeds, total, depth_limit=None,
         seeds = [seeds]
     workers = set()
     visited = set()
-    q = asyncio.PriorityQueue() #queue of URIs to process
+
+    if relevance_threshold != None:
+        q = asyncio.PriorityQueue() #queue of URIs to process
+    else:
+        q = asyncio.Queue()
 
     print("Generating knowledge graph with seeds:")
     for seed in seeds:
@@ -56,9 +60,12 @@ def generate_graph(seeds, total, depth_limit=None,
                 print("ERROR: keyword %s not found"%seed)
                 return
         print("Seed: ",uri)
-        q.put_nowait((10,(0,uri)))
+        if relevance_threshold != None:
+            q.put_nowait((10,(0,uri)))
+        else:
+            q.put_nowait((0,uri))
         visited.add(uri)#need to add initial to visited
-
+ 
     count = 0
     graph = Domain()
 
@@ -76,7 +83,10 @@ def generate_graph(seeds, total, depth_limit=None,
             return
 
         #process next link from queue
-        priority, (depth, value) = await q.get() #get next URI
+        if relevance_threshold != None:
+            priority, (depth, value) = await q.get() #get next URI
+        else:
+            (depth, value) = await q.get()
 
         fillcount += 1
 
@@ -94,17 +104,10 @@ def generate_graph(seeds, total, depth_limit=None,
             return
 
         #check relevance to other nodes
-        r = get_relevance(z)
+        if relevance_threshold != None:
+            r = get_relevance(z)
 
-        if debug:
-            try:
-                #check what percent of links tie back
-                if depth > 0:
-                    print(value, depth, r)
-                else:
-                    print(value, depth)
-            except UnicodeDecodeError:
-                pass
+        
 
         #add node if relevant enough
         #slowly build up to specified threshold based on depth
@@ -117,6 +120,16 @@ def generate_graph(seeds, total, depth_limit=None,
                 n.add_attribute(get_label(rtype), dest)
         graph.add_node(n)
         count += 1
+
+        if debug:
+            try:
+                #check what percent of links tie back
+                if relevance_threshold != None:
+                    print(value, depth, r)
+                else:
+                    print(value, depth)
+            except UnicodeDecodeError:
+                pass
 
         #stop exploring if too deep
         if depth_limit != None and depth+1 > depth_limit:
@@ -135,27 +148,39 @@ def generate_graph(seeds, total, depth_limit=None,
                 if link not in visited:
                     #negative priority so higher relevance first
                     #prioritize outgoing over incoming
-                    q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
+                    if relevance_threshold != None:
+                        q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
+                    else:
+                        q.put_nowait((depth+1,link))
                     visited.add(link)
         else:
             for link in linkdata['outgoing']:
                 if link not in visited:
                     #negative priority so higher relevance first
                     #prioritize outgoing over incoming
-                    q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
+                    if relevance_threshold != None:
+                        q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
+                    else:
+                        q.put_nowait((depth+1,link))
                     visited.add(link)
 
         if max_incoming != None:     
             for link in random.sample(linkdata['incoming'], min(max_incoming, len(linkdata['incoming']))):
                 if link not in visited:
                     #negative priority so higher relevance first
-                    q.put_nowait((-r/exp(depth),(depth+1,link)))
+                    if relevance_threshold != None:
+                        q.put_nowait((-r/exp(depth),(depth+1,link)))
+                    else:
+                        q.put_nowait((depth+1,link))
                     visited.add(link)
         else:
             for link in linkdata['incoming']:
                 if link not in visited:
                     #negative priority so higher relevance first
-                    q.put_nowait((-r/exp(depth),(depth+1,link)))
+                    if relevance_threshold != None:
+                        q.put_nowait((-r/exp(depth),(depth+1,link)))
+                    else:
+                        q.put_nowait((depth+1,link))
                     visited.add(link)
 
         fillcount -= 1
