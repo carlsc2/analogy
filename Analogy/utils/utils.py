@@ -404,8 +404,8 @@ class Domain:
         }
         """
         out = {"nodes":[],
-               "idmap":{str(i):x for i,x in enumerate(self.nodes.keys())}} #map for decoding
-        r_idmap = {x:str(i) for i,x in enumerate(self.nodes.keys())} #map for encoding
+               "idmap":{i:x for i,x in enumerate(sorted(self.nodes))}} #map for decoding
+        r_idmap = {x:i for i,x in out["idmap"].items()} #map for encoding
         for name, node in self.nodes.items():
             tmp = {"name": name,
                    "text": node.text,
@@ -418,7 +418,7 @@ class Domain:
             for atype, attribute in node.attributes:
                 tmp["neighbors"].append(["literal", atype, attribute])
             out["nodes"].append(tmp)
-        return json.dumps(out)
+        return json.dumps(out,sort_keys=True)
 
 def deserialize(data):
     """Returns a Domain object constructed from JSON data
