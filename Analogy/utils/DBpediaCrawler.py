@@ -9,6 +9,7 @@ import signal, sys
 from utils import Domain, Node
 from concurrent.futures import ThreadPoolExecutor
 import time
+from math import exp
 
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 sparql.setReturnFormat(JSON)
@@ -16,7 +17,7 @@ sparql.setReturnFormat(JSON)
 NUM_WORKERS = 15 #number of worker threads
 
 def generate_graph(seeds, total, depth_limit=None,
-                   max_outgoing=None, max_incoming=None, relevance_threshold=0.5, debug=False):
+                   max_outgoing=None, max_incoming=None, relevance_threshold=None, debug=False):
     '''
     Generates a knowledge graph from seed keywords, up to <total> nodes
 
@@ -36,16 +37,16 @@ def generate_graph(seeds, total, depth_limit=None,
     '''
 
     WORKER_COUNT = min(total, NUM_WORKERS)
-
+    
     start_time = time.time()
 
     if type(seeds) != list:
         seeds = [seeds]
-    print(seeds)
     workers = set()
     visited = set()
     q = asyncio.PriorityQueue() #queue of URIs to process
 
+    print("Generating knowledge graph with seeds:")
     for seed in seeds:
         if seed[:19] == "http://dbpedia.org/": #assume proper dbpedia URI
             uri = seed
@@ -54,7 +55,8 @@ def generate_graph(seeds, total, depth_limit=None,
             if uri is None:
                 print("ERROR: keyword %s not found"%seed)
                 return
-        q.put_nowait((1,(0,uri)))
+        print("Seed: ",uri)
+        q.put_nowait((10,(0,uri)))
         visited.add(uri)#need to add initial to visited
 
     count = 0
@@ -123,7 +125,8 @@ def generate_graph(seeds, total, depth_limit=None,
 
         #don't explore links if node isn't relevant enough
         if relevance_threshold != None and (depth > 0 and r < relevance_threshold):
-            print("==> Skipping irrelevant node:", depth, value, r)
+            if debug:
+                print("==> Skipping irrelevant node:", depth, value, r)
             fillcount -= 1
             return            
 
@@ -132,27 +135,27 @@ def generate_graph(seeds, total, depth_limit=None,
                 if link not in visited:
                     #negative priority so higher relevance first
                     #prioritize outgoing over incoming
-                    q.put_nowait((-r*1.5,(depth+1,link)))
+                    q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
                     visited.add(link)
         else:
             for link in linkdata['outgoing']:
                 if link not in visited:
                     #negative priority so higher relevance first
                     #prioritize outgoing over incoming
-                    q.put_nowait((-r*1.5,(depth+1,link)))
+                    q.put_nowait((-r*1.5/exp(depth),(depth+1,link)))
                     visited.add(link)
 
         if max_incoming != None:     
             for link in random.sample(linkdata['incoming'], min(max_incoming, len(linkdata['incoming']))):
                 if link not in visited:
                     #negative priority so higher relevance first
-                    q.put_nowait((-r,(depth+1,link)))
+                    q.put_nowait((-r/exp(depth),(depth+1,link)))
                     visited.add(link)
         else:
             for link in linkdata['incoming']:
                 if link not in visited:
                     #negative priority so higher relevance first
-                    q.put_nowait((-r,(depth+1,link)))
+                    q.put_nowait((-r/exp(depth),(depth+1,link)))
                     visited.add(link)
 
         fillcount -= 1
