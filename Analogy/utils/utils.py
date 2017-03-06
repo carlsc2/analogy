@@ -56,12 +56,15 @@ def dice_coefficient(a, b):
 
 def permute_rtype_vector(x):
     """convert incoming relationship to outgoing and vice versa"""
+                     #rtype permutations
     return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
-                     x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17]],dtype=np.float)
-    #return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
-    #                 x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17],x[19],x[18],x[21],x[20]],dtype=np.float)
+                     x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17],
+                     #atype permutations
+                     x[18],x[23],x[24],x[25],x[26],x[19],x[20],x[21],x[22],x[27],
+                     x[31],x[32],x[33],x[28],x[29],x[30],x[34],x[35],
+                     ],dtype=np.float)
 
-JACCARD_DIMENSIONS = 18
+JACCARD_DIMENSIONS = 36
 #JACCARD_DIMENSIONS = 22
 NULL_VEC = lambda : np.zeros(JACCARD_DIMENSIONS)
 NULL_VEC2 = lambda : np.zeros(JACCARD_DIMENSIONS * 2)
@@ -111,6 +114,7 @@ class Node:
         self.outgoing_relations = set()  # set of relations to other nodes
         self.incoming_relations = set()  # set of relations from other nodes
         self.rtypes = set() #set of types of outgoing relationships
+        self.atypes = set() #set of types of attributes
         self.rtype_count = Counter() #how many times each rtype is used
         self.knowledge_level = len(self.outgoing_relations) +\
                                len(self.incoming_relations) +\
@@ -126,12 +130,16 @@ class Node:
         atype is the type of attribute, value is the literal value        
         '''
         self.attributes.add((atype, value))
+        self.atypes.add(atype)
 
     def remove_attribute(self, atype, value):
         '''Removes an attribute from the node
         atype is the type of attribute, value is the literal value        
         '''
         self.attributes.remove((atype, value))
+        #remove attribute type if last of its kind
+        if atype not in {x for x,v in self.attributes}:
+            self.atypes.remove(atype)
 
     def add_predecessor(self, rtype, pred):
         '''Adds a predecessor relationship (incoming connection)
@@ -324,21 +332,24 @@ class Domain:
             # all object anyways, so will cover everything
             for (rtype, dest) in fnode.outgoing_relations:
                 dnode = self.nodes[dest]
-                a = fnode.rtypes
-                b = dnode.rtypes
-                c = a - b
-                d = b - a
-                e = b & a
-                f = b ^ a
-                g = b | a
-                h = c | d
-                #i = len(a) - len(b)
-                #j = len(b) - len(a)
-                #k = len(set(a)) / len(a) if len(a) else 0
-                #l = len(set(b)) / len(b) if len(b) else 0
+                a1 = fnode.rtypes
+                b1 = dnode.rtypes
+                c1 = a1 - b1
+                d1 = b1 - a1
+                e1 = b1 & a1
+                f1 = b1 ^ a1
+                g1 = b1 | a1
+                h1 = c1 | d1
 
-                #i /= len(a) + len(b)
-                #j /= len(a) + len(b)
+                #for all outgoing connections, check difference between attributes
+                a2 = fnode.atypes
+                b2 = dnode.atypes
+                c2 = a2 - b2
+                d2 = b2 - a2
+                e2 = b2 & a2
+                f2 = b2 ^ a2
+                g2 = b2 | a2
+                h2 = c2 | d2
 
                 """
                 TODO: add similarity measure between node and prototype nodes
@@ -352,28 +363,43 @@ class Domain:
 
                 rval = out.setdefault(rtype, NULL_VEC())
 
-                score = np.array([metric(a, b),
-                                  metric(a, c),
-                                  metric(a, e),
-                                  metric(a, f),
-                                  metric(a, g),
-                                  metric(b, d),
-                                  metric(b, e),
-                                  metric(b, f),
-                                  metric(b, g),
-                                  metric(c, d),
-                                  metric(c, e),
-                                  metric(c, f),
-                                  metric(c, g),
-                                  metric(d, e),
-                                  metric(d, f),
-                                  metric(d, g),
-                                  metric(f, g),
-                                  metric(f, h),
-                                  #i,
-                                  #j,
-                                  #k,
-                                  #l
+                score = np.array([metric(a1, b1),
+                                  metric(a1, c1),
+                                  metric(a1, e1),
+                                  metric(a1, f1),
+                                  metric(a1, g1),
+                                  metric(b1, d1),
+                                  metric(b1, e1),
+                                  metric(b1, f1),
+                                  metric(b1, g1),
+                                  metric(c1, d1),
+                                  metric(c1, e1),
+                                  metric(c1, f1),
+                                  metric(c1, g1),
+                                  metric(d1, e1),
+                                  metric(d1, f1),
+                                  metric(d1, g1),
+                                  metric(f1, g1),
+                                  metric(f1, h1),
+
+                                  metric(a2, b2),
+                                  metric(a2, c2),
+                                  metric(a2, e2),
+                                  metric(a2, f2),
+                                  metric(a2, g2),
+                                  metric(b2, d2),
+                                  metric(b2, e2),
+                                  metric(b2, f2),
+                                  metric(b2, g2),
+                                  metric(c2, d2),
+                                  metric(c2, e2),
+                                  metric(c2, f2),
+                                  metric(c2, g2),
+                                  metric(d2, e2),
+                                  metric(d2, f2),
+                                  metric(d2, g2),
+                                  metric(f2, g2),
+                                  metric(f2, h2),
                                   ], dtype=np.float)
 
                 out[rtype] = rval + score
