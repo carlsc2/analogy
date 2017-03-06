@@ -222,12 +222,13 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     #confidence is based on difference from ideal
     confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
 
-    if total_rating == 0:  # prevent divide by zero error
-        return None
+    if total_rating != 0:  # prevent divide by zero error
+        normalized_rating = rating / total_rating
+    else:
+         normalized_rating = 0
 
-    normalized_rating = rating / total_rating #* math.log(weight)
-
-    total_score = ((confidence *2) + normalized_rating) / 3 #weigh confidence more
+    #total_score = ((confidence *2) + normalized_rating) / 3 #weigh confidence more
+    total_score = (confidence + normalized_rating) / 2
 
     return {"total_score":total_score,
             "confidence":confidence,
@@ -237,7 +238,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             "asserts":rassert,
             "mapping":best,
             "weight":weight}
-
 
 def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
     """Makes the best analogy between two concepts in two domains
@@ -250,13 +250,14 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
 
     Note: analogies to self are ignored (if same domain)
     """
-
     candidate_pool = filter_list if filter_list is not None else target_domain.nodes
-    candidate_results = []
 
     if not src_concept in src_domain.nodes:
         print("'%s' not in source domain" % src_concept)
         return None
+
+    best_result = None
+    best_score = 0
 
     for target_concept in candidate_pool:
         # find novel within same domain
@@ -264,21 +265,36 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
         if target_domain == src_domain and target_concept == src_concept:
             continue
         result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
-        if result:
-            candidate_results.append(result)
+        if result["total_score"] > best_score:
+            best_result = result
+            best_score = result["total_score"]
 
-    if not candidate_results:
+    return best_result
+
+
+def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
+    """Makes all analogies for some concept in one domain to another domain
+
+    Finds all analogies between a specific concept in the source domain
+    and any concept in the target domain.
+
+    If filter_list is specified, only the concepts in that list will be
+    selected from to make analogies.
+    """
+
+    candidate_pool = filter_list if filter_list is not None else target_domain.nodes
+    results = []
+
+    if not src_concept in src_domain.nodes:
+        print("'%s' not in source domain" % src_concept)
         return None
-    else:
-        
-        
-        tmp = sorted(candidate_results, key=lambda x: x["total_score"])
-        #from pprint import pprint
-        #tmp2 = [(x["total_score"],x["confidence"],x["rating"],x["target_concept"]) for x in tmp]
-        #pprint(tmp2)
 
-        # return the best global analogy
-        return tmp[-1]
+    for target_concept in candidate_pool:
+        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
+        if result:
+            results.append(result)     
+             
+    return results
 
 
 def explain_analogy(analogy, verbose=False):
