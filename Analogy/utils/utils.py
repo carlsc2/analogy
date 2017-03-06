@@ -33,15 +33,16 @@ def kulczynski_2(a, b):
     y = z / (len(b - a) + z)
     return (x + y) / 2
 
-
 def jaccard_index(a, b):
     '''Computes the jaccard index between two sets. 
     
     1 means completely similar, 0 means completely different.'''
-    if len(a) == len(b) == 0:  # if both sets are empty, return 1
+    la = len(a)
+    lb = len(b)
+    if la == lb == 0:  # if both sets are empty, return 1
         return 1
     n = len(a&b)
-    return n / (len(a) + len(b) - n)
+    return n / (la + lb - n)
 
 
 def dice_coefficient(a, b):
@@ -214,27 +215,30 @@ class Domain:
             current options are jaccard_index, dice_coefficient, kulczynski_2
 
     '''
-    def __init__(self, nodes=None, index_metric=jaccard_index):
+    def __init__(self, nodes=None, index_metric=jaccard_index, lazy=True):
         if nodes != None:
             #mapping between the name of each node and its object
             self.nodes = {n.name:n for n in nodes}
         else:
             self.nodes = {}
-        #the function to use for indexing the relationship type vectors
-        self.index_metric = index_metric
-        #maps each relationship type to all its uses
-        self.usage_map = self.map_uses()
-        #maps each rtype to its vector
-        self.rtype_vectors = self.index_rtypes()
-        #maps each node to its vector
-        self.node_vectors = self.index_nodes()
+
+        #build data if passed into constructor
         if len(self.nodes) > 0:
-            #nearest rtype fast lookup
-            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-            self.rkdtree = cKDTree(_rvalues)
-            #nearest node fast lookup
-            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-            self.nkdtree = cKDTree(_nvalues)
+            #the function to use for indexing the relationship type vectors
+            self.index_metric = index_metric
+            #maps each relationship type to all its uses
+            self.usage_map = self.map_uses()
+            #maps each rtype to its vector
+            self.rtype_vectors = self.index_rtypes()
+            #maps each node to its vector
+            self.node_vectors = self.index_nodes()
+            if not lazy:
+                #nearest rtype fast lookup
+                self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
+                self.rkdtree = cKDTree(_rvalues)
+                #nearest node fast lookup
+                self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
+                self.nkdtree = cKDTree(_nvalues)
         #dirty flag -- if graph has changed, should re-evaluate things
         self.dirty = False
 
@@ -254,15 +258,16 @@ class Domain:
         self.nodes[node2].add_predecessor(rtype,node1)
         self.dirty = True
 
-    def rebuild_graph_data(self):
+    def rebuild_graph_data(self,lazy=True):
         """rebuild all of the graph data structures"""
         self.usage_map = self.map_uses()
         self.rtype_vectors = self.index_rtypes()
         self.node_vectors = self.index_nodes()
-        self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-        self.rkdtree = cKDTree(_rvalues)
-        self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-        self.nkdtree = cKDTree(_nvalues)
+        if not lazy:
+            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
+            self.rkdtree = cKDTree(_rvalues)
+            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
+            self.nkdtree = cKDTree(_nvalues)
         self.dirty = False
 
     def index_nodes(self):
@@ -326,7 +331,7 @@ class Domain:
             return [(d, self.rkdtree_keys[i]) for d,i in tmp]
         else:
             dist, id = self.rkdtree.query(point,n)
-            return [dist, self.rkdtree_keys[id]]
+            return [(dist, self.rkdtree_keys[id])]
 
     def get_closest_node(self, point, n=1):
         """
@@ -340,7 +345,7 @@ class Domain:
             return [(d, self.nkdtree_keys[i]) for d,i in tmp]
         else:
             dist, id = self.nkdtree.query(point,n)
-            return [dist, self.nkdtree_keys[id]]
+            return [(dist, self.nkdtree_keys[id])]
 
     def index_rtypes(self):
         """Constructs vector representations for every type of relationship
