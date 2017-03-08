@@ -6,3 +6,4 @@ numpy
 scipy
 lru-dict
 sparqlwrapper
+flask
