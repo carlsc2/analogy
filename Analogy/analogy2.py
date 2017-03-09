@@ -7,7 +7,7 @@ module for making analogies between standard graph structures
 """
 
 import numpy as np
-from utils import permute_rtype_vector, cosine_similarity, euclidean_distance, NULL_VEC
+from utils import permute_rtype_vector, cosine_similarity, euclidean_distance
 import math
 
 from pprint import pprint
@@ -31,13 +31,18 @@ Need to incrementally make inferences
 class AnalogyException(Exception):
     pass
 
-def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1):
+def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, singular=False):
     '''Makes the best analogy between two concepts in two domains
 
     src_domain is the KNOWN domain
     target_domain is the NOVEL domain
 
     returns the best analogy that can be made between the two concepts
+
+    if singular is True, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes with
+    a very large number of homogeneous connections as it severely cuts down on
+    the computation time.
 
     raises an AnalogyException if concept does not exist in domain 
     '''
@@ -79,11 +84,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
         return 1 - (diff1+diff2)/2
 
-    def weigh_score(x,c):
-        #return math.exp((3*x-3))
-        #return math.tanh((6*x-6) + 2)
-        return math.tanh(2*c*x - c)
-
     def get_hypotheses():
         svec = src_domain.node_vectors[src_concept]
         tvec = target_domain.node_vectors[target_concept]
@@ -93,25 +93,43 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
         # precompute source vectors because this won't change
         src_vec_dict = {}
 
-        net1 = [(r,d,True) for r,d in cnode.outgoing_relations] +\
-               [(r,d,False) for r,d in cnode.incoming_relations]
-
+        #aggregate incominng/outgoing
         net2 = [(r,d,True) for r,d in tnode.outgoing_relations] +\
-               [(r,d,False) for r,d in tnode.incoming_relations]
+                [(r,d,False) for r,d in tnode.incoming_relations]
 
-        #precompute vectors for inner loop
-        for r, d, v in net1:
-            #vector from src node to src neighbor
-            src_vec_dict[d] = svec - src_domain.node_vectors[d]
+        #only use one of each rtype
+        if singular:
+            for rtype in cnode.rtypes:              
+                clv = np.mean([src_domain.node_vectors[d] for r,d \
+                    in cnode.outgoing_relations if r == rtype], axis=0)
+                src_vec_dict[(rtype,
+                              "things with %s from"%rtype,
+                              True)] = (svec - clv,
+                                        svec - src_domain.rtype_vectors[rtype])
 
-            #vector from src node to src rtype
-            if v: #if outgoing rtype
-                src_vec_dict[(r,v)] = svec - src_domain.rtype_vectors[r]
-            else: #if incoming rtype
-                src_vec_dict[(r,v)] = svec - permute_rtype_vector(src_domain.rtype_vectors[r])
+            for rtype in cnode.i_rtypes:
+                clv = np.mean([src_domain.node_vectors[d] for r,d \
+                    in cnode.incoming_relations if r == rtype], axis=0)
+                src_vec_dict[(rtype,
+                              "things with %s to"%rtype,
+                              False)] = (svec - clv,
+                                         svec - permute_rtype_vector(
+                                             src_domain.rtype_vectors[rtype]))
 
+        else:
+            #precompute vectors for inner loop
+            for r,d in cnode.outgoing_relations:
+                #vector from src node to src neighbor, vector from src node to src rtype
+                src_vec_dict[(r,d,True)] = (svec - src_domain.node_vectors[d],
+                                            svec - src_domain.rtype_vectors[r])
+            for r,d in cnode.incoming_relations:
+                src_vec_dict[(r,d,False)] = (svec - src_domain.node_vectors[d],
+                                             svec - permute_rtype_vector(
+                                                 src_domain.rtype_vectors[r]))
 
-        # for each pair in candidate outgoing
+        svdi = src_vec_dict.items()
+
+        # for each pair in target in/out
         for r2, d2, v2 in net2:
 
             #vector from target node to target neighbor
@@ -123,11 +141,11 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             else: #if incoming rtype
                 rdiff2 = tvec - permute_rtype_vector(target_domain.rtype_vectors[r2])
 
-            # find best outgoing rtype to compare with
-            for r1, d1, v1 in net1:
+            #compare with each pair in source in/out
+            for (r1, d1, v1),(vdiff1, rdiff1) in svdi:
 
                 #compute relative rtype score
-                rscore = cosine_similarity(src_vec_dict[(r1,v1)], rdiff2)
+                rscore = cosine_similarity(rdiff1, rdiff2)
 
                 #adjust rtype score by confidence
                 #rscore *= get_confidence(r1,r2)
@@ -136,9 +154,12 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
                 #rscore = math.tanh(2*math.e*rscore - math.e)
 
                 #compute relative node score
-                vscore = cosine_similarity(src_vec_dict[d1], vdiff2)
+                vscore = cosine_similarity(vdiff1, vdiff2)
 
                 actual_score = (rscore*rmax + vscore*vmax)/tscore
+
+                if singular:
+                    actual_score *= nc1[r1]
 
                 hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
 
@@ -156,8 +177,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     hvals = hmap.values()
     rkeys = rassert.keys()
     rvals = rassert.values()
-    ritems = rassert.items()
-    hitems = hmap.items()
 
     #total number of rtypes for each node
     tr1 = len(nc1.keys())
@@ -173,6 +192,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     # only penalize on true conflicts
     # max possible matches is min(n,m) matches
     maxm = min(sr1,sr2)
+    #total_rating = maxm
 
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
         vkey = (src, v1)
@@ -213,6 +233,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
                 hmap[vkey] = target
                 best[(otype, r1, src)] = (r2, target, score)
                 rating += score
+            #if rtype mapping exists but is consistent
             elif rassert.get(rkey1) == rkey2:
                 hmap[vkey] = target
                 best[(otype, r1, src)] = (r2, target, score)
@@ -252,7 +273,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             "mapping":best,
             "weight":weight}
 
-def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
+def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1, singular=False):
     """Makes the best analogy between two concepts in two domains
 
     Finds the best analogy between a specific concept in the source domain
@@ -278,7 +299,7 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
         # otherwise best analogy would always be self
         if target_domain == src_domain and target_concept == src_concept:
             continue
-        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
+        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax, singular)
         if result["total_score"] > best_score:
             best_result = result
             best_score = result["total_score"]
@@ -286,7 +307,7 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
     return best_result
 
 
-def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
+def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1, singular=False):
     """Makes all analogies for some concept in one domain to another domain
 
     Finds all analogies between a specific concept in the source domain
@@ -305,7 +326,7 @@ def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None, 
         raise AnalogyException("'%s' not in source domain" % src_concept)
 
     for target_concept in candidate_pool:
-        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
+        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax, singular)
         if result:
             results.append(result)     
              
