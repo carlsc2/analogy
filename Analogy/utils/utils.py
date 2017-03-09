@@ -138,10 +138,13 @@ class Node:
         self.rtypes = set() #set of types of outgoing relationships
         self.atypes = set() #set of types of attributes
         self.rtype_count = Counter() #how many times each rtype is used
-        self.knowledge_level = len(self.outgoing_relations) +\
-                               len(self.incoming_relations) +\
-                               len(self.attributes)
         self.text = ""
+
+    @property
+    def knowledge_level(self):
+        return len(self.outgoing_relations) +\
+               len(self.incoming_relations) +\
+               len(self.attributes)
 
     def get_rtype_ratios(self):
         total = sum(self.rtype_count.values())
@@ -169,10 +172,9 @@ class Node:
         Note: This should not be called directly if the feature is already in
         a Domain
         '''
-        self.incoming_relations.add((rtype, pred))
-        self.rtype_count[rtype] += 1
-        self.knowledge_level = len(self.outgoing_relations) +\
-                               len(self.incoming_relations)
+        if (rtype, pred) not in self.incoming_relations:
+            self.incoming_relations.add((rtype, pred))
+            self.rtype_count[rtype] += 1
 
     def add_relation(self, rtype, dest):
         '''Adds a neighbor relationship (outgoing connection)
@@ -180,12 +182,10 @@ class Node:
         Note: This should not be called directly if the feature is already in
         a Domain
         '''
-        self.outgoing_relations.add((rtype, dest))
-        self.rtypes.add(rtype)
-        self.rtype_count[rtype] += 1
-        self.knowledge_level = len(self.outgoing_relations) +\
-                               len(self.incoming_relations) +\
-                               len(self.attributes)
+        if (rtype, dest) not in self.outgoing_relations:
+            self.outgoing_relations.add((rtype, dest))
+            self.rtypes.add(rtype)
+            self.rtype_count[rtype] += 1
 
     def remove_relation(self, rtype, dest):
         '''Removes a neighbor relationship (outgoing connection)
@@ -199,9 +199,6 @@ class Node:
             if self.rtype_count[rtype] == 0:
                 self.rtypes.remove(rtype)
                 del self.rtype_count[rtype]
-            self.knowledge_level = len(self.outgoing_relations) +\
-                                   len(self.incoming_relations) +\
-                                   len(self.attributes)
 
     def __repr__(self):
         return "<%s>(%d)" % (self.name, self.knowledge_level)
@@ -215,30 +212,30 @@ class Domain:
             current options are jaccard_index, dice_coefficient, kulczynski_2
 
     '''
-    def __init__(self, nodes=None, index_metric=jaccard_index, lazy=True):
+    def __init__(self, nodes=None, index_metric=jaccard_index):
         if nodes != None:
             #mapping between the name of each node and its object
             self.nodes = {n.name:n for n in nodes}
         else:
             self.nodes = {}
 
+        #the function to use for indexing the relationship type vectors
+        self.index_metric = index_metric
+
         #build data if passed into constructor
         if len(self.nodes) > 0:
-            #the function to use for indexing the relationship type vectors
-            self.index_metric = index_metric
             #maps each relationship type to all its uses
             self.usage_map = self.map_uses()
             #maps each rtype to its vector
             self.rtype_vectors = self.index_rtypes()
             #maps each node to its vector
             self.node_vectors = self.index_nodes()
-            if not lazy:
-                #nearest rtype fast lookup
-                self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-                self.rkdtree = cKDTree(_rvalues)
-                #nearest node fast lookup
-                self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-                self.nkdtree = cKDTree(_nvalues)
+            #nearest rtype fast lookup
+            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
+            self.rkdtree = cKDTree(_rvalues)
+            #nearest node fast lookup
+            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
+            self.nkdtree = cKDTree(_nvalues)
         #dirty flag -- if graph has changed, should re-evaluate things
         self.dirty = False
 
@@ -258,12 +255,12 @@ class Domain:
         self.nodes[node2].add_predecessor(rtype,node1)
         self.dirty = True
 
-    def rebuild_graph_data(self,lazy=True):
+    def rebuild_graph_data(self):
         """rebuild all of the graph data structures"""
-        self.usage_map = self.map_uses()
-        self.rtype_vectors = self.index_rtypes()
-        self.node_vectors = self.index_nodes()
-        if not lazy:
+        if len(self.nodes) > 0:
+            self.usage_map = self.map_uses()
+            self.rtype_vectors = self.index_rtypes()
+            self.node_vectors = self.index_nodes()
             self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
             self.rkdtree = cKDTree(_rvalues)
             self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
