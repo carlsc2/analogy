@@ -114,7 +114,10 @@ def cosine_similarity(v1, v2):
         nu = v1.dot(v1)
         nv = v2.dot(v2)
         if nu == 0 or nv == 0:
-            value = 0
+            if nv == 0 and nu == 0:
+                value = 1
+            else:
+                value = 0
         else:
             value = 0.5 * (v1.dot(v2) / sqrt(nu * nv) + 1)
 
@@ -136,6 +139,7 @@ class Node:
         self.outgoing_relations = set()  # set of relations to other nodes
         self.incoming_relations = set()  # set of relations from other nodes
         self.rtypes = set() #set of types of outgoing relationships
+        self.i_rtypes = set() #set of types of incoming relationships
         self.atypes = set() #set of types of attributes
         self.rtype_count = Counter() #how many times each rtype is used
         self.text = ""
@@ -175,6 +179,20 @@ class Node:
         if (rtype, pred) not in self.incoming_relations:
             self.incoming_relations.add((rtype, pred))
             self.rtype_count[rtype] += 1
+            self.i_rtypes.add(rtype)
+
+    def remove_predecessor(self, rtype, pred):
+        '''Removes a predecessor relationship (incoming connection)
+        
+        Note: This should not be called directly if the feature is already in
+        a Domain
+        '''
+        if (rtype, pred) in self.incoming_relations:
+            self.incoming_relations.remove((rtype, pred))
+            self.rtype_count[rtype] -= 1
+            if self.rtype_count[rtype] == 0:
+                self.i_rtypes.remove(rtype)
+                del self.rtype_count[rtype]
 
     def add_relation(self, rtype, dest):
         '''Adds a neighbor relationship (outgoing connection)
