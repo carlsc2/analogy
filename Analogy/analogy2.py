@@ -426,6 +426,6 @@ def explain_analogy(analogy, verbose=False):
                 narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'," % (
                     a, b, c, d, e, f)
             else:
-                narrative += " %s '%s' are like %s '%s'.\n" % (
+                narrative += " %s '%s' are like %s '%s'," % (
                     a, c, d, f)
     return narrative
