@@ -28,27 +28,28 @@ Need to incrementally make inferences
 
 '''
 
-def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, relaxed=False):
+class AnalogyException(Exception):
+    pass
+
+def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1):
     '''Makes the best analogy between two concepts in two domains
 
     src_domain is the KNOWN domain
     target_domain is the NOVEL domain
 
-    if relaxed is set to True, the analogy evidence will not be one-to-one
+    returns the best analogy that can be made between the two concepts
 
-    returns the best analogy or None if no analogy could be made
-
+    raises an AnalogyException if concept does not exist in domain 
     '''
     
     
 
     # ensure features exist
     if not src_concept in src_domain.nodes:
-        print("'%s' not in source domain" % src_concept)
-        return None
+        raise AnalogyException("'%s' not in source domain" % src_concept)
+
     if not target_concept in target_domain.nodes:
-        print("'%s' not in target domain" % target_concept)
-        return None
+        raise AnalogyException("'%s' not in target domain" % target_concept)
 
     cnode = src_domain.nodes[src_concept]
     tnode = target_domain.nodes[target_concept]
@@ -78,8 +79,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
         return 1 - (diff1+diff2)/2
 
-        #return 1 - (nc1[r1] - nc2[r2])**2
-
     def weigh_score(x,c):
         #return math.exp((3*x-3))
         #return math.tanh((6*x-6) + 2)
@@ -94,12 +93,11 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
         # precompute source vectors because this won't change
         src_vec_dict = {}
 
-        
-        net1 = [(r1,d1,True) for r1,d1 in cnode.outgoing_relations] +\
-               [(r1,d1,False) for r1,d1 in cnode.incoming_relations]
+        net1 = [(r,d,True) for r,d in cnode.outgoing_relations] +\
+               [(r,d,False) for r,d in cnode.incoming_relations]
 
-        net2 = [(r1,d1,True) for r1,d1 in tnode.outgoing_relations] +\
-               [(r1,d1,False) for r1,d1 in tnode.incoming_relations]
+        net2 = [(r,d,True) for r,d in tnode.outgoing_relations] +\
+               [(r,d,False) for r,d in tnode.incoming_relations]
 
         #precompute vectors for inner loop
         for r, d, v in net1:
@@ -132,10 +130,10 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
                 rscore = cosine_similarity(src_vec_dict[(r1,v1)], rdiff2)
 
                 #adjust rtype score by confidence
-                rscore *= get_confidence(r1,r2)
+                #rscore *= get_confidence(r1,r2)
 
                 #skew score
-                rscore = math.tanh(2*math.e*rscore - math.e)
+                #rscore = math.tanh(2*math.e*rscore - math.e)
 
                 #compute relative node score
                 vscore = cosine_similarity(src_vec_dict[d1], vdiff2)
@@ -159,11 +157,22 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     rkeys = rassert.keys()
     rvals = rassert.values()
     ritems = rassert.items()
+    hitems = hmap.items()
+
+    #total number of rtypes for each node
+    tr1 = len(nc1.keys())
+    tr2 = len(nc2.keys())
+
+    #total number of relationships for each node
+    sr1 = len(cnode.outgoing_relations) + len(cnode.incoming_relations)
+    sr2 = len(tnode.outgoing_relations) + len(tnode.incoming_relations)
 
     # for each mh, pick the best then pick the next best non-conflicting
     # total number of hypotheses is O(m*n) with max(n,m) matches
     # total score is based on possible non-conflicts
-    # only penalize on conflicts
+    # only penalize on true conflicts
+    # max possible matches is min(n,m) matches
+    maxm = min(sr1,sr2)
 
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
         vkey = (src, v1)
@@ -181,45 +190,49 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             else:
                 otype = "IN-IN"
 
-        #for a new mapping
-        if vkey not in hkeys and (relaxed or (target not in hvals)):
-            
-            #print("new mapping: ", vkey, target)
-            hmap[vkey] = target
-            rating += score
-            if (r1,r2) not in ritems:
-                total_rating += tscore
+        #same src, dest could have multiple rtype mappings
+
+        #if new concept mapping
+        if vkey not in hkeys and target not in hvals:
+            #if new rtype mapping
             if rkey1 not in rkeys and rkey2 not in rvals:
                 rassert[rkey1] = rkey2
-
-        if target not in hvals:
-            total_rating += tscore
-
-        #if the src/target has already been mapped to
-        #if hmap.get(vkey) == target:
-        if hmap.get(vkey) == target:# or target not in hvals:
-            #check for conflict with relationship types
-            if rassert.get(rkey1) == rkey2:
-                #track best match
+                hmap[vkey] = target
                 best[(otype, r1, src)] = (r2, target, score)
-                #increase score for match
                 rating += score
-    
-    #total number of rtypes for each node
-    tr1 = len(nc1.keys())
-    tr2 = len(nc2.keys())
-
-    #total number of relationships for each node
-    sr1 = sum(cnode.rtype_count.values())
-    sr2 = sum(tnode.rtype_count.values())
+            #if rtype mapping exists but is consistent
+            elif rassert.get(rkey1) == rkey2:
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+        #if existing concept mapping
+        elif hmap.get(vkey) == target:
+            #if new rtype mapping
+            if rkey1 not in rkeys and rkey2 not in rvals:
+                rassert[rkey1] = rkey2
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+            elif rassert.get(rkey1) == rkey2:
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+        total_rating += 1/maxm
 
     #get max number of each (ideal number)
     v = max(sr1, sr2)
     z = max(tr1, tr2)
 
+    #total impact of the analogy (in terms of connectivity)
     weight = z*v
 
     #confidence is based on difference from ideal
+    #best possible analogy:
+    #   all types could be mapped, 
+    #   all connections could be mapped 
+
+    mass = len(hmap) * len(rassert) / weight
+
     confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
 
     if total_rating != 0:  # prevent divide by zero error
@@ -249,12 +262,13 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
     selected from to make analogies.
 
     Note: analogies to self are ignored (if same domain)
+
+    raises an AnalogyException if concept does not exist in domain 
     """
     candidate_pool = filter_list if filter_list is not None else target_domain.nodes
 
     if not src_concept in src_domain.nodes:
-        print("'%s' not in source domain" % src_concept)
-        return None
+        raise AnalogyException("'%s' not in source domain" % src_concept)
 
     best_result = None
     best_score = 0
@@ -280,14 +294,15 @@ def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None, 
 
     If filter_list is specified, only the concepts in that list will be
     selected from to make analogies.
+
+    raises an AnalogyException if concept does not exist in domain 
     """
 
     candidate_pool = filter_list if filter_list is not None else target_domain.nodes
     results = []
 
     if not src_concept in src_domain.nodes:
-        print("'%s' not in source domain" % src_concept)
-        return None
+        raise AnalogyException("'%s' not in source domain" % src_concept)
 
     for target_concept in candidate_pool:
         result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
