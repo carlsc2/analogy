@@ -99,7 +99,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
         #only use one of each rtype
         if singular:
-            for rtype in cnode.rtypes:              
+            for rtype in cnode.rtypes:
                 clv = np.mean([src_domain.node_vectors[d] for r,d \
                     in cnode.outgoing_relations if r == rtype], axis=0)
                 src_vec_dict[(rtype,
@@ -142,13 +142,13 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
                 rdiff2 = tvec - permute_rtype_vector(target_domain.rtype_vectors[r2])
 
             #compare with each pair in source in/out
-            for (r1, d1, v1),(vdiff1, rdiff1) in svdi:
+            for (r1, d1, v1), (vdiff1, rdiff1) in svdi:
 
                 #compute relative rtype score
                 rscore = cosine_similarity(rdiff1, rdiff2)
 
                 #adjust rtype score by confidence
-                #rscore *= get_confidence(r1,r2)
+                rscore *= get_confidence(r1,r2)
 
                 #skew score
                 #rscore = math.tanh(2*math.e*rscore - math.e)
@@ -196,6 +196,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
         vkey = (src, v1)
+        tkey = (target, v2)
         rkey1 = (r1, v1)
         rkey2 = (r2, v2)
 
@@ -213,29 +214,29 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
         #same src, dest could have multiple rtype mappings
 
         #if new concept mapping
-        if vkey not in hkeys and target not in hvals:
+        if vkey not in hkeys and tkey not in hvals:
             #if new rtype mapping
             if rkey1 not in rkeys and rkey2 not in rvals:
                 rassert[rkey1] = rkey2
-                hmap[vkey] = target
+                hmap[vkey] = tkey
                 best[(otype, r1, src)] = (r2, target, score)
                 rating += score
             #if rtype mapping exists but is consistent
             elif rassert.get(rkey1) == rkey2:
-                hmap[vkey] = target
+                hmap[vkey] = tkey
                 best[(otype, r1, src)] = (r2, target, score)
                 rating += score
         #if existing concept mapping
-        elif hmap.get(vkey) == target:
+        elif hmap.get(vkey) == tkey:
             #if new rtype mapping
             if rkey1 not in rkeys and rkey2 not in rvals:
                 rassert[rkey1] = rkey2
-                hmap[vkey] = target
+                hmap[vkey] = tkey
                 best[(otype, r1, src)] = (r2, target, score)
                 rating += score
             #if rtype mapping exists but is consistent
             elif rassert.get(rkey1) == rkey2:
-                hmap[vkey] = target
+                hmap[vkey] = tkey
                 best[(otype, r1, src)] = (r2, target, score)
                 rating += score
         total_rating += 1/maxm
