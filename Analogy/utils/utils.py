@@ -180,11 +180,12 @@ class Node:
         for rtype in self.rtypes:
             cnds = [domain.node_vectors[d] for r,d
                     in self.outgoing_relations if r == rtype]
-            if len(cnds) > 1:
+            clen = len(cnds)
+            if clen > 1:
                 cluster_vec_dict[(rtype, "things are <%s> from"%rtype, True)] = (
                     svec - np.mean(cnds, axis=0),
                     svec - domain.rtype_vectors[rtype])
-            else:
+            elif clen == 1:
                 d = next(d for r,d in self.outgoing_relations if r == rtype)
                 cluster_vec_dict[(rtype, "%s <%s> of"%(d, rtype), True)] = (
                     svec - domain.node_vectors[d],
@@ -193,11 +194,12 @@ class Node:
         for rtype in self.i_rtypes:
             cnds = [domain.node_vectors[d] for r,d
                     in self.incoming_relations if r == rtype]
-            if len(cnds) > 1:
+            clen = len(cnds)
+            if clen > 1:
                 cluster_vec_dict[(rtype, "things are <%s> to"%rtype, False)] = (
                     svec - np.mean(cnds, axis=0),
                     svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
-            else:
+            elif clen == 1:
                 d = next(d for r,d in self.incoming_relations if r == rtype)
                 cluster_vec_dict[(rtype, "%s <%s>"%(d, rtype), True)] = (
                     svec - domain.node_vectors[d],

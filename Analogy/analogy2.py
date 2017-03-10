@@ -244,9 +244,12 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
     #   all types could be mapped, 
     #   all connections could be mapped 
 
-    mass = len(hmap) * len(rassert) / weight
+    #mass = len(hmap) * len(rassert) / weight
 
-    confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
+    try:
+        confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
+    except ZeroDivisionError:
+        confidence = 0
 
     if total_rating != 0:  # prevent divide by zero error
         normalized_rating = rating / total_rating
