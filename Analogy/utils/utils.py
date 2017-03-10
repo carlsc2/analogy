@@ -91,9 +91,6 @@ def permute_rtype_vector(x):
 
 JACCARD_DIMENSIONS = 67
 NULL_VEC = lambda : np.zeros(JACCARD_DIMENSIONS)
-NULL_VEC2 = lambda : np.zeros(JACCARD_DIMENSIONS * 2)
-
-
 
 SIMILARITY_CACHE = LRU(10000) #use LRU cache to limit size and avoid memory error
 
@@ -146,6 +143,12 @@ class Node:
         self.rtype_count = Counter() #how many times each rtype is used
         self.text = ""
 
+        #store computed data for a particular domain
+        self._vec_dict = None
+        self._cluster_vec_dict = None
+        self.domain = None
+
+
     @property
     def knowledge_level(self):
         return len(self.outgoing_relations) +\
@@ -155,6 +158,66 @@ class Node:
     def get_rtype_ratios(self):
         total = sum(self.rtype_count.values())
         return {x:self.rtype_count[x]/total for x in self.rtype_count}
+
+    def get_vec_dict(self, domain, cluster=False):
+        #return vector dict if computed with same parameters
+        if domain != self.domain:
+            self.compute_dicts(domain)
+
+        if cluster:
+            return self._cluster_vec_dict
+        else:
+            return self._vec_dict
+
+    def compute_dicts(self, domain):
+        #recompute vector dicts
+        self.domain = domain
+        vec_dict = {}
+        cluster_vec_dict = {}
+        svec = domain.node_vectors[self.name]
+
+        #compute clustered dict values
+        for rtype in self.rtypes:
+            cnds = [domain.node_vectors[d] for r,d
+                    in self.outgoing_relations if r == rtype]
+            if len(cnds) > 1:
+                cluster_vec_dict[(rtype, "things are <%s> from"%rtype, True)] = (
+                    svec - np.mean(cnds, axis=0),
+                    svec - domain.rtype_vectors[rtype])
+            else:
+                d = next(d for r,d in self.outgoing_relations if r == rtype)
+                cluster_vec_dict[(rtype, "%s <%s> of"%(d, rtype), True)] = (
+                    svec - domain.node_vectors[d],
+                    svec - domain.rtype_vectors[rtype])
+
+        for rtype in self.i_rtypes:
+            cnds = [domain.node_vectors[d] for r,d
+                    in self.incoming_relations if r == rtype]
+            if len(cnds) > 1:
+                cluster_vec_dict[(rtype, "things are <%s> to"%rtype, False)] = (
+                    svec - np.mean(cnds, axis=0),
+                    svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
+            else:
+                d = next(d for r,d in self.incoming_relations if r == rtype)
+                cluster_vec_dict[(rtype, "%s <%s>"%(d, rtype), True)] = (
+                    svec - domain.node_vectors[d],
+                    svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
+
+        #compute individual dict values
+        vec_dict = {(r,d,False):(svec - domain.node_vectors[d],
+                                    svec - permute_rtype_vector(
+                                        domain.rtype_vectors[r]))
+                        for r,d in self.incoming_relations}
+
+        for r,d in self.outgoing_relations:
+            #vector from node to neighbor, vector from node to rtype
+            vec_dict[(r,d,True)] = (svec - domain.node_vectors[d],
+                                    svec - domain.rtype_vectors[r])
+
+        self._vec_dict = vec_dict
+        self._cluster_vec_dict = cluster_vec_dict
+        return vec_dict
+
 
     def add_attribute(self, atype, value):
         '''Adds an attribute to the node
@@ -256,6 +319,11 @@ class Domain:
             #nearest node fast lookup
             self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
             self.nkdtree = cKDTree(_nvalues)
+
+        #precompute some vector constructs
+        for node in self.nodes.values():
+            node.compute_dicts(self)
+
         #dirty flag -- if graph has changed, should re-evaluate things
         self.dirty = False
 
@@ -269,10 +337,21 @@ class Domain:
         self.nodes[node.name] = node
         self.dirty = True
 
+    def remove_node(self, node):
+        """Removes a node object <node> from the domain"""
+        self.nodes[node.name] = node
+        self.dirty = True
+
     def add_edge(self, rtype, node1, node2):
         """Adds an edge of type <rtype> from <node1> to <node2>"""
         self.nodes[node1].add_relation(rtype,node2)
         self.nodes[node2].add_predecessor(rtype,node1)
+        self.dirty = True
+
+    def remove_edge(self, rtype, node1, node2):
+        """Removes an edge of type <rtype> from <node1> to <node2>"""
+        self.nodes[node1].remove_relation(rtype,node2)
+        self.nodes[node2].remove_predecessor(rtype,node1)
         self.dirty = True
 
     def rebuild_graph_data(self):
@@ -285,6 +364,11 @@ class Domain:
             self.rkdtree = cKDTree(_rvalues)
             self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
             self.nkdtree = cKDTree(_nvalues)
+
+        #precompute some vector constructs
+        for node in self.nodes.values():
+            node.compute_dicts(self)
+
         self.dirty = False
 
     def index_nodes(self):
@@ -299,10 +383,12 @@ class Domain:
             net = tmp1 + tmp2
 
             out[name] = np.asarray(net).mean(axis=0)
+            #out[name] = np.asarray(net).sum(axis=0)
 
-        ##normalize everything
+        ###normalize everything
         #for r,v in out.items():
-        #    out[r] = v / sqrt(v.dot(v))
+        #    if v.any():#if array is nonzero
+        #        out[r] = v / sqrt(v.dot(v))
 
         return out
 
@@ -616,7 +702,7 @@ def deserialize(data):
                 node.add_attribute(neighbor[1], str(neighbor[2]))
         nodelist.append(node)
     d = Domain(nodelist)
-    d.rebuild_graph_data()
+    #d.rebuild_graph_data()
     return d
 
 class DomainLoader:

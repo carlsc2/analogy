@@ -95,110 +95,18 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
 
         hypotheses = []
 
-        # precompute source vectors because this won't change
-        
-
-        #only use one of each rtype
-        if cluster_mode == 1 or cluster_mode == 3:
-            #compute clusters for source
-            src_vec_dict = {}
-
-            for rtype in cnode.rtypes:
-                cnds = [src_domain.node_vectors[d] for r,d
-                        in cnode.outgoing_relations if r == rtype]
-                if len(cnds) > 1:
-                    src_vec_dict[(rtype,
-                                  "things are <%s> from"%rtype,
-                                  True)] = (svec - np.mean(cnds, axis=0),
-                                            svec - src_domain.rtype_vectors[rtype])
-                else:
-                    d = next(d for r,d in cnode.outgoing_relations if r == rtype)
-                    src_vec_dict[(rtype,
-                                  "%s <%s> of"%(d, rtype),
-                                  True)] = (svec - src_domain.node_vectors[d],
-                                            svec - src_domain.rtype_vectors[rtype])
-
-            for rtype in cnode.i_rtypes:
-                cnds = [src_domain.node_vectors[d] for r,d
-                        in cnode.incoming_relations if r == rtype]
-                if len(cnds) > 1:
-                    src_vec_dict[(rtype,
-                                  "things are <%s> to"%rtype,
-                                  False)] = (svec - np.mean(cnds, axis=0),
-                                             svec - permute_rtype_vector(
-                                                 src_domain.rtype_vectors[rtype]))
-                else:
-                    d = next(d for r,d in cnode.incoming_relations if r == rtype)
-                    src_vec_dict[(rtype,
-                                  "%s <%s>"%(d, rtype),
-                                  True)] = (svec - src_domain.node_vectors[d],
-                                            svec - permute_rtype_vector(
-                                                src_domain.rtype_vectors[rtype]))
-
-        if cluster_mode == 2 or cluster_mode == 3:
-            #compute clusters for target
-            trg_vec_dict = {}
-
-            for rtype in tnode.rtypes:
-                cnds = [target_domain.node_vectors[d] for r,d
-                        in tnode.outgoing_relations if r == rtype]
-                if len(cnds) > 1:
-                    trg_vec_dict[(rtype,
-                                  "things are <%s> from"%rtype,
-                                  True)] = (tvec - np.mean(cnds, axis=0),
-                                            tvec - target_domain.rtype_vectors[rtype])
-                else:
-                    d = next(d for r,d in tnode.outgoing_relations if r == rtype)
-                    trg_vec_dict[(rtype,
-                                  "%s <%s> of"%(d, rtype),
-                                  True)] = (tvec - target_domain.node_vectors[d],
-                                            tvec - target_domain.rtype_vectors[rtype])
-
-            for rtype in tnode.i_rtypes:
-                cnds = [target_domain.node_vectors[d] for r,d
-                        in tnode.incoming_relations if r == rtype]
-                if len(cnds) > 1:
-                    trg_vec_dict[(rtype,
-                                  "things are <%s> to"%rtype,
-                                  False)] = (tvec - np.mean(cnds, axis=0),
-                                             tvec - permute_rtype_vector(
-                                                 target_domain.rtype_vectors[rtype]))
-                else:
-                    d = next(d for r,d in tnode.incoming_relations if r == rtype)
-                    trg_vec_dict[(rtype,
-                                  "%s <%s>"%(d, rtype),
-                                  True)] = (tvec - target_domain.node_vectors[d],
-                                            tvec - permute_rtype_vector(
-                                                target_domain.rtype_vectors[rtype]))
-
-        if cluster_mode == 0 or cluster_mode == 2:
-            #no clusters for source
-
-            src_vec_dict = {(r,d,False):(svec - src_domain.node_vectors[d],
-                                         svec - permute_rtype_vector(
-                                             src_domain.rtype_vectors[r]))
-                            for r,d in cnode.incoming_relations}
-
-            for r,d in cnode.outgoing_relations:
-                #vector from src node to src neighbor, vector from src node to src rtype
-                src_vec_dict[(r,d,True)] = (svec - src_domain.node_vectors[d],
-                                            svec - src_domain.rtype_vectors[r])
-
-        if cluster_mode == 0 or cluster_mode == 1:
-            #no clusters for target
-
-            trg_vec_dict = {(r,d,False):(tvec - target_domain.node_vectors[d],
-                                         tvec - permute_rtype_vector(
-                                             target_domain.rtype_vectors[r]))
-                            for r,d in tnode.incoming_relations}
-
-            for r,d in tnode.outgoing_relations:
-                #vector from trg node to trg neighbor, vector from trg node to trg rtype
-                trg_vec_dict[(r,d,True)] = (tvec - target_domain.node_vectors[d],
-                                            tvec - target_domain.rtype_vectors[r])
-
-        svdi = src_vec_dict.items()
-        tvdi = trg_vec_dict.items()
+        if cluster_mode == 0: #no cluster
+            svdi = cnode.get_vec_dict(src_domain,False).items()
+            tvdi = tnode.get_vec_dict(target_domain,False).items()
+        if cluster_mode == 1: #src only cluster
+            svdi = cnode.get_vec_dict(src_domain,True).items()
+            tvdi = tnode.get_vec_dict(target_domain,False).items()
+        if cluster_mode == 2: #trg only cluster
+            svdi = cnode.get_vec_dict(src_domain,False).items()
+            tvdi = tnode.get_vec_dict(target_domain,True).items()
+        else: #both cluster
+            svdi = cnode.get_vec_dict(src_domain,True).items()
+            tvdi = tnode.get_vec_dict(target_domain,True).items()
 
         # for each pair in target in/out
         for (r2, d2, v2), (vdiff2, rdiff2) in tvdi:
@@ -237,7 +145,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                 rscore *= get_confidence(r1,r2)
 
                 #skew score
-                #rscore = math.tanh(2*math.e*rscore - math.e)
+                rscore = math.tanh(2*math.e*rscore - math.e)
 
                 #compute final score
                 actual_score = (rscore*rmax + vscore*vmax)/tscore
