@@ -100,6 +100,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
 
         #only use one of each rtype
         if cluster_mode == 1 or cluster_mode == 3:
+            #compute clusters for source
             src_vec_dict = {}
 
             for rtype in cnode.rtypes:
@@ -135,6 +136,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                                                 src_domain.rtype_vectors[rtype]))
 
         if cluster_mode == 2 or cluster_mode == 3:
+            #compute clusters for target
             trg_vec_dict = {}
 
             for rtype in tnode.rtypes:
@@ -154,7 +156,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
 
             for rtype in tnode.i_rtypes:
                 cnds = [target_domain.node_vectors[d] for r,d
-                        in tnode.outgoing_relations if r == rtype]
+                        in tnode.incoming_relations if r == rtype]
                 if len(cnds) > 1:
                     trg_vec_dict[(rtype,
                                   "things are <%s> to"%rtype,
@@ -170,7 +172,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                                                 target_domain.rtype_vectors[rtype]))
 
         if cluster_mode == 0 or cluster_mode == 2:
-            ##precompute vectors for loop
+            #no clusters for source
 
             src_vec_dict = {(r,d,False):(svec - src_domain.node_vectors[d],
                                          svec - permute_rtype_vector(
@@ -183,6 +185,8 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                                             svec - src_domain.rtype_vectors[r])
 
         if cluster_mode == 0 or cluster_mode == 1:
+            #no clusters for target
+
             trg_vec_dict = {(r,d,False):(tvec - target_domain.node_vectors[d],
                                          tvec - permute_rtype_vector(
                                              target_domain.rtype_vectors[r]))
@@ -200,7 +204,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
         for (r2, d2, v2), (vdiff2, rdiff2) in tvdi:
             #compare with each pair in source in/out
             for (r1, d1, v1), (vdiff1, rdiff1) in svdi:
-
 
                 if cluster_mode == 0:
                     #compute relative rtype score
