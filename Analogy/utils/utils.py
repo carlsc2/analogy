@@ -14,6 +14,8 @@ from lru import LRU
 from scipy.spatial.ckdtree import cKDTree
 import numpy as np
 import json
+import pickle
+import os.path
 
 def kulczynski_2(a, b):
     '''Computes the Kulczynski-2 measure between two sets
@@ -622,10 +624,19 @@ class DomainLoader:
     Wrapper for loading domains
     
     """
-    def __init__(self,filename=None,rawdata=None):
+    def __init__(self, filename=None, rawdata=None, cachefile=None):
         self.nodelist = [] #list of all nodes in the domain
-        if filename or rawdata:#convenience method to load file in constructor
+        self.domain_obj = None
+        #load from cache if possible
+        if cachefile != None and os.path.isfile(cachefile):
+            self.cache_load(cachefile)
+        #convenience method to load file in constructor
+        #load if not already loaded from cache
+        #otherwise store in cache file
+        if self.domain_obj == None and (filename or rawdata):
             self.import_data(filename=filename, rawdata=rawdata)
+            if cachefile:
+                self.cache_store(cachefile)
 
     def import_data(self, filename=None, rawdata=None, append=False):
         """if append is true, will join together multiple data sources
@@ -645,13 +656,24 @@ class DomainLoader:
 
         d = deserialize(data)
         self.nodelist += list(d.nodes.values())
+        self.domain_obj = None #object is outdated, mark for update
+
+    def cache_store(self, filename):
+        with open(filename, "wb+") as f:
+            pickle.dump(self.domain, f, -1)
+
+    def cache_load(self, filename):
+        with open(filename, "rb") as f:
+            self.domain_obj = pickle.load(f)
 
     def export_data(self):
         return self.domain.serialize()
 
     @property
     def domain(self, metric=jaccard_index):
-        return Domain(self.nodelist, metric)
+        if self.domain_obj == None:
+            self.domain_obj = Domain(self.nodelist, metric)
+        return self.domain_obj
 
 
 
