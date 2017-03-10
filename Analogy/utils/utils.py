@@ -171,7 +171,7 @@ class Node:
 
     def compute_dicts(self, domain):
         #recompute vector dicts
-        self.domain = domain
+     
         vec_dict = {}
         cluster_vec_dict = {}
         svec = domain.node_vectors[self.name]
@@ -216,8 +216,7 @@ class Node:
 
         self._vec_dict = vec_dict
         self._cluster_vec_dict = cluster_vec_dict
-        return vec_dict
-
+        self.domain = domain
 
     def add_attribute(self, atype, value):
         '''Adds an attribute to the node

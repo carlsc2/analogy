@@ -90,18 +90,16 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
         return 1 - (diff1+diff2)/2
 
     def get_hypotheses():
-        svec = src_domain.node_vectors[src_concept]
-        tvec = target_domain.node_vectors[target_concept]
 
         hypotheses = []
 
         if cluster_mode == 0: #no cluster
             svdi = cnode.get_vec_dict(src_domain,False).items()
             tvdi = tnode.get_vec_dict(target_domain,False).items()
-        if cluster_mode == 1: #src only cluster
+        elif cluster_mode == 1: #src only cluster
             svdi = cnode.get_vec_dict(src_domain,True).items()
             tvdi = tnode.get_vec_dict(target_domain,False).items()
-        if cluster_mode == 2: #trg only cluster
+        elif cluster_mode == 2: #trg only cluster
             svdi = cnode.get_vec_dict(src_domain,False).items()
             tvdi = tnode.get_vec_dict(target_domain,True).items()
         else: #both cluster
