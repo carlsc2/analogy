@@ -206,31 +206,38 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                     #compute relative rtype score
                     rscore = cosine_similarity(rdiff1, rdiff2)
 
-                    #adjust rtype score by confidence
-                    rscore *= get_confidence(r1,r2)
-
-                    #skew score
-                    rscore = math.tanh(2*math.e*rscore - math.e)
-
                     #compute relative node score
                     vscore = cosine_similarity(vdiff1, vdiff2)
 
-                    actual_score = (rscore*rmax + vscore*vmax)/tscore
+                elif cluster_mode == 1:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1*nc1[r1], rdiff2)
+
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2)
+
+                elif cluster_mode == 2:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1, rdiff2*nc2[r2])
+
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1, vdiff2*nc2[r2])
 
                 else:
                     #compute relative rtype score
                     rscore = cosine_similarity(rdiff1*nc1[r1], rdiff2*nc2[r2])
 
-                    #adjust rtype score by confidence
-                    rscore *= get_confidence(r1,r2)
-
-                    #skew score
-                    rscore = math.tanh(2*math.e*rscore - math.e)
-
                     #compute relative node score
                     vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2*nc2[r2])
 
-                    actual_score = (rscore*rmax + vscore*vmax)/tscore
+                #adjust rtype score by confidence
+                rscore *= get_confidence(r1,r2)
+
+                #skew score
+                #rscore = math.tanh(2*math.e*rscore - math.e)
+
+                #compute final score
+                actual_score = (rscore*rmax + vscore*vmax)/tscore
 
                 hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
 
