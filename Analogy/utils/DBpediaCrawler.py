@@ -17,7 +17,8 @@ sparql.setReturnFormat(JSON)
 NUM_WORKERS = 15 #number of worker threads
 
 def generate_graph(seeds, total, depth_limit=None,
-                   max_outgoing=None, max_incoming=None, relevance_threshold=None, debug=False):
+                   max_outgoing=None, max_incoming=None,
+                   relevance_threshold=None, debug=False):
     '''
     Generates a knowledge graph from seed keywords, up to <total> nodes
 
@@ -94,7 +95,7 @@ def generate_graph(seeds, total, depth_limit=None,
         data = await loop.run_in_executor(executor, get_data, value)
 
         #fetch links
-        linkdata = await loop.run_in_executor(executor, get_links, value)#fetch URI data
+        linkdata = await loop.run_in_executor(executor, get_links, value)
 
         z = linkdata['incoming'] | linkdata['outgoing']
 
@@ -144,7 +145,9 @@ def generate_graph(seeds, total, depth_limit=None,
             return            
 
         if max_outgoing != None:
-            for link in random.sample(linkdata['outgoing'], min(max_outgoing, len(linkdata['outgoing']))):
+            for link in random.sample(linkdata['outgoing'],
+                                      min(max_outgoing,
+                                          len(linkdata['outgoing']))):
                 if link not in visited:
                     #negative priority so higher relevance first
                     #prioritize outgoing over incoming
@@ -165,7 +168,9 @@ def generate_graph(seeds, total, depth_limit=None,
                     visited.add(link)
 
         if max_incoming != None:     
-            for link in random.sample(linkdata['incoming'], min(max_incoming, len(linkdata['incoming']))):
+            for link in random.sample(linkdata['incoming'],
+                                      min(max_incoming,
+                                          len(linkdata['incoming']))):
                 if link not in visited:
                     #negative priority so higher relevance first
                     if relevance_threshold != None:
@@ -192,20 +197,23 @@ def generate_graph(seeds, total, depth_limit=None,
     async def grow(loop, executor):
         #grow the graph
         for i in range(WORKER_COUNT):
-            workers.add(asyncio.ensure_future(consume(loop, executor)))
+            workers.add(asyncio.ensure_future(consume(loop,
+                                                      executor)))
         while count < total:
             if q.empty() and fillcount == 0:#prevent dead ends
                 for worker in workers:
                     worker.cancel()
                     return
-            done,_ = await asyncio.wait(workers,return_when=asyncio.FIRST_COMPLETED)
+            done,_ = await asyncio.wait(workers,
+                                        return_when=asyncio.FIRST_COMPLETED)
             for ret in done:
                 workers.remove(ret)
                 while len(workers) < WORKER_COUNT:
                     if q.empty() and fillcount == 0:#prevent race condition
                         break
                     if count + len(workers) < total:
-                        workers.add(asyncio.ensure_future(consume(loop, executor)))
+                        workers.add(asyncio.ensure_future(consume(loop,
+                                                                  executor)))
                     else:
                         break
             if debug:

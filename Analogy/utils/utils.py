@@ -152,8 +152,8 @@ class Node:
     @property
     def knowledge_level(self):
         return len(self.outgoing_relations) +\
-               len(self.incoming_relations) +\
-               len(self.attributes)
+               len(self.incoming_relations) #+\
+               #len(self.attributes)
 
     def get_rtype_ratios(self):
         total = sum(self.rtype_count.values())
@@ -632,7 +632,10 @@ class Domain:
         #normalize everything
         for r,v in out.items():
             out[r] = v / sqrt(v.dot(v))
+
+        #for debugging purposes
         np.save("utils/vectest.npy",np.array(list(out.values())))
+
         return out
 
     def serialize(self):
