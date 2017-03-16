@@ -270,7 +270,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
             "cluster_mode":cluster_mode}
 
 def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
-                      rmax=1, vmax=1, cluster_mode=False):
+                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100):
     """Makes the best analogy between two concepts in two domains
 
     Finds the best analogy between a specific concept in the source domain
@@ -288,6 +288,9 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
     1 = source domain clustering only
     2 = target domain clustering only
     3 = both domains will be clustered
+    4 = anything with a high enough knowledge level will be clustered. Determined
+    by <cluster_threshold>, default is 100.
+
 
     Note: analogies to self are ignored (if same domain)
 
@@ -301,13 +304,31 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
     best_result = None
     best_score = 0
 
+    ikl = src_domain.nodes[src_concept].knowledge_level
+
     for target_concept in candidate_pool:
         # find novel within same domain
         # otherwise best analogy would always be self
         if target_domain == src_domain and target_concept == src_concept:
             continue
+
+        ckl = target_domain.nodes[target_concept].knowledge_level
+
+        cmode = cluster_mode
+
+        if cluster_mode == 4:
+            if ikl > cluster_threshold:
+                if ckl > cluster_threshold:
+                    cmode = 3
+                else:
+                    cmode = 1
+            elif ckl > cluster_threshold:
+                cmode = 2
+            else:
+                cmode = 0
+
         result = make_analogy(src_concept, src_domain, target_concept,
-                              target_domain, rmax, vmax, cluster_mode)
+                              target_domain, rmax, vmax, cmode)
         if result["total_score"] > best_score:
             best_result = result
             best_score = result["total_score"]
@@ -316,7 +337,7 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
 
 
 def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None,
-                      rmax=1, vmax=1, cluster_mode=False):
+                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100):
     """Makes all analogies for some concept in one domain to another domain
 
     Finds all analogies between a specific concept in the source domain
@@ -334,18 +355,38 @@ def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None,
     1 = source domain clustering only
     2 = target domain clustering only
     3 = both domains will be clustered
+    4 = anything with a high enough knowledge level will be clustered. Determined
+    by <cluster_threshold>, default is 100.
 
     raises an AnalogyException if concept does not exist in domain 
     """
 
     candidate_pool = filter_list if filter_list is not None else target_domain.nodes
     results = []
+    ikl = src_domain.nodes[src_concept].knowledge_level
 
     if not src_concept in src_domain.nodes:
         raise AnalogyException("'%s' not in source domain" % src_concept)
 
     for target_concept in candidate_pool:
-        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax, cluster_mode)
+
+        ckl = target_domain.nodes[target_concept].knowledge_level
+
+        cmode = cluster_mode
+
+        if cluster_mode == 4:
+            if ikl > cluster_threshold:
+                if ckl > cluster_threshold:
+                    cmode = 3
+                else:
+                    cmode = 1
+            elif ckl > cluster_threshold:
+                cmode = 2
+            else:
+                cmode = 0
+
+        result = make_analogy(src_concept, src_domain, target_concept,
+                              target_domain, rmax, vmax, cmode)
         if result:
             results.append(result)     
              
