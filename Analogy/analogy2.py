@@ -292,6 +292,9 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
     raises an AnalogyException if concept does not exist in domain 
     """
 
+    if not src_concept in src_domain.nodes:
+        raise AnalogyException("'%s' not in source domain" % src_concept)
+
     if filter_list != None:
         candidate_pool = filter_list
     elif knn_filter != None:
@@ -300,8 +303,7 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
     else:
         candidate_pool = target_domain.nodes
 
-    if not src_concept in src_domain.nodes:
-        raise AnalogyException("'%s' not in source domain" % src_concept)
+    
 
     best_result = None
     best_score = 0
