@@ -13,6 +13,7 @@ from os import listdir, makedirs
 import hashlib
 import base64
 import json
+import asyncio
 
 KEY_SIZE = 32 #the size of the file names to generate 
 
@@ -104,6 +105,8 @@ class DomainManager:
 
     def reconcile_knowledge(self, limit=100):
         """For each unknown topic, check if it is now known. If not, search for it."""
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         unknowns = self.database.query(Unknown)
         total = unknowns.count()
         for i,u in enumerate(unknowns.all()):
@@ -133,7 +136,7 @@ class DomainManager:
                 print("Domain %s exists but is not in database. Adding."%fname)
                 d = Domain()
                 d.filepath = fname
-                d.details = json.dumps({"root_uri":uri})
+                d.details = json.dumps({"root_uri":uri,"size":num_nodes})
                 self.database.add(d)
                 self.database.commit()
             else:
@@ -142,15 +145,15 @@ class DomainManager:
         else:
             try:
                 G = generate_graph(uri, num_nodes)
-            except:
-                print("Error generating domain for concept: %s"%uri)
+            except Exception as e:
+                print("Error generating domain for concept: %s > %s"%(uri,e))
                 return None
             with open(fname,"w+") as f:
                 print("Domain generated for concept: %s"%uri)
                 f.write(G.serialize())
             d = Domain()
             d.filepath = fname
-            d.details = json.dumps({"root_uri":uri})
+            d.details = json.dumps({"root_uri":uri,"size":num_nodes})
             self.database.add(d)
             self.database.commit()
             self.refresh_database(fname)

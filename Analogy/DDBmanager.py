@@ -7,6 +7,7 @@ import sys
 import os
 from pprint import pformat, pprint
 import argparse
+import threading
 
 from domainDB import DomainManager
 
@@ -33,7 +34,8 @@ def get_features():
 
 @app.route('/reconcile_db', methods=['GET'])
 def reconcile_db():
-    DM.reconcile_knowledge()
+    threading.Thread(target=DM.reconcile_knowledge).start()
+    #DM.reconcile_knowledge()
     return "ACK"
 
 parser = argparse.ArgumentParser(description='Domain database manager.')
