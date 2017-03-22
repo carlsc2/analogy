@@ -139,11 +139,12 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                     #compute relative node score
                     vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2*nc2[r2])
 
-                #adjust rtype score by confidence
+                #adjust rtype score by relative confidence
                 rscore *= get_confidence(r1,r2)
 
                 #skew score
                 rscore = math.tanh(2*math.e*rscore - math.e)
+                #vscore = math.tanh(2*math.e*vscore - math.e)
 
                 #compute final score
                 actual_score = (rscore*rmax + vscore*vmax)/tscore
@@ -183,8 +184,6 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
         maxm = min(sr1,sr2)
     else:
         maxm = min(tr1,tr2)
-
-    #total_rating = maxm
 
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
         vkey = (src, v1)
@@ -239,25 +238,18 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
     #total impact of the analogy (in terms of connectivity)
     weight = z*v
 
-    #confidence is based on difference from ideal
-    #best possible analogy:
-    #   all types could be mapped, 
-    #   all connections could be mapped 
-
-    #mass = len(hmap) * len(rassert) / weight
-
     try:
         confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
     except ZeroDivisionError:
         confidence = 0
 
-    if total_rating != 0:  # prevent divide by zero error
+    try:
         normalized_rating = rating / total_rating
-    else:
-         normalized_rating = 0
+    except ZeroDivisionError:
+        normalized_rating = 0
 
-    #total_score = ((confidence *2) + normalized_rating) / 3 #weigh confidence more
-    total_score = (confidence + normalized_rating) / 2
+    #total_score = (confidence + normalized_rating) / 2
+    total_score = confidence * normalized_rating
 
     return {"total_score":total_score,
             "confidence":confidence,
@@ -270,7 +262,8 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
             "cluster_mode":cluster_mode}
 
 def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
-                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100):
+                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100,
+                      knn_filter=None):
     """Makes the best analogy between two concepts in two domains
 
     Finds the best analogy between a specific concept in the source domain
@@ -291,12 +284,21 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
     4 = anything with a high enough knowledge level will be clustered. Determined
     by <cluster_threshold>, default is 100.
 
+    If knn_filter is specified, only concepts from the <knn_filter> nearest
+    neighbors will be selected from to make analogies.
 
     Note: analogies to self are ignored (if same domain)
 
     raises an AnalogyException if concept does not exist in domain 
     """
-    candidate_pool = filter_list if filter_list is not None else target_domain.nodes
+
+    if filter_list != None:
+        candidate_pool = filter_list
+    elif knn_filter != None:
+        candidate_pool = [c for d,c in target_domain.get_closest_node(
+            src_domain.node_vectors[src_concept], knn_filter)]
+    else:
+        candidate_pool = target_domain.nodes
 
     if not src_concept in src_domain.nodes:
         raise AnalogyException("'%s' not in source domain" % src_concept)
@@ -393,7 +395,20 @@ def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None,
     return results
 
 
-def explain_analogy(analogy, verbose=False):
+def explain_analogy(analogy, verbose=False, paragraph=True):
+
+    """
+    Takes an analogy and returns an explanation.
+
+    If verbose is True, it will explain everything. Otherwise it
+    will only explain one of each relationship type.
+
+    If paragraph is True, it will return a paragraph. Otherwise it will
+    return the individual logic chunks.
+    
+    """
+
+
     # only explain main relation
     if not analogy:
         return
@@ -437,6 +452,10 @@ def explain_analogy(analogy, verbose=False):
             nchunks.append((s, d1, r1, src, d2, r2, trg))
         mentioned.add((r1,r2))
     nchunks.sort(reverse=True)
+
+    if not paragraph:
+        return nchunks
+
     #order by score to give most important matches first 
     for i, nc in enumerate(nchunks):
         s, a, b, c, d, e, f = nc
