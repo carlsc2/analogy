@@ -42,11 +42,13 @@ class DomainManager:
     def get_uri(self, concept):
         return keyword_search(concept)
 
-    def find_domains(self, concept, explicit=True):
+    def find_domains(self, concept, explicit=True, ordered=False):
         """Return the domains containing a topic, an Unkown object if it is not yet known,
         or None if it is not in DBpedia
         
         if explicit is True, the DBpedia query must be an exact match
+
+        if ordered is True, it will sort the domains by their size.
         
         """
         ret = keyword_search(concept)
@@ -55,7 +57,7 @@ class DomainManager:
             #check for exact match
             if explicit and name != concept:
                 return None
-            domains = self.database.query(Concept.domain, Domain.filepath).join(Domain).filter(Concept.name == name)
+            domains = self.database.query(Concept.domain, Domain.filepath, Domain.details).join(Domain).filter(Concept.name == name)
             if domains.count() == 0:
                 #if the topic is not yet known, add to list of unknown topics
                 ukn = Unknown.query.filter_by(name=name).first()
@@ -66,7 +68,10 @@ class DomainManager:
                     self.database.commit()
                 return ukn  
             else:
-                return [x.filepath for x in domains.all()]
+
+                tmpd = [x for x in domains.all()]
+                tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100))
+                return sorted([x.filepath for x in tmpd])
         else:
             #if the topic is not in DBpedia, return None
             return None  

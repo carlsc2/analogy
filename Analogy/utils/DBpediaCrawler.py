@@ -245,6 +245,8 @@ def generate_graph(seeds, total, depth_limit=None,
     return graph
 
 def get_label(uri):
+    if uri == None:
+        return None
     if uri[:19] == "http://dbpedia.org/":
         #what kind of uri scheme allows slashes??
         return "/".join((uri.split("/")[4:])).replace("_"," ")
