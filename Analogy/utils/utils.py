@@ -17,6 +17,11 @@ import json
 import pickle
 import os.path
 
+def softmax(x):
+    """Compute softmax values for x."""
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum()
+
 def kulczynski_2(a, b):
     '''Computes the Kulczynski-2 measure between two sets
 
@@ -60,36 +65,19 @@ def dice_coefficient(a, b):
 def permute_rtype_vector(x):
     """convert incoming relationship to outgoing and vice versa"""
 
-    #mixed representation (independent) d=67
-    return np.array([x[0],x[11],x[12],x[13],x[15],x[14],x[17],x[16],x[18],
-                     x[19],x[20],x[1],x[2],x[3],x[5],x[4],x[7],x[6],x[8],
-                     x[9],x[10],x[21],x[30],x[32],x[31],x[34],x[33],x[35],
-                     x[36],x[37],x[22],x[24],x[23],x[26],x[25],x[27],x[28],
-                     x[29],x[39],x[38],x[41],x[40],x[42],x[43],x[44],x[46],
-                     x[45],x[48],x[47],x[49],x[50],x[51],x[53],x[52],x[55],
-                     x[54],x[56],x[57],x[58],x[59],x[63],x[64],x[65],x[60],
-                     x[61],x[62],x[66]],dtype=np.float)
+    return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],
+                     x[3],x[4],x[9],x[11],x[10],x[12]],dtype=np.float)
 
-    #disjoint representation d=36
-    #rtype permutations first
-    #return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
-    #                 x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17],
-    #                 #then atype permutations
-    #                 x[18],x[23],x[24],x[25],x[26],x[19],x[20],x[21],x[22],x[27],
-    #                 x[31],x[32],x[33],x[28],x[29],x[30],x[34],x[35],
-    #                 ],dtype=np.float)
+    #return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],
+    #                 x[3],x[4],x[9],x[13],x[14],x[15],x[10],
+    #                 x[11],x[12],x[16],x[17],x[22],x[23],x[24],
+    #                 x[25],x[18],x[19],x[20],x[21],x[27],x[26],x[28]],
+    #                dtype=np.float)
 
 
-    #stacked representation d=18
-    #return np.array([x[0],x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4],x[9],
-    #                 x[13],x[14],x[15],x[10],x[11],x[12],x[16],x[17]
-    #                 ],dtype=np.float)
 
-
-    #stacked representation (independent) d=9
-    #return np.array([x[0],x[4],x[5],x[6],x[1],x[2],x[3],x[7],x[8]],dtype=np.float)
-
-JACCARD_DIMENSIONS = 67
+#JACCARD_DIMENSIONS = 29
+JACCARD_DIMENSIONS = 13
 NULL_VEC = lambda : np.zeros(JACCARD_DIMENSIONS)
 
 SIMILARITY_CACHE = LRU(10000) #use LRU cache to limit size and avoid memory error
@@ -185,11 +173,13 @@ class Node:
                 cluster_vec_dict[(rtype, "things are <%s> from"%rtype, True)] = (
                     svec - np.mean(cnds, axis=0),
                     svec - domain.rtype_vectors[rtype])
+                    #domain.rtype_vectors[rtype])
             elif clen == 1:
                 d = next(d for r,d in self.outgoing_relations if r == rtype)
                 cluster_vec_dict[(rtype, "%s <%s> of"%(d, rtype), True)] = (
                     svec - domain.node_vectors[d],
                     svec - domain.rtype_vectors[rtype])
+                    #domain.rtype_vectors[rtype])
 
         for rtype in self.i_rtypes:
             cnds = [domain.node_vectors[d] for r,d
@@ -199,22 +189,27 @@ class Node:
                 cluster_vec_dict[(rtype, "things are <%s> to"%rtype, False)] = (
                     svec - np.mean(cnds, axis=0),
                     svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
+                    #permute_rtype_vector(domain.rtype_vectors[rtype]))
             elif clen == 1:
                 d = next(d for r,d in self.incoming_relations if r == rtype)
                 cluster_vec_dict[(rtype, "%s <%s>"%(d, rtype), True)] = (
                     svec - domain.node_vectors[d],
                     svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
+                    #permute_rtype_vector(domain.rtype_vectors[rtype]))
 
         #compute individual dict values
         vec_dict = {(r,d,False):(svec - domain.node_vectors[d],
-                                    svec - permute_rtype_vector(
+                                 svec - permute_rtype_vector(
                                         domain.rtype_vectors[r]))
+                                    #permute_rtype_vector(
+                                    #    domain.rtype_vectors[r]))
                         for r,d in self.incoming_relations}
 
         for r,d in self.outgoing_relations:
             #vector from node to neighbor, vector from node to rtype
             vec_dict[(r,d,True)] = (svec - domain.node_vectors[d],
                                     svec - domain.rtype_vectors[r])
+                                    #domain.rtype_vectors[r])
 
         self._vec_dict = vec_dict
         self._cluster_vec_dict = cluster_vec_dict
@@ -372,27 +367,6 @@ class Domain:
 
         self.dirty = False
 
-    def index_nodes(self):
-        """Construct vector representations for every node"""
-        out = {}
-        for name, node in self.nodes.items():
-            tmp1 = [self.rtype_vectors[rtype]
-                    for rtype, dest in node.outgoing_relations] or [NULL_VEC()]
-            tmp2 = [permute_rtype_vector(self.rtype_vectors[rtype])
-                    for rtype, prev in node.incoming_relations] or [NULL_VEC()]
-
-            net = tmp1 + tmp2
-
-            out[name] = np.asarray(net).mean(axis=0)
-            #out[name] = np.asarray(net).sum(axis=0)
-
-        ###normalize everything
-        #for r,v in out.items():
-        #    if v.any():#if array is nonzero
-        #        out[r] = v / sqrt(v.dot(v))
-
-        return out
-
     def map_uses(self):
         """Create map between relationship type and all of its uses
         
@@ -451,6 +425,42 @@ class Domain:
             dist, id = self.nkdtree.query(point,n)
             return [(dist, self.nkdtree_keys[id])]
 
+    def index_nodes(self):
+        """Construct vector representations for every node"""
+        out = {}
+
+        #avg = np.mean(list(self.rtype_vectors.values()),axis=0)
+
+
+        for name, node in self.nodes.items():
+            tmp1 = [self.rtype_vectors[rtype]
+                    for rtype, dest in node.outgoing_relations] or [NULL_VEC()]
+            tmp2 = [permute_rtype_vector(self.rtype_vectors[rtype])
+                    for rtype, prev in node.incoming_relations] or [NULL_VEC()]
+
+            net = tmp1 + tmp2
+
+            #out[name] = np.asarray(net).mean(axis=0)
+            #out[name] = np.asarray(net).sum(axis=0)
+            v = np.asarray(net).sum(axis=0)
+            if v.any():
+                out[name] = v/max(v)#softmax(v/max(v))
+            else:
+                out[name] = v
+
+
+        #avg = np.mean(list(out.values()),axis=0)
+
+        #maxm = np.max(list(out.values()),axis=0)
+
+        ####normalize everything
+        #for r,v in out.items():
+        #    if v.any():
+        #        #out[r] = v / sqrt(v.dot(v))
+        #        out[r] = softmax((v-avg)/maxm)
+
+        return out
+
     def index_rtypes(self):
         """Constructs vector representations for every type of relationship
         in the domain.        
@@ -460,26 +470,29 @@ class Domain:
         for fnode in self.nodes.values():
             # only consider outgoing relationships because looping over
             # all object anyways, so will cover everything
+
             for (rtype, dest) in fnode.outgoing_relations:
                 dnode = self.nodes[dest]
-                a1 = fnode.rtypes
-                b1 = dnode.rtypes
+
+                # merge outgoing and attributes - distinction should not change
+                # how vectors are formed
+                a1 = fnode.rtypes | fnode.atypes
+                b1 = dnode.rtypes | dnode.atypes
                 c1 = a1 - b1
                 d1 = b1 - a1
                 e1 = b1 & a1
                 f1 = b1 ^ a1
                 g1 = b1 | a1
-                h1 = c1 | d1
 
-                #for all outgoing connections, check difference between attributes
-                a2 = fnode.atypes
-                b2 = dnode.atypes
-                c2 = a2 - b2
-                d2 = b2 - a2
-                e2 = b2 & a2
-                f2 = b2 ^ a2
-                g2 = b2 | a2
-                h2 = c2 | d2
+                # merge outgoing and attributes - distinction should not change
+                # how vectors are formed
+                #a2 = {b for a,b in fnode.outgoing_relations} | {b for a,b in fnode.attributes}
+                #b2 = {b for a,b in dnode.outgoing_relations} | {b for a,b in dnode.attributes}
+                #c2 = a2 - b2
+                #d2 = b2 - a2
+                #e2 = b2 & a2
+                #f2 = b2 ^ a2
+                #g2 = b2 | a2
 
                 rval = out.setdefault(rtype, NULL_VEC())
 
@@ -493,31 +506,24 @@ class Domain:
                 
                 """
 
-                
-                #stacked representation (dependent is not as good as independent)
-                #score = np.array([metric(a1, b1)+metric(a2, b2),
-                #                  metric(a1, c1)+metric(a2, c2),
-                #                  metric(a1, e1)+metric(a2, e2),
-                #                  metric(a1, f1)+metric(a2, f2),
-                #                  #metric(a1, g1)+metric(a2, g2),#
-                #                  metric(b1, d1)+metric(b2, d2),
-                #                  metric(b1, e1)+metric(b2, e2),
-                #                  metric(b1, f1)+metric(b2, f2),
-                #                  #metric(b1, g1)+metric(b2, g2),#
-                #                  metric(c1, d1)+metric(c2, d2),
-                #                  #metric(c1, e1)+metric(c2, e2),#
-                #                  metric(c1, f1)+metric(c2, f2),
-                #                  #metric(c1, g1)+metric(c2, g2),#
-                #                  #metric(d1, e1)+metric(d2, e2),#
-                #                  #metric(d1, f1)+metric(d2, f2),#
-                #                  #metric(d1, g1)+metric(d2, g2),#
-                #                  #metric(f1, g1)+metric(f2, g2),#
-                #                  #metric(f1, h1)+metric(f2, h2)#
-                #                  ], dtype=np.float)
-                                  
+                #types only
+                score = np.array([metric(a1, b1),
+                                  metric(a1, c1),#1
+                                  metric(a1, e1),#2
+                                  metric(a1, f1),#3
+                                  metric(a1, g1),#4
+                                  metric(b1, d1),#1
+                                  metric(b1, e1),#2
+                                  metric(b1, f1),#3
+                                  metric(b1, g1),#4
+                                  metric(c1, d1),
+                                  metric(c1, f1),#5
+                                  metric(d1, f1),#5
+                                  metric(f1, g1),
+                                  ],dtype=np.float)
 
-
-                #disjoint representation
+           
+                #types and objects
                 #score = np.array([metric(a1, b1),
                 #                  metric(a1, c1),
                 #                  metric(a1, e1),
@@ -528,15 +534,13 @@ class Domain:
                 #                  metric(b1, f1),
                 #                  metric(b1, g1),
                 #                  metric(c1, d1),
-                #                  metric(c1, e1),
                 #                  metric(c1, f1),
-                #                  metric(c1, g1),
-                #                  metric(d1, e1),
+                #                  metric(c1, c2),
+                #                  metric(c1, e2),
                 #                  metric(d1, f1),
-                #                  metric(d1, g1),
+                #                  metric(d1, d2),
+                #                  metric(d1, e2),
                 #                  metric(f1, g1),
-                #                  metric(f1, h1),
-
                 #                  metric(a2, b2),
                 #                  metric(a2, c2),
                 #                  metric(a2, e2),
@@ -546,92 +550,23 @@ class Domain:
                 #                  metric(b2, e2),
                 #                  metric(b2, f2),
                 #                  metric(b2, g2),
-                #                  metric(c2, d2),
-                #                  metric(c2, e2),
                 #                  metric(c2, f2),
-                #                  metric(c2, g2),
-                #                  metric(d2, e2),
                 #                  metric(d2, f2),
-                #                  metric(d2, g2),
-                #                  metric(f2, g2),
-                #                  metric(f2, h2),
-                #                  ], dtype=np.float)
-
-
-                #mixed representation
-                score = np.array([metric(a1, b1),
-                                  metric(a1, c1),
-                                  metric(a1, e1),
-                                  metric(a1, f1),
-                                  metric(a1, a2),
-                                  metric(a1, b2),
-                                  metric(a1, c2),
-                                  metric(a1, d2),
-                                  metric(a1, e2),
-                                  metric(a1, f2),
-                                  metric(a1, g2),
-                                  metric(b1, d1),
-                                  metric(b1, e1),
-                                  metric(b1, f1),
-                                  metric(b1, a2),
-                                  metric(b1, b2),
-                                  metric(b1, c2),
-                                  metric(b1, d2),
-                                  metric(b1, e2),
-                                  metric(b1, f2),
-                                  metric(b1, g2),
-                                  metric(c1, d1),
-                                  metric(c1, f1),
-                                  metric(c1, a2),
-                                  metric(c1, b2),
-                                  metric(c1, c2),
-                                  metric(c1, d2),
-                                  metric(c1, e2),
-                                  metric(c1, f2),
-                                  metric(c1, g2),
-                                  metric(d1, f1),
-                                  metric(d1, a2),
-                                  metric(d1, b2),
-                                  metric(d1, c2),
-                                  metric(d1, d2),
-                                  metric(d1, e2),
-                                  metric(d1, f2),
-                                  metric(d1, g2),
-                                  metric(e1, a2),
-                                  metric(e1, b2),
-                                  metric(e1, c2),
-                                  metric(e1, d2),
-                                  metric(e1, e2),
-                                  metric(e1, f2),
-                                  metric(e1, g2),
-                                  metric(f1, a2),
-                                  metric(f1, b2),
-                                  metric(f1, c2),
-                                  metric(f1, d2),
-                                  metric(f1, e2),
-                                  metric(f1, f2),
-                                  metric(f1, g2),
-                                  metric(g1, a2),
-                                  metric(g1, b2),
-                                  metric(g1, c2),
-                                  metric(g1, d2),
-                                  metric(g1, e2),
-                                  metric(g1, f2),
-                                  metric(g1, g2),
-                                  metric(a2, b2),
-                                  metric(a2, c2),
-                                  metric(a2, e2),
-                                  metric(a2, f2),
-                                  metric(b2, d2),
-                                  metric(b2, e2),
-                                  metric(b2, f2),
-                                  metric(c2, d2)], dtype=np.float)
+                #                  metric(f2, g2)],dtype=np.float)
 
                 out[rtype] = rval + score
 
+        #avg = np.mean(list(out.values()),axis=0)
+
+        #maxm = np.max(list(out.values()),axis=0)
+
         #normalize everything
         for r,v in out.items():
-            out[r] = v / sqrt(v.dot(v))
+            #out[r] = v / max(v)
+            #out[r] = v / sqrt(v.dot(v))
+            #out[r] = softmax(v/maxm)
+            out[r] = softmax(v/max(v))
+            #out[r] = softmax((v-avg)/maxm)
 
         #for debugging purposes
         np.save("utils/vectest.npy",np.array(list(out.values())))
