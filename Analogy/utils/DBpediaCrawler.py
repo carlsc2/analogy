@@ -222,12 +222,15 @@ def generate_graph(seeds, total, depth_limit=None,
                 except UnicodeDecodeError:
                     pass
 
-    def signal_handler(signal, frame):  
-        loop.stop()
-        sys.exit(0)
+    try:
+        def signal_handler(signal, frame):  
+            loop.stop()
+            sys.exit(0)
 
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+    except:
+        pass
 
     with ThreadPoolExecutor(max_workers=WORKER_COUNT) as executor:
         try:
