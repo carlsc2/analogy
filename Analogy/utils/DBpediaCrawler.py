@@ -10,6 +10,7 @@ from utils import Domain, Node
 from concurrent.futures import ThreadPoolExecutor
 import time
 from math import exp
+import difflib
 
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 sparql.setReturnFormat(JSON)
@@ -253,17 +254,39 @@ def get_label(uri):
     else:
         return uri
 
-def keyword_search(keyword,limit=None):
+def keyword_search(keyword, limit=None, similar=False):
+    """Queries DBpedia concepts based on a keyword
+
+    Will return the top result based on DBpedia's ranking unless 
+    limit is specified, in which case it will return a list of
+    <limit> results. Will return None if no results are found.
+
+    If similar is True, it will weigh the quality of the
+    results by their word similarity to the keyword.
+
+    Note: By default, similar will look at the top 10 results,
+    even if it only returns the best one
+
+    """
     data=urlencode({'QueryString':keyword,
-                 'MaxHits':(limit or 1)})
+                    'MaxHits':(limit or (10 if similar else 1))})
     req = Request("http://lookup.dbpedia.org/api/search/KeywordSearch?"+data,
-               headers = {'Accept': 'application/json'})
-    results = json.loads(urlopen(req,timeout=5).read().decode("utf8"))['results']
-    if limit != None:#return all results if specified
-        return [x['uri'] for x in results]
-    elif len(results) > 0:
-        #take first result
-        return results[0]['uri']
+                  headers = {'Accept': 'application/json'})
+    response = json.loads(urlopen(req,timeout=5).read().decode("utf8"))['results']
+
+    results = [(x['refCount'],x['label'],x['uri'],) for x in response]
+
+    if similar:
+        results = sorted([(c/exp(1-difflib.SequenceMatcher(None, keyword.lower(), a.lower()).ratio()),a,b)
+                          for c,a,b in results],reverse=True)
+        
+    if len(results) > 0:
+        if limit == None:
+            #take first result
+            return results[0][2]
+        else:
+            #return all results if specified
+            return [b for c,a,b in results]
     return None
 
 def get_data(uri):
