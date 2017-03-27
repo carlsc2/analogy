@@ -42,16 +42,21 @@ class DomainManager:
     def get_uri(self, concept):
         return keyword_search(concept)
 
-    def find_domains(self, concept, explicit=True, ordered=False):
+    def find_domains(self, concept, explicit=True, ordered=False, uri=False):
         """Return the domains containing a topic, an Unkown object if it is not yet known,
         or None if it is not in DBpedia
         
         if explicit is True, the DBpedia query must be an exact match
 
         if ordered is True, it will sort the domains by their size.
+
+        if uri is True, concept is assumed to be a DBpedia URI already
         
         """
-        ret = keyword_search(concept)
+        if not uri:
+            ret = keyword_search(concept)
+        else:
+            ret = concept
         if ret:
             name = get_label(ret)
             #check for exact match
