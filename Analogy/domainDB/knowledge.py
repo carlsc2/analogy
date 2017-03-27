@@ -6,7 +6,7 @@ Contains functions for managing the domain files.
 
 from domainDB.database import init_db
 from domainDB.models import Concept, Domain, Unknown
-from utils.DBpediaCrawler import keyword_search, generate_graph, get_label
+from utils.DBpediaCrawler import keyword_search, generate_graph, get_label, make_uri
 from utils.utils import deserialize
 from os.path import join, isfile, abspath, exists
 from os import listdir, makedirs
@@ -53,39 +53,46 @@ class DomainManager:
         if uri is True, concept is assumed to be a DBpedia URI already
         
         """
-        if not uri:
-            ret = keyword_search(concept)
-        else:
-            ret = concept
-        if ret:
-            name = get_label(ret)
-            #check for exact match
-            if explicit and name != concept:
-                return None
-            domains = self.database.query(Concept.domain, Domain.filepath, Domain.details).join(Domain).filter(Concept.name == name)
-            if domains.count() == 0:
-                #if the topic is not yet known, add to list of unknown topics
-                ukn = Unknown.query.filter_by(name=name).first()
-                if ukn == None:
-                    ukn = Unknown()
-                    ukn.name = name
-                    self.database.add(ukn)
-                    self.database.commit()
-                return ukn  
-            else:
 
-                tmpd = [x for x in domains.all()]
-                tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100))
-                return sorted([x.filepath for x in tmpd])
-        else:
-            #if the topic is not in DBpedia, return None
-            return None  
+        session = self.database()
+        def find_helper():
+            if not uri:
+                ret = keyword_search(concept)
+                #check for exact match
+                if explicit and get_label(ret) != concept:
+                    return None
+            else:
+                ret = make_uri(concept)
+            if ret:
+                domains = session.query(Concept.domain, Domain.filepath, Domain.details).join(Domain).filter(Concept.name == get_label(ret))
+                if domains.count() == 0:
+                    #if the topic is not yet known, add to list of unknown topics
+                    ukn = Unknown.query.filter_by(name=ret).first()
+                    if ukn == None:
+                        ukn = Unknown()
+                        ukn.name = ret
+                        session.add(ukn)
+                        session.commit()
+                    return ukn  
+                else:
+
+                    tmpd = [x for x in domains.all()]
+                    tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100))
+                    return sorted([x.filepath for x in tmpd])
+            else:
+                #if the topic is not in DBpedia, return None
+                return None
+        tmp = find_helper()
+        self.database.remove()
+        return tmp
 
     def refresh_database(self, domain=None):
         """Check the data file folder for domain files and update the database
         If domain is None, it will check all files in folder.
         Domain must be an absolute path.
         """
+
+        session = self.database()
 
         if domain != None:
             domains = [domain]
@@ -105,11 +112,12 @@ class DomainManager:
                         c = Concept()
                         c.domain = d.id
                         c.name = concept
-                        self.database.add(c)
-                    self.database.commit()
+                        session.add(c)
+                    session.commit()
             else:
                 print("no db for %s"%fname)
         print("Database refreshed.")
+        self.database.remove()
 
 
 
@@ -117,17 +125,24 @@ class DomainManager:
         """For each unknown topic, check if it is now known. If not, search for it."""
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        unknowns = self.database.query(Unknown)
+
+        session = self.database()
+        unknowns = session.query(Unknown)
         total = unknowns.count()
         for i,u in enumerate(unknowns.all()):
             print("reconciling unknown %d/%d: "%(i+1,total), u.name)
-            ret = keyword_search(u.name)
+
+            if u.name[:19] != "http://dbpedia.org/": #assume proper dbpedia URI
+                ret = keyword_search(u.name)
+            else:
+                ret = u.name
             if ret != None:
                 if self.generate_domain(ret, limit) != None: 
-                    self.database.delete(u)
-                    self.database.commit()
+                    session.delete(u)
+                    session.commit()
             else:
                 print("Error: could not find DBpedia entry for %s"%u.name)
+        self.database.remove()
 
     def consolidate_domain(self, domain):
         """Re-cluster domain file, if necessary"""
@@ -139,35 +154,45 @@ class DomainManager:
 
     def generate_domain(self, uri, num_nodes=100):
         """Generate a domain centered on a concept. Expects a DBpedia URI."""
-        fname = join(self.datapath, shorten(uri))
-        d = Domain.query.filter_by(filepath=fname).first()
-        if isfile(fname):
-            if d == None:
-                print("Domain %s exists but is not in database. Adding."%fname)
+        session = self.database()
+        def helper_func():
+            nonlocal uri
+            fname = join(self.datapath, shorten(uri))
+            d = Domain.query.filter_by(filepath=fname).first()
+            if isfile(fname):
+                if d == None:
+                    print("Domain %s exists but is not in database. Adding."%fname)
+                    d = Domain()
+                    d.filepath = fname
+                    d.details = json.dumps({"root_uri":uri,"size":num_nodes})
+                    session.add(d)
+                    session.commit()
+                else:
+                    print("Domain %s already exists."%fname)
+                return d
+            else:
+                try:
+                    G = generate_graph(uri, num_nodes)
+                    #if disambiguation page on exact uri, try search
+                    if len(G.nodes) == 0:
+                        uri = keyword_search(get_label(uri))
+                        G = generate_graph(uri, num_nodes)
+                except Exception as e:
+                    print("Error generating domain for concept: %s > %s"%(uri,e))
+                    return None
+                with open(fname,"w+") as f:
+                    print("Domain generated for concept: %s"%uri)
+                    f.write(G.serialize())
                 d = Domain()
                 d.filepath = fname
                 d.details = json.dumps({"root_uri":uri,"size":num_nodes})
-                self.database.add(d)
-                self.database.commit()
-            else:
-                print("Domain %s already exists."%fname)
-            return d
-        else:
-            try:
-                G = generate_graph(uri, num_nodes)
-            except Exception as e:
-                print("Error generating domain for concept: %s > %s"%(uri,e))
-                return None
-            with open(fname,"w+") as f:
-                print("Domain generated for concept: %s"%uri)
-                f.write(G.serialize())
-            d = Domain()
-            d.filepath = fname
-            d.details = json.dumps({"root_uri":uri,"size":num_nodes})
-            self.database.add(d)
-            self.database.commit()
-            self.refresh_database(fname)
-            return d
+                session.add(d)
+                session.commit()
+                self.refresh_database(fname)
+                return d
+        tmp = helper_func()
+        self.database.remove()
+        return tmp
 
     def list_unknowns(self):
         return self.database.query(Unknown).all()

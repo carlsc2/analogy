@@ -254,6 +254,14 @@ def get_label(uri):
     else:
         return uri
 
+def make_uri(concept):
+    if concept == None:
+        return None
+    if concept[:19] == "http://dbpedia.org/":
+        return concept
+    else:
+        return "http://dbpedia.org/resource/" + concept.replace(" ","_")
+
 def keyword_search(keyword, limit=None, similar=False):
     """Queries DBpedia concepts based on a keyword
 
