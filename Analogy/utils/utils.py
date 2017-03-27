@@ -404,6 +404,7 @@ class Domain:
         If n is specified, will return the n closest relationships
         
         """
+        n = min(n,len(self.rtype_vectors))#prevent index error
         if n > 1:
             tmp = zip(*self.rkdtree.query(point,n))
             return [(d, self.rkdtree_keys[i]) for d,i in tmp]
@@ -418,6 +419,7 @@ class Domain:
         If n is specified, will return the n closest nodes
         
         """
+        n = min(n,len(self.nodes))#prevent index error
         if n > 1:
             tmp = zip(*self.nkdtree.query(point,n))
             return [(d, self.nkdtree_keys[i]) for d,i in tmp]
