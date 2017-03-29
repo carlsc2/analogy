@@ -102,13 +102,11 @@ class DomainManager:
         for fname in domains:
             d = Domain.query.filter_by(filepath=fname).first()
             if d != None:
-                print(d)
                 #clear all old concepts
                 Concept.query.filter_by(domain=d.id).delete()
                 with open(fname, "r") as f:
                     data = deserialize(f.read())
                     for concept in data.nodes:
-                        print(concept)
                         c = Concept()
                         c.domain = d.id
                         c.name = concept
@@ -129,9 +127,10 @@ class DomainManager:
         session = self.database()
         unknowns = session.query(Unknown)
         total = unknowns.count()
+        any_flag = False
         for i,u in enumerate(unknowns.all()):
             print("reconciling unknown %d/%d: "%(i+1,total), u.name)
-
+            any_flag = True
             if u.name[:19] != "http://dbpedia.org/": #assume proper dbpedia URI
                 ret = keyword_search(u.name)
             else:
@@ -142,7 +141,9 @@ class DomainManager:
                     session.commit()
             else:
                 print("Error: could not find DBpedia entry for %s"%u.name)
+
         self.database.remove()
+        return any_flag
 
     def consolidate_domain(self, domain):
         """Re-cluster domain file, if necessary"""

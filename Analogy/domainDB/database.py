@@ -14,6 +14,7 @@ def init_db(path_to_database):
                            convert_unicode=True)
     db_session = scoped_session(sessionmaker(autocommit=False,
                                              autoflush=False,
+                                             expire_on_commit=False,
                                              bind=engine))
     Base.query = db_session.query_property()
     import domainDB.models
