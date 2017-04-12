@@ -16,6 +16,7 @@ import numpy as np
 import json
 import pickle
 import os.path
+from math import log
 
 def softmax(x):
     """Compute softmax values for x."""
@@ -282,6 +283,10 @@ class Node:
     def __repr__(self):
         return "<%s>(%d)" % (self.name, self.knowledge_level)
 
+
+class DomainException(Exception):
+    pass
+
 class Domain:
     '''Represents a graph about a particular domain
     
@@ -300,28 +305,9 @@ class Domain:
 
         #the function to use for indexing the relationship type vectors
         self.index_metric = index_metric
-
-        #build data if passed into constructor
-        if len(self.nodes) > 0:
-            #maps each relationship type to all its uses
-            self.usage_map = self.map_uses()
-            #maps each rtype to its vector
-            self.rtype_vectors = self.index_rtypes()
-            #maps each node to its vector
-            self.node_vectors = self.index_nodes()
-            #nearest rtype fast lookup
-            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-            self.rkdtree = cKDTree(_rvalues)
-            #nearest node fast lookup
-            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-            self.nkdtree = cKDTree(_nvalues)
-
-        #precompute some vector constructs
-        for node in self.nodes.values():
-            node.compute_dicts(self)
-
-        #dirty flag -- if graph has changed, should re-evaluate things
-        self.dirty = False
+        
+        #build the graph metadata
+        self.rebuild_graph_data()
 
     @property
     def size(self):
@@ -352,19 +338,53 @@ class Domain:
 
     def rebuild_graph_data(self):
         """rebuild all of the graph data structures"""
-        if len(self.nodes) > 0:
-            self.usage_map = self.map_uses()
-            self.rtype_vectors = self.index_rtypes()
-            self.node_vectors = self.index_nodes()
-            self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
-            self.rkdtree = cKDTree(_rvalues)
-            self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
-            self.nkdtree = cKDTree(_nvalues)
+        if len(self.nodes) == 0:
+            raise DomainException("No nodes supplied to graph!")
 
-        #precompute some vector constructs
+        # ==== compute member variables ====
+        self.usage_map = self.map_uses()
+        self.rtype_vectors = self.index_rtypes()
+        self.node_vectors = self.index_nodes()
+        self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
+        self.rkdtree = cKDTree(_rvalues)
+        self.nkdtree_keys, _nvalues = zip(*self.node_vectors.items())
+        self.nkdtree = cKDTree(_nvalues)
+
+        # ==== precompute some vector constructs ====
         for node in self.nodes.values():
             node.compute_dicts(self)
 
+        # ==== compute tf-idf weights for all nodes ====
+
+        #calculate number of nodes containing rtype and 
+        #find maximum frequency rtype for any single node
+        maxftd = 0
+        c2 = Counter()
+        for y in self.nodes.values():
+            for k,z in y.rtype_count.items():
+                c2[k] += 1
+                if z > maxftd:
+                    maxftd = z
+
+        #calculate augmented term frequency
+        tf = Counter()
+        for x,y in self.nodes.items():
+            for z,v in y.rtype_count.items():
+                tf[(x,z)] = 0.5 + 0.5*(v/maxftd)
+
+        #calculate inverse document frequency
+        idf = Counter()
+        N = len(self.nodes)
+        for x in c2:
+            idf[x] = log(N / c2[x])
+
+        tfidf = {}
+        for x,y in self.nodes.items():
+            for z in y.rtype_count:
+                tmp = tfidf.setdefault(x,{})
+                tmp[z] = tf[(x,z)] * idf[z]
+
+        self.tfidf = tfidf
         self.dirty = False
 
     def map_uses(self):
