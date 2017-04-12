@@ -139,6 +139,12 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
                     #compute relative node score
                     vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2*nc2[r2])
 
+                #adjust by tfidf
+                try:
+                    rscore *= src_domain.tfidf[d1][r1] * target_domain.tfidf[d2][r2]
+                except KeyError:#ignore clusters for now
+                    pass
+                
                 #adjust rtype score by relative confidence
                 rscore *= get_confidence(r1,r2)
 
