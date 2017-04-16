@@ -193,7 +193,7 @@ class Node:
                     #permute_rtype_vector(domain.rtype_vectors[rtype]))
             elif clen == 1:
                 d = next(d for r,d in self.incoming_relations if r == rtype)
-                cluster_vec_dict[(rtype, "%s <%s>"%(d, rtype), True)] = (
+                cluster_vec_dict[(rtype, "%s <%s>"%(d, rtype), False)] = (
                     svec - domain.node_vectors[d],
                     svec - permute_rtype_vector(domain.rtype_vectors[rtype]))
                     #permute_rtype_vector(domain.rtype_vectors[rtype]))
