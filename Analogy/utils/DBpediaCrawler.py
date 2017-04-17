@@ -241,7 +241,10 @@ def generate_graph(seeds, total, depth_limit=None,
 
     print("Graph constructed in %.5f seconds"%(time.time() - start_time))
 
-    graph.rebuild_graph_data()
+    try:
+        graph.rebuild_graph_data()
+    except Exception:
+        pass
 
     return graph
 
