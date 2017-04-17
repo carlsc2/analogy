@@ -76,6 +76,11 @@ def permute_rtype_vector(x):
     #                dtype=np.float)
 
 
+class ConsolidatorException(Exception):
+    """Raise this exception in a consolidator if some rtype should be ignored"""
+    pass
+
+
 
 #JACCARD_DIMENSIONS = 29
 JACCARD_DIMENSIONS = 13
@@ -223,6 +228,11 @@ class Node:
         self.attributes.add((atype, value))
         self.atypes.add(atype)
 
+        try:
+            self.domain.dirty = True
+        except:
+            pass
+
     def remove_attribute(self, atype, value):
         '''Removes an attribute from the node
         atype is the type of attribute, value is the literal value        
@@ -232,23 +242,25 @@ class Node:
         if atype not in {x for x,v in self.attributes}:
             self.atypes.remove(atype)
 
+        try:
+            self.domain.dirty = True
+        except:
+            pass
+
     def add_predecessor(self, rtype, pred):
-        '''Adds a predecessor relationship (incoming connection)
-        
-        Note: This should not be called directly if the feature is already in
-        a Domain
-        '''
+        '''Adds a predecessor relationship (incoming connection)'''
         if (rtype, pred) not in self.incoming_relations:
             self.incoming_relations.add((rtype, pred))
             self.rtype_count[rtype] += 1
             self.i_rtypes.add(rtype)
 
+        try:
+            self.domain.dirty = True
+        except:
+            pass
+
     def remove_predecessor(self, rtype, pred):
-        '''Removes a predecessor relationship (incoming connection)
-        
-        Note: This should not be called directly if the feature is already in
-        a Domain
-        '''
+        '''Removes a predecessor relationship (incoming connection)'''
         if (rtype, pred) in self.incoming_relations:
             self.incoming_relations.remove((rtype, pred))
             self.rtype_count[rtype] -= 1
@@ -256,29 +268,36 @@ class Node:
                 self.i_rtypes.remove(rtype)
                 del self.rtype_count[rtype]
 
+        try:
+            self.domain.dirty = True
+        except:
+            pass
+
     def add_relation(self, rtype, dest):
-        '''Adds a neighbor relationship (outgoing connection)
-        
-        Note: This should not be called directly if the feature is already in
-        a Domain
-        '''
+        '''Adds a neighbor relationship (outgoing connection)'''
         if (rtype, dest) not in self.outgoing_relations:
             self.outgoing_relations.add((rtype, dest))
             self.rtypes.add(rtype)
             self.rtype_count[rtype] += 1
 
+        try:
+            self.domain.dirty = True
+        except:
+            pass
+
     def remove_relation(self, rtype, dest):
-        '''Removes a neighbor relationship (outgoing connection)
-        
-        Note: This should not be called directly if the feature is already in
-        a Domain
-        '''
+        '''Removes a neighbor relationship (outgoing connection)'''
         if (rtype, dest) in self.outgoing_relations:
             self.outgoing_relations.remove((rtype, dest))
             self.rtype_count[rtype] -= 1
             if self.rtype_count[rtype] == 0:
                 self.rtypes.remove(rtype)
                 del self.rtype_count[rtype]
+
+        try:
+            self.domain.dirty = True
+        except:
+            pass
 
     def __repr__(self):
         return "<%s>(%d)" % (self.name, self.knowledge_level)
@@ -294,9 +313,10 @@ class Domain:
         nodes - a list of Node objects
         index_metric - which metric function to use for vector indexing
             current options are jaccard_index, dice_coefficient, kulczynski_2
+        consolidator - function to consolidate relation types, or None
 
     '''
-    def __init__(self, nodes=None, index_metric=jaccard_index):
+    def __init__(self, nodes=None, index_metric=jaccard_index, consolidator=None):
         if nodes != None:
             #mapping between the name of each node and its object
             self.nodes = {n.name:n for n in nodes}
@@ -337,10 +357,67 @@ class Domain:
         self.nodes[node2].remove_predecessor(rtype,node1)
         self.dirty = True
 
-    def rebuild_graph_data(self):
-        """rebuild all of the graph data structures"""
+    def rebuild_graph_data(self, consolidator=None):
+        """rebuild all of the graph data structures
+
+        If consolidator is specified, all relationship types will be 
+        consolidated.
+        
+        <consolidator> is a function which takes a relationship as input
+        and returns a relationship as output. Used to cut down and group
+        similar relationship types.
+
+        Example usage:
+        consolidator("largestCity") = largestcity
+        consolidator("derivatives") = derivative
+        """
+
         if len(self.nodes) == 0:
             raise DomainException("No nodes supplied to graph!")
+
+        if consolidator != None:
+            for node in self.nodes.values():
+                na = set()
+                nat = set()
+                no = set()
+                nr = set()
+                ni = set()
+                nir = set()
+                nrc = Counter()
+                for atype, attribute in node.attributes:
+                    try:
+                        atype = consolidator(atype)
+                    except ConsolidatorException:
+                        continue
+                    na.add((atype, attribute))
+                    nat.add(atype)
+
+                for rtype, dest in node.outgoing_relations:
+                    try:
+                        rtype = consolidator(rtype)
+                    except ConsolidatorException:
+                        continue
+                    no.add((rtype, dest))
+                    nr.add(rtype)
+                    nrc[rtype] += 1
+                    
+                for rtype, pred in node.incoming_relations:
+                    try:
+                        rtype = consolidator(rtype)
+                    except ConsolidatorException:
+                        continue
+                    ni.add((rtype, pred))
+                    nir.add(rtype)
+                    nrc[rtype] += 1
+
+                #update values
+                node.attributes = na
+                node.outgoing_relations = no
+                node.incoming_relations = ni
+                node.rtypes = nr
+                node.i_rtypes = nir
+                node.atypes = nat
+                node.rtype_count = nrc
 
         # ==== compute member variables ====
         self.usage_map = self.map_uses()
@@ -632,7 +709,7 @@ class Domain:
             out["nodes"].append(tmp)
         return json.dumps(out,sort_keys=True)
 
-def deserialize(data):
+def deserialize(data, consolidator=None):
     """Returns a Domain object constructed from JSON data
     
     Expected Format:
@@ -663,18 +740,17 @@ def deserialize(data):
             elif neighbor[0] == "literal":
                 node.add_attribute(neighbor[1], str(neighbor[2]))
         nodelist.append(node)
-    d = Domain(nodelist)
-    #d.rebuild_graph_data()
-    return d
+    return Domain(nodelist, consolidator=consolidator)
 
 class DomainLoader:
     """
     Wrapper for loading domains
     
     """
-    def __init__(self, filename=None, rawdata=None, cachefile=None):
+    def __init__(self, filename=None, rawdata=None, cachefile=None, consolidator=None):
         self.nodelist = [] #list of all nodes in the domain
         self.domain_obj = None
+        self.consolidator = consolidator
         #load from cache if possible
         if cachefile != None and os.path.isfile(cachefile):
             self.cache_load(cachefile)
@@ -685,6 +761,8 @@ class DomainLoader:
             self.import_data(filename=filename, rawdata=rawdata)
             if cachefile:
                 self.cache_store(cachefile)
+
+        
 
     def import_data(self, filename=None, rawdata=None, append=False):
         """if append is true, will join together multiple data sources
@@ -702,9 +780,12 @@ class DomainLoader:
         if not append:
             self.nodelist = []
 
-        d = deserialize(data)
+        d = deserialize(data, self.consolidator)
         self.nodelist += list(d.nodes.values())
-        self.domain_obj = None #object is outdated, mark for update
+        if append:
+            self.domain_obj = None #mark as outdated
+        else:
+            self.domain_obj = d
 
     def cache_store(self, filename):
         with open(filename, "wb+") as f:
@@ -719,8 +800,9 @@ class DomainLoader:
 
     @property
     def domain(self, metric=jaccard_index):
+        #if object is marked as outdated, update
         if self.domain_obj == None:
-            self.domain_obj = Domain(self.nodelist, metric)
+            self.domain_obj = Domain(self.nodelist, metric, self.consolidator)
         return self.domain_obj
 
 
