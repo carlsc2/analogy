@@ -4,16 +4,18 @@ knowledge.py
 Contains functions for managing the domain files.
 """
 
-from domainDB.database import init_db
-from domainDB.models import Concept, Domain, Unknown
-from utils.DBpediaCrawler import keyword_search, generate_graph, get_label, make_uri
-from utils.utils import deserialize
 from os.path import join, isfile, abspath, exists
 from os import listdir, makedirs
 import hashlib
 import base64
 import json
 import asyncio
+import random
+
+from domainDB.database import init_db
+from domainDB.models import Concept, Domain, Unknown
+from utils.DBpediaCrawler import keyword_search, generate_graph, get_label, make_uri
+from utils.utils import deserialize
 
 KEY_SIZE = 32 #the size of the file names to generate 
 
@@ -38,6 +40,25 @@ class DomainManager:
         self.datapath = abspath(datapath)
         if not exists(self.datapath):
             makedirs(self.datapath)
+
+    def get_random_concept(self):
+        try:
+            session = self.database()
+            query = session.query(Concept)
+            rowCount = int(query.count())
+            tmp = query.offset(int(rowCount*random.random())).first()
+            return tmp.name, session.query(Domain.filepath).filter(Domain.id==tmp.domain).first().filepath
+        finally:
+            self.database.remove()
+
+    def get_random_domain(self):
+        try:
+            session = self.database()
+            query = session.query(Domain)
+            rowCount = int(query.count())
+            return query.offset(int(rowCount*random.random())).first().filepath
+        finally:
+            self.database.remove()
 
     def get_uri(self, concept):
         return keyword_search(concept)
@@ -77,8 +98,9 @@ class DomainManager:
                 else:
 
                     tmpd = [x for x in domains.all()]
-                    tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100))
-                    return sorted([x.filepath for x in tmpd])
+                    if ordered:
+                        tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100), reverse=True)
+                    return [x.filepath for x in tmpd]
             else:
                 #if the topic is not in DBpedia, return None
                 return None
@@ -144,6 +166,7 @@ class DomainManager:
                 print("Error: could not find DBpedia entry for %s"%u.name)
 
         self.database.remove()
+        loop.stop()
         return filepaths
 
     def consolidate_domain(self, domain):
@@ -154,7 +177,7 @@ class DomainManager:
         """Re-cluster all domain files"""
         raise NotImplementedError()
 
-    def generate_domain(self, uri, num_nodes=100):
+    def generate_domain(self, uri, num_nodes=100, _re=False):
         """Generate a domain centered on a concept. Expects a DBpedia URI."""
         session = self.database()
         def helper_func():
@@ -177,8 +200,11 @@ class DomainManager:
                     G = generate_graph(uri, num_nodes)
                     #if disambiguation page on exact uri, try search
                     if len(G.nodes) == 0:
-                        uri = keyword_search(get_label(uri))
-                        G = generate_graph(uri, num_nodes)
+                        if not _re:
+                            return self.generate_domain(keyword_search(get_label(uri)), num_nodes, True)
+                        else:
+                            print("Error: could not generate domain for concept: %s"%(uri))
+                            return None
                 except Exception as e:
                     print("Error generating domain for concept: %s > %s"%(uri,e))
                     return None
