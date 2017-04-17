@@ -305,9 +305,10 @@ class Domain:
 
         #the function to use for indexing the relationship type vectors
         self.index_metric = index_metric
-        
-        #build the graph metadata
-        self.rebuild_graph_data()
+        self.dirty = False
+        if len(self.nodes) > 0:
+            #build the graph metadata
+            self.rebuild_graph_data(consolidator)
 
     @property
     def size(self):
