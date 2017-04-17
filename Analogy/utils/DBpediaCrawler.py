@@ -195,6 +195,10 @@ def generate_graph(seeds, total, depth_limit=None,
 
     loop = asyncio.get_event_loop()
 
+    # Stop the loop concurrently                                                
+    async def exit_loop(loop):                                                                                    
+        loop.stop()                                          
+
     async def grow(loop, executor):
         #grow the graph
         for i in range(WORKER_COUNT):
@@ -204,7 +208,8 @@ def generate_graph(seeds, total, depth_limit=None,
             if q.empty() and fillcount == 0:#prevent dead ends
                 for worker in workers:
                     worker.cancel()
-                    return
+                asyncio.ensure_future(exit_loop(loop))  
+                return
             done,_ = await asyncio.wait(workers,
                                         return_when=asyncio.FIRST_COMPLETED)
             for ret in done:
