@@ -127,23 +127,24 @@ class DomainManager:
         session = self.database()
         unknowns = session.query(Unknown)
         total = unknowns.count()
-        any_flag = False
+        filepaths = []
         for i,u in enumerate(unknowns.all()):
             print("reconciling unknown %d/%d: "%(i+1,total), u.name)
-            any_flag = True
             if u.name[:19] != "http://dbpedia.org/": #assume proper dbpedia URI
                 ret = keyword_search(u.name)
             else:
                 ret = u.name
             if ret != None:
-                if self.generate_domain(ret, limit) != None: 
+                tmpd = self.generate_domain(ret, limit)
+                if tmpd != None: 
                     session.delete(u)
                     session.commit()
+                    filepaths.append(tmpd.filepath)
             else:
                 print("Error: could not find DBpedia entry for %s"%u.name)
 
         self.database.remove()
-        return any_flag
+        return filepaths
 
     def consolidate_domain(self, domain):
         """Re-cluster domain file, if necessary"""
