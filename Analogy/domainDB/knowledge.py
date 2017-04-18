@@ -64,8 +64,8 @@ class DomainManager:
         return keyword_search(concept)
 
     def find_domains(self, concept, explicit=True, ordered=False, uri=False):
-        """Return the domains containing a topic, an Unkown object if it is not yet known,
-        or None if it is not in DBpedia
+        """Return the valid keyword used and the domains containing that keyword, 
+        an Unkown object if it is not yet known, or None if it is not in DBpedia
         
         if explicit is True, the DBpedia query must be an exact match
 
@@ -81,7 +81,7 @@ class DomainManager:
                 ret = keyword_search(concept)
                 #check for exact match
                 if explicit and get_label(ret) != concept:
-                    return None
+                    return ret, None
             else:
                 ret = make_uri(concept)
             if ret:
@@ -94,19 +94,19 @@ class DomainManager:
                         ukn.name = ret
                         session.add(ukn)
                         session.commit()
-                    return ukn  
+                    return ret, ukn  
                 else:
 
                     tmpd = [x for x in domains.all()]
                     if ordered:
                         tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100), reverse=True)
-                    return [x.filepath for x in tmpd]
+                    return ret, [x.filepath for x in tmpd]
             else:
                 #if the topic is not in DBpedia, return None
-                return None
+                return ret, None
         tmp = find_helper()
         self.database.remove()
-        return tmp
+        return ret, tmp
 
     def refresh_database(self, domain=None):
         """Check the data file folder for domain files and update the database
