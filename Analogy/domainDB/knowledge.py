@@ -81,7 +81,7 @@ class DomainManager:
                 ret = keyword_search(concept)
                 #check for exact match
                 if explicit and get_label(ret) != concept:
-                    return ret, None
+                    return get_label(ret), None
             else:
                 ret = make_uri(concept)
             if ret:
@@ -94,19 +94,19 @@ class DomainManager:
                         ukn.name = ret
                         session.add(ukn)
                         session.commit()
-                    return ret, ukn  
+                    return get_label(ret), ukn  
                 else:
 
                     tmpd = [x for x in domains.all()]
                     if ordered:
                         tmpd.sort(key=lambda x: int(json.loads(x.details).get("size") or 100), reverse=True)
-                    return ret, [x.filepath for x in tmpd]
+                    return get_label(ret), [x.filepath for x in tmpd]
             else:
                 #if the topic is not in DBpedia, return None
-                return ret, None
+                return None, None
         tmp = find_helper()
         self.database.remove()
-        return ret, tmp
+        return tmp
 
     def refresh_database(self, domain=None):
         """Check the data file folder for domain files and update the database
