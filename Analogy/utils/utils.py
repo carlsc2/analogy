@@ -76,6 +76,18 @@ def permute_rtype_vector(x):
     #                dtype=np.float)
 
 
+def PCA(data, n=2):
+    """Perform Principal Component Analysis on a matrix
+
+    Returns the projection of the data onto the first <n> principal components.
+
+    """
+    U, S, Vt = np.linalg.svd(data, full_matrices=False)
+    s = np.diag(S)
+    newdata = np.dot(U[:, :n], np.dot(s[:n, :n], Vt[:n,:]))
+    return newdata
+
+
 class ConsolidatorException(Exception):
     """Raise this exception in a consolidator if some rtype should be ignored"""
     pass
@@ -421,6 +433,7 @@ class Domain:
 
         # ==== compute member variables ====
         self.usage_map = self.map_uses()
+        self.usage_counts = {x:len(y) for x,y in self.usage_map.items()}
         self.rtype_vectors = self.index_rtypes()
         self.node_vectors = self.index_nodes()
         self.rkdtree_keys, _rvalues = zip(*self.rtype_vectors.items())
@@ -532,21 +545,21 @@ class Domain:
         #avg = np.mean(list(self.rtype_vectors.values()),axis=0)
 
 
-        for name, node in self.nodes.items():
-            tmp1 = [self.rtype_vectors[rtype]
-                    for rtype, dest in node.outgoing_relations] or [NULL_VEC()]
-            tmp2 = [permute_rtype_vector(self.rtype_vectors[rtype])
-                    for rtype, prev in node.incoming_relations] or [NULL_VEC()]
+        #for name, node in self.nodes.items():
+        #    tmp1 = [self.rtype_vectors[rtype]
+        #            for rtype, dest in node.outgoing_relations] or [NULL_VEC()]
+        #    tmp2 = [permute_rtype_vector(self.rtype_vectors[rtype])
+        #            for rtype, prev in node.incoming_relations] or [NULL_VEC()]
 
-            net = tmp1 + tmp2
+        #    net = tmp1 + tmp2
 
-            #out[name] = np.asarray(net).mean(axis=0)
-            #out[name] = np.asarray(net).sum(axis=0)
-            v = np.asarray(net).sum(axis=0)
-            if v.any():
-                out[name] = v/max(v)#softmax(v/max(v))
-            else:
-                out[name] = v
+        #    #out[name] = np.asarray(net).mean(axis=0)
+        #    #out[name] = np.asarray(net).sum(axis=0)
+        #    v = np.asarray(net).sum(axis=0)
+        #    if v.any():
+        #        out[name] = v/max(v)#softmax(v/max(v))
+        #    else:
+        #        out[name] = v
 
 
         #avg = np.mean(list(out.values()),axis=0)
@@ -558,6 +571,36 @@ class Domain:
         #    if v.any():
         #        #out[r] = v / sqrt(v.dot(v))
         #        out[r] = softmax((v-avg)/maxm)
+
+
+
+        # PCA method 0001701
+        rmap = self.rtype_vectors
+        data = np.zeros((len(self.nodes), JACCARD_DIMENSIONS), dtype=np.float)
+        ix = 0
+        for node in self.nodes.values():
+
+            #compute weighted average of each relation type
+            tmp = [rmap[rtype] for 
+                        rtype, dest in node.outgoing_relations] + \
+                  [permute_rtype_vector(rmap[rtype]) for 
+                        rtype, prev in node.incoming_relations]
+
+            v = np.asarray(tmp).mean(axis=0) if tmp else NULL_VEC()
+
+            #normalize
+            if v.any():
+                data[ix] = v / sqrt(v.dot(v))
+            else:
+                data[ix] = v
+            ix += 1
+
+        #eliminate projection onto first 7 principal components
+        d2 = data - PCA(data, 7)
+
+        #order of nodes is preserved
+        for i,v in enumerate(self.nodes):
+            out[v] = softmax(d2[i])
 
         return out
 
@@ -660,17 +703,36 @@ class Domain:
 
         #maxm = np.max(list(out.values()),axis=0)
 
+
+        
+        #with open("rrw.pkl","wb+") as f:
+        #    pickle.dump(out, f, -1)
+
         #normalize everything
         for r,v in out.items():
             #out[r] = v / max(v)
-            #out[r] = v / sqrt(v.dot(v))
+            out[r] = v / sqrt(v.dot(v))
             #out[r] = softmax(v/maxm)
-            out[r] = softmax(v/max(v))
+            #out[r] = softmax(v/max(v))
             #out[r] = softmax((v-avg)/maxm)
 
         #for debugging purposes
-        np.save("utils/vectest.npy",np.array(list(out.values())))
+        #np.save("utils/vectest.npy",np.array(list(out.values())))
+        
 
+        '''
+        rcount = self.usage_counts
+        vs1 = {}
+        for rtype, vec in out.items():
+            vs1[rtype] = softmax(vec/rcount[rtype])
+
+        data = np.array(list(vs1.values()))
+        d2 = data - PCA(data, 1)#eliminate projection onto first principal component
+
+        for i,v in enumerate(vs1):#iteration order is preserved
+            #rescale output
+            out[v] = softmax(d2[i]/rcount[v])
+        '''
         return out
 
     def serialize(self):
