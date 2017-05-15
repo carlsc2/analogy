@@ -12,23 +12,6 @@ import math
 
 from pprint import pprint
 
-'''
-To make analogies:
-- need to start out with initial assertions
-    - these assertions are either known to be good or are
-      based on intent of analogy
-
-Types of analogies:
-1) If A is novel and B is known: Explain A in terms of B
-2) If neither A nor B is understood: Relate A to B and explain in terms of C,
-    where C is understood
-
-Need to incrementally make inferences
-- if X is like Y then X-->A is like Y-->B
-
-
-'''
-
 class AnalogyException(Exception):
     pass
 

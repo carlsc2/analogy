@@ -28,23 +28,62 @@
     <Compile Include="abstractiontest.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="analogy.py" />
     <Compile Include="analogy2.py" />
-    <Compile Include="analogytest.py" />
     <Compile Include="analogytest2.py" />
-    <Compile Include="analogyserver.py" />
-    <Compile Include="analogy_boosted.py" />
-    <Compile Include="analogy_multi.py" />
-    <Compile Include="coreattribtest.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="langparsetest.py" />
-    <Compile Include="semantic_analysis.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="utils.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="domainDB\database.py" />
+    <Compile Include="domainDB\knowledge.py" />
+    <Compile Include="domainDB\models.py" />
+    <Compile Include="domainDB\__init__.py" />
+    <Compile Include="utils\DBpediaCrawler.py" />
+    <Compile Include="utils\elim.py" />
+    <Compile Include="utils\rtest2.py" />
+    <Compile Include="utils\swaptest.py" />
+    <Compile Include="utils\utils.py" />
+    <Compile Include="utils\wtest.py" />
+    <Compile Include="utils\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="domainDB\" />
+    <Folder Include="domainDB\__pycache__\" />
+    <Folder Include="utils\" />
+    <Folder Include="utils\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="domainDB\__pycache__\database.cpython-35.pyc" />
+    <Content Include="domainDB\__pycache__\database.cpython-36.pyc" />
+    <Content Include="domainDB\__pycache__\knowledge.cpython-35.pyc" />
+    <Content Include="domainDB\__pycache__\knowledge.cpython-36.pyc" />
+    <Content Include="domainDB\__pycache__\models.cpython-35.pyc" />
+    <Content Include="domainDB\__pycache__\models.cpython-36.pyc" />
+    <Content Include="domainDB\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="domainDB\__pycache__\__init__.cpython-36.pyc" />
+    <Content Include="utils\asctest.pkl" />
+    <Content Include="utils\asctest_ds.pkl" />
+    <Content Include="utils\asctest_sft.pkl" />
+    <Content Include="utils\dendrogram_centroid.png" />
+    <Content Include="utils\dendrogram_original_centroid.png" />
+    <Content Include="utils\dendrogram_rtype_centroid_decent.png" />
+    <Content Include="utils\drmap.pkl" />
+    <Content Include="utils\drmap_ds.pkl" />
+    <Content Include="utils\drmap_m.pkl" />
+    <Content Include="utils\drmap_r.pkl" />
+    <Content Include="utils\drmap_sft.pkl" />
+    <Content Include="utils\rcount_m.pkl" />
+    <Content Include="utils\rcount_r.pkl" />
+    <Content Include="utils\rcount_sft.pkl" />
+    <Content Include="utils\rrw.pkl" />
+    <Content Include="utils\rrw_m.pkl" />
+    <Content Include="utils\rrw_r.pkl" />
+    <Content Include="utils\vectest.npy" />
+    <Content Include="utils\vmap.pkl" />
+    <Content Include="utils\vmap_ds.pkl" />
+    <Content Include="utils\vmap_sft.pkl" />
+    <Content Include="utils\__pycache__\DBpediaCrawler.cpython-35.pyc" />
+    <Content Include="utils\__pycache__\DBpediaCrawler.cpython-36.pyc" />
+    <Content Include="utils\__pycache__\utils.cpython-35.pyc" />
+    <Content Include="utils\__pycache__\utils.cpython-36.pyc" />
+    <Content Include="utils\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="utils\__pycache__\__init__.cpython-36.pyc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
