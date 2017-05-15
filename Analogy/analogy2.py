@@ -15,7 +15,8 @@ from pprint import pprint
 '''
 To make analogies:
 - need to start out with initial assertions
-    - these assertions are either known to be good or are based on intent of analogy
+    - these assertions are either known to be good or are
+      based on intent of analogy
 
 Types of analogies:
 1) If A is novel and B is known: Explain A in terms of B
@@ -28,25 +29,37 @@ Need to incrementally make inferences
 
 '''
 
-def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1):
+class AnalogyException(Exception):
+    pass
+
+def make_analogy(src_concept, src_domain, target_concept, target_domain,
+                 rmax=1, vmax=1, cluster_mode=0):
     '''Makes the best analogy between two concepts in two domains
 
     src_domain is the KNOWN domain
     target_domain is the NOVEL domain
 
-    returns the best analogy or None if no analogy could be made
+    returns the best analogy that can be made between the two concepts
 
+    In cluster mode, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes 
+    with a very large number of homogeneous connections as it severely cuts
+    down on the computation time.
+
+    0 = default (no clustering)
+    1 = source domain clustering only
+    2 = target domain clustering only
+    3 = both domains will be clustered
+
+    raises an AnalogyException if concept does not exist in domain 
     '''
-    
-    
 
     # ensure features exist
     if not src_concept in src_domain.nodes:
-        print("Feature %s not in source domain" % src_concept)
-        return None
+        raise AnalogyException("'%s' not in source domain" % src_concept)
+
     if not target_concept in target_domain.nodes:
-        print("Feature %s not in target domain" % target_concept)
-        return None
+        raise AnalogyException("'%s' not in target domain" % target_concept)
 
     cnode = src_domain.nodes[src_concept]
     tnode = target_domain.nodes[target_concept]
@@ -76,84 +89,71 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
 
         return 1 - (diff1+diff2)/2
 
-        #return 1 - (nc1[r1] - nc2[r2])**2
-
-    def weigh_score(x,c):
-        #return math.exp((3*x-3))
-        #return math.tanh((6*x-6) + 2)
-        return math.tanh(2*c*x - c)
-
     def get_hypotheses():
-        svec = src_domain.node_vectors[src_concept]
-        tvec = target_domain.node_vectors[target_concept]
-
-        offset = svec - tvec
 
         hypotheses = []
 
-        # precompute source vectors because this won't change
-        src_vec_dict = {}
+        if cluster_mode == 0: #no cluster
+            svdi = cnode.get_vec_dict(src_domain,False).items()
+            tvdi = tnode.get_vec_dict(target_domain,False).items()
+        elif cluster_mode == 1: #src only cluster
+            svdi = cnode.get_vec_dict(src_domain,True).items()
+            tvdi = tnode.get_vec_dict(target_domain,False).items()
+        elif cluster_mode == 2: #trg only cluster
+            svdi = cnode.get_vec_dict(src_domain,False).items()
+            tvdi = tnode.get_vec_dict(target_domain,True).items()
+        else: #both cluster
+            svdi = cnode.get_vec_dict(src_domain,True).items()
+            tvdi = tnode.get_vec_dict(target_domain,True).items()
 
-        
-        net1 = [(r1,d1,True) for r1,d1 in cnode.outgoing_relations] +\
-               [(r1,d1,False) for r1,d1 in cnode.incoming_relations]
+        # for each pair in target in/out
+        for (r2, d2, v2), (vdiff2, rdiff2) in tvdi:
+            #compare with each pair in source in/out
+            for (r1, d1, v1), (vdiff1, rdiff1) in svdi:
 
-        net2 = [(r1,d1,True) for r1,d1 in tnode.outgoing_relations] +\
-               [(r1,d1,False) for r1,d1 in tnode.incoming_relations]
+                if cluster_mode == 0:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1, rdiff2)
 
-        #precompute vectors for inner loop
-        for r, d, v in net1:
-            #vector from src node to src neighbor
-            src_vec_dict[d] = svec - src_domain.node_vectors[d]
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1, vdiff2)
 
-            #vector from src node to src rtype
-            if v: #if outgoing rtype
-                src_vec_dict[(r,v)] = svec - src_domain.rtype_vectors[r]
-            else: #if incoming rtype
-                src_vec_dict[(r,v)] = svec - permute_rtype_vector(src_domain.rtype_vectors[r])
+                elif cluster_mode == 1:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1*nc1[r1], rdiff2)
 
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2)
 
-        # for each pair in candidate outgoing
-        for r2, d2, v2 in net2:
+                elif cluster_mode == 2:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1, rdiff2*nc2[r2])
 
-            #vector from target node to target neighbor
-            vdiff2 = tvec - target_domain.node_vectors[d2]
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1, vdiff2*nc2[r2])
 
-            #vector from target node to target rtype
-            if v2: #if outgoing rtype
-                rdiff2 = tvec - target_domain.rtype_vectors[r2]
-            else: #if incoming rtype
-                rdiff2 = tvec - permute_rtype_vector(target_domain.rtype_vectors[r2])
+                else:
+                    #compute relative rtype score
+                    rscore = cosine_similarity(rdiff1*nc1[r1], rdiff2*nc2[r2])
 
-            # find best outgoing rtype to compare with
-            for r1, d1, v1 in net1:
+                    #compute relative node score
+                    vscore = cosine_similarity(vdiff1*nc1[r1], vdiff2*nc2[r2])
 
-                #compute relative rtype score
-                rscore = cosine_similarity(src_vec_dict[(r1,v1)], rdiff2)
-
-                #adjust rtype score by confidence
+                #adjust by tfidf
+                try:
+                    rscore *= src_domain.tfidf[d1][r1] * target_domain.tfidf[d2][r2]
+                except KeyError:#ignore clusters for now
+                    pass
+                
+                #adjust rtype score by relative confidence
                 rscore *= get_confidence(r1,r2)
 
-                #rscore = rscore**3
+                #skew score
                 rscore = math.tanh(2*math.e*rscore - math.e)
-
-                #weigh rscore
-                #rscore *= weigh_score(rscore,15)
-
-                #compute relative node score
-                vscore = cosine_similarity(src_vec_dict[d1], vdiff2)
-
-                #vscore = vscore**3
-                
                 #vscore = math.tanh(2*math.e*vscore - math.e)
 
-
-
-                #vscore *= weigh_score(vscore,13)
-
+                #compute final score
                 actual_score = (rscore*rmax + vscore*vmax)/tscore
-
-                #actual_score = math.tanh(2*math.e*actual_score - math.e)
 
                 hypotheses.append((actual_score, r1, d1, r2, d2, v1, v2))
 
@@ -171,20 +171,30 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
     hvals = hmap.values()
     rkeys = rassert.keys()
     rvals = rassert.values()
-    ritems = rassert.items()
+
+    #total number of rtypes for each node
+    tr1 = len(nc1.keys())
+    tr2 = len(nc2.keys())
+
+    #total number of relationships for each node
+    sr1 = len(cnode.outgoing_relations) + len(cnode.incoming_relations)
+    sr2 = len(tnode.outgoing_relations) + len(tnode.incoming_relations)
 
     # for each mh, pick the best then pick the next best non-conflicting
-    
     # total number of hypotheses is O(m*n) with max(n,m) matches
     # total score is based on possible non-conflicts
-    # only penalize on conflicts
+    # only penalize on true conflicts
+    # max possible matches is min(n,m) matches
+
+    if cluster_mode == 0:
+        maxm = min(sr1,sr2)
+    else:
+        maxm = min(tr1,tr2)
 
     for score, r1, src, r2, target, v1, v2 in get_hypotheses():
         vkey = (src, v1)
         rkey1 = (r1, v1)
         rkey2 = (r2, v2)
-
-        
 
         if v1:
             if v2:
@@ -197,58 +207,54 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             else:
                 otype = "IN-IN"
 
-        #for a new mapping
-        if vkey not in hkeys:# and target not in hvals:
-            
-            #print("new mapping: ", vkey, target)
-            hmap[vkey] = target
-            rating += score
-            if (r1,r2) not in ritems:
-                total_rating += tscore
+        #same src, dest could have multiple rtype mappings
+
+        #if new concept mapping
+        if vkey not in hkeys and target not in hvals:
+            #if new rtype mapping
             if rkey1 not in rkeys and rkey2 not in rvals:
                 rassert[rkey1] = rkey2
-
-        if target not in hvals:
-            total_rating += tscore
-
-        #if the src/target has already been mapped to
-        #if hmap.get(vkey) == target:
-        if hmap.get(vkey) == target:# or target not in hvals:
-            #check for conflict with relationship types
-            if rassert.get(rkey1) == rkey2:
-                #track best match
+                hmap[vkey] = target
                 best[(otype, r1, src)] = (r2, target, score)
-                #increase score for match
                 rating += score
-
-        #else:
-            #print("mismatch: ", vkey, target, hmap.get(vkey))
-
-
-    #print(rating, total_rating)
-    
-    #total number of rtypes for each node
-    tr1 = len(nc1.keys())
-    tr2 = len(nc2.keys())
-
-    #total number of relationships for each node
-    sr1 = sum(cnode.rtype_count.values())
-    sr2 = sum(tnode.rtype_count.values())
+            #if rtype mapping exists but is consistent
+            elif rassert.get(rkey1) == rkey2:
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+        #if existing concept mapping
+        elif hmap.get(vkey) == target:
+            #if new rtype mapping
+            if rkey1 not in rkeys and rkey2 not in rvals:
+                rassert[rkey1] = rkey2
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+            #if rtype mapping exists but is consistent
+            elif rassert.get(rkey1) == rkey2:
+                hmap[vkey] = target
+                best[(otype, r1, src)] = (r2, target, score)
+                rating += score
+        total_rating += 1/maxm
 
     #get max number of each (ideal number)
     v = max(sr1, sr2)
     z = max(tr1, tr2)
 
+    #total impact of the analogy (in terms of connectivity)
     weight = z*v
 
-    #confidence is based on difference from ideal
-    confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
+    try:
+        confidence = 1 - (abs(tr1-tr2)/z + abs(sr1-sr2)/v)/2
+    except ZeroDivisionError:
+        confidence = 0
 
-    if total_rating == 0:  # prevent divide by zero error
-        return None
+    try:
+        normalized_rating = rating / total_rating
+    except ZeroDivisionError:
+        normalized_rating = 0
 
-    normalized_rating = rating / total_rating * math.log(weight)
-
+    #total_score = (confidence + normalized_rating) / 2
     total_score = confidence * normalized_rating
 
     return {"total_score":total_score,
@@ -258,10 +264,12 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1,
             "target_concept":target_concept,
             "asserts":rassert,
             "mapping":best,
-            "weight":weight}
+            "weight":weight,
+            "cluster_mode":cluster_mode}
 
-
-def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1):
+def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
+                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100,
+                      knn_filter=None):
     """Makes the best analogy between two concepts in two domains
 
     Finds the best analogy between a specific concept in the source domain
@@ -270,36 +278,145 @@ def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, 
     If filter_list is specified, only the concepts in that list will be
     selected from to make analogies.
 
+    In cluster mode, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes 
+    with a very large number of homogeneous connections as it severely cuts
+    down on the computation time.
+
+    0 = default (no clustering)
+    1 = source domain clustering only
+    2 = target domain clustering only
+    3 = both domains will be clustered
+    4 = anything with a high enough knowledge level will be clustered. Determined
+    by <cluster_threshold>, default is 100.
+
+    If knn_filter is specified, only concepts from the <knn_filter> nearest
+    neighbors will be selected from to make analogies.
+
     Note: analogies to self are ignored (if same domain)
+
+    raises an AnalogyException if concept does not exist in domain 
     """
 
-    candidate_pool = filter_list if filter_list is not None else target_domain.nodes
-    candidate_results = []
+    if not src_concept in src_domain.nodes:
+        raise AnalogyException("'%s' not in source domain" % src_concept)
+
+    if filter_list != None:
+        candidate_pool = filter_list
+    elif knn_filter != None:
+        candidate_pool = [c for d,c in target_domain.get_closest_node(
+            src_domain.node_vectors[src_concept], knn_filter)]
+    else:
+        candidate_pool = target_domain.nodes
+
+    
+
+    best_result = None
+    best_score = 0
+
+    ikl = src_domain.nodes[src_concept].knowledge_level
 
     for target_concept in candidate_pool:
         # find novel within same domain
         # otherwise best analogy would always be self
         if target_domain == src_domain and target_concept == src_concept:
             continue
-        result = make_analogy(src_concept, src_domain, target_concept, target_domain, rmax, vmax)
+
+        ckl = target_domain.nodes[target_concept].knowledge_level
+
+        cmode = cluster_mode
+
+        if cluster_mode == 4:
+            if ikl > cluster_threshold:
+                if ckl > cluster_threshold:
+                    cmode = 3
+                else:
+                    cmode = 1
+            elif ckl > cluster_threshold:
+                cmode = 2
+            else:
+                cmode = 0
+
+        result = make_analogy(src_concept, src_domain, target_concept,
+                              target_domain, rmax, vmax, cmode)
+        if result["total_score"] > best_score:
+            best_result = result
+            best_score = result["total_score"]
+
+    return best_result
+
+
+def get_all_analogies(src_concept, src_domain, target_domain, filter_list=None,
+                      rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100):
+    """Makes all analogies for some concept in one domain to another domain
+
+    Finds all analogies between a specific concept in the source domain
+    and any concept in the target domain.
+
+    If filter_list is specified, only the concepts in that list will be
+    selected from to make analogies.
+
+    In cluster mode, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes 
+    with a very large number of homogeneous connections as it severely cuts
+    down on the computation time.
+
+    0 = default (no clustering)
+    1 = source domain clustering only
+    2 = target domain clustering only
+    3 = both domains will be clustered
+    4 = anything with a high enough knowledge level will be clustered. Determined
+    by <cluster_threshold>, default is 100.
+
+    raises an AnalogyException if concept does not exist in domain 
+    """
+
+    candidate_pool = filter_list if filter_list is not None else target_domain.nodes
+    results = []
+    ikl = src_domain.nodes[src_concept].knowledge_level
+
+    if not src_concept in src_domain.nodes:
+        raise AnalogyException("'%s' not in source domain" % src_concept)
+
+    for target_concept in candidate_pool:
+
+        ckl = target_domain.nodes[target_concept].knowledge_level
+
+        cmode = cluster_mode
+
+        if cluster_mode == 4:
+            if ikl > cluster_threshold:
+                if ckl > cluster_threshold:
+                    cmode = 3
+                else:
+                    cmode = 1
+            elif ckl > cluster_threshold:
+                cmode = 2
+            else:
+                cmode = 0
+
+        result = make_analogy(src_concept, src_domain, target_concept,
+                              target_domain, rmax, vmax, cmode)
         if result:
-            candidate_results.append(result)
-
-    if not candidate_results:
-        return None
-    else:
-        
-        
-        tmp = sorted(candidate_results, key=lambda x: x["total_score"])
-        #from pprint import pprint
-        #tmp2 = [(x["total_score"],x["confidence"],x["rating"],x["target_concept"]) for x in tmp]
-        #pprint(tmp2)
-
-        # return the best global analogy
-        return tmp[-1]
+            results.append(result)     
+             
+    return results
 
 
-def explain_analogy(analogy, verbose=False):
+def explain_analogy(analogy, verbose=False, paragraph=True):
+
+    """
+    Takes an analogy and returns an explanation.
+
+    If verbose is True, it will explain everything. Otherwise it
+    will only explain one of each relationship type.
+
+    If paragraph is True, it will return a paragraph. Otherwise it will
+    return the individual logic chunks.
+    
+    """
+
+
     # only explain main relation
     if not analogy:
         return
@@ -307,38 +424,69 @@ def explain_analogy(analogy, verbose=False):
     src = analogy["src_concept"]
     trg = analogy["target_concept"]
     mapping = analogy["mapping"]
-
+    cluster_mode = analogy["cluster_mode"]
 
     narrative = ""
-    narrative += "\t%s is like %s. " % (src, trg)
-
+    narrative += "\t'%s' is like '%s'. " % (src, trg)
     narrative += "This is because"
     nchunks = []
 
     mentioned = set()
 
     for (x, r1, d1), (r2, d2, s) in mapping.items():
-        if not verbose and r1 in mentioned:
+        if not verbose and (r1,r2) in mentioned:
             continue
-        if x == "IN-IN":
+
+        if cluster_mode == 0:#no clustering
+            if x == "IN-IN":
+                nchunks.append((s, d1, r1, src, d2, r2, trg))
+            if x == "IN-OUT":
+                nchunks.append((s, d1, r1, src, trg, r2, d2))
+            if x == "OUT-IN":
+                nchunks.append((s, src, r1, d1, d2, r2, trg))
+            if x == "OUT-OUT":
+                nchunks.append((s, src, r1, d1, trg, r2, d2))
+        elif cluster_mode == 1:#src only cluster
+            if x == "IN-IN" or x == "OUT-IN":
+                nchunks.append((s, d1, r1, src, d2, r2, trg))
+            if x == "IN-OUT" or x == "OUT-OUT":
+                nchunks.append((s, d1, r1, src, trg, r2, d2))
+        elif cluster_mode == 2:#target only cluster
+            if x == "IN-IN" or x == "IN-OUT":
+                nchunks.append((s, d1, r1, src, d2, r2, trg))
+            if x == "OUT-IN" or x == "OUT-OUT":
+                nchunks.append((s, src, r1, d1, d2, r2, trg))
+        elif cluster_mode == 3:#both clustered
             nchunks.append((s, d1, r1, src, d2, r2, trg))
-        if x == "IN-OUT":
-            nchunks.append((s, d1, r1, src, trg, r2, d2))
-        if x == "OUT-IN":
-            nchunks.append((s, src, r1, d1, d2, r2, trg))
-        if x == "OUT-OUT":
-            nchunks.append((s, src, r1, d1, trg, r2, d2))
-        mentioned.add(r1)
+        mentioned.add((r1,r2))
     nchunks.sort(reverse=True)
+
+    if not paragraph:
+        return nchunks
+
     #order by score to give most important matches first 
     for i, nc in enumerate(nchunks):
         s, a, b, c, d, e, f = nc
         if i == len(nchunks) - 1:
-            if i > 1: #only add and if more than one thing
+            if i > 1: #only add 'and' if more than one thing
                 narrative += " and"
-            narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'.\n" % (
-                a, b, c, d, e, f)
+            if cluster_mode == 0:#no clustering
+                narrative += " %s <%s> %s in the same"\
+                             " way that %s <%s> %s.\n"%(a, b, c, d, e, f)
+            elif cluster_mode == 1:#src only cluster
+                narrative += " %s %s just like %s <%s> %s.\n"%(a, c, d, e, f)
+            elif cluster_mode == 2:#target only cluster
+                narrative += " %s <%s> %s just like %s %s.\n"%(a, b, c, d, f)
+            elif cluster_mode == 3:#both clustered
+                narrative += " %s %s just like %s %s.\n"%(a, c, d, f)
         else:
-            narrative += " '%s' <%s> '%s' in the same way that '%s' <%s> '%s'," % (
-                a, b, c, d, e, f)
+            if cluster_mode == 0:#no clustering
+                narrative += " %s <%s> %s in the same"\
+                             " way that %s <%s> %s,"%(a, b, c, d, e, f)
+            if cluster_mode == 1:#src only cluster
+                narrative += " %s %s just like %s <%s> %s,"%(a, c, d, e, f)
+            if cluster_mode == 2:#target only cluster
+                narrative += " %s <%s> %s just like %s %s,"%(a, b, c, d, f)
+            elif cluster_mode == 3:#both clustered
+                narrative += " %s %s just like %s %s,"%(a, c, d, f)
     return narrative
