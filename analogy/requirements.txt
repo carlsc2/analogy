@@ -1,0 +1,9 @@
+#
+####### requirements.txt #######
+#
+###### Requirements for analogy code ######
+numpy
+scipy
+lru-dict
+sparqlwrapper
+flask

@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{e76129ca-715e-41f6-8cab-cf29f5319e4d}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>analogytest.py</StartupFile>
+    <SearchPath>analogy\</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="analogytest.py" />
+    <Compile Include="analogy\core\analogy.py" />
+    <Compile Include="analogy\core\__init__.py" />
+    <Compile Include="analogy\data files\foo.py" />
+    <Compile Include="analogy\data files\sparqltest.py" />
+    <Compile Include="analogy\data files\testerino.py" />
+    <Compile Include="analogy\domainDB\database.py" />
+    <Compile Include="analogy\domainDB\knowledge.py" />
+    <Compile Include="analogy\domainDB\models.py" />
+    <Compile Include="analogy\domainDB\__init__.py" />
+    <Compile Include="analogy\utils\DBpediaCrawler.py" />
+    <Compile Include="analogy\utils\utils.py" />
+    <Compile Include="analogy\utils\__init__.py" />
+    <Compile Include="analogy\web_interface\setup.py" />
+    <Compile Include="analogy\web_interface\webinterface.py" />
+    <Compile Include="analogy\web_interface\__init__.py" />
+    <Compile Include="analogy\__init__.py" />
+    <Compile Include="test.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="analogy\comparisons.txt" />
+    <Content Include="analogy\data files\testdump.txt" />
+    <Content Include="analogy\Documentation.txt" />
+    <Content Include="analogy\domainDB\__pycache__\database.cpython-35.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\database.cpython-36.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\knowledge.cpython-35.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\knowledge.cpython-36.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\models.cpython-35.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\models.cpython-36.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="analogy\domainDB\__pycache__\__init__.cpython-36.pyc" />
+    <Content Include="analogy\examples.txt" />
+    <Content Include="analogy\requirements.txt" />
+    <Content Include="analogy\TODO.txt" />
+    <Content Include="analogy\utils\__pycache__\DBpediaCrawler.cpython-35.pyc" />
+    <Content Include="analogy\utils\__pycache__\DBpediaCrawler.cpython-36.pyc" />
+    <Content Include="analogy\utils\__pycache__\utils.cpython-35.pyc" />
+    <Content Include="analogy\utils\__pycache__\utils.cpython-36.pyc" />
+    <Content Include="analogy\utils\__pycache__\__init__.cpython-35.pyc" />
+    <Content Include="analogy\utils\__pycache__\__init__.cpython-36.pyc" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\lib2to3\Grammar.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\lib2to3\PatternGrammar.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\include\numpy\multiarray_api.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\include\numpy\ufunc_api.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\lib\npy-pkg-config\mlib.ini" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\lib\npy-pkg-config\npymath.ini" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\numpy\LICENSE.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\pydoc_data\_pydoc.css" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\BENTO_BUILD.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\HACKING.rst.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\INSTALL.rst.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\io\matlab\tests\data\japanese_utf8.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\LICENSE.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x3x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x3x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x4x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x4x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x5x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\3x5x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x3x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x3x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x4x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x4x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x5x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\4x5x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x3x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x3x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x4x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x4x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x5x3.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\5x5x4.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\blocks2bit.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\box1.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\foo3x5x4indexed.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\icon.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\icon_mono.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\icon_mono_flat.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data\pattern4bit.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\data\label_inputs.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\data\label_results.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\data\label_strels.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\data\README.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\dots.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\cdist-X1.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\cdist-X2.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-boolean-inp.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-chebychev-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-chebychev-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-cityblock-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-cityblock-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-correlation-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-correlation-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-cosine-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-cosine-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-double-inp.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-euclidean-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-euclidean-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-hamming-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-jaccard-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-minkowski-3.2-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-minkowski-3.2-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-minkowski-5.8-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-seuclidean-ml-iris.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-seuclidean-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\pdist-spearman-ml.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data\random-bool-data.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\scipy\THANKS.txt" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\static\ajax-loader.gif" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\static\jquery-3.1.1.min.js" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\static\jquery-ui.css" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\static\jquery-ui.js" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\templates\index.html" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\console.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\debugger.js" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\jquery.js" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\less.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\more.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\source.png" />
+    <Content Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared\style.css" />
+    <Content Include="analogy\web_interface\static\ajax-loader.gif" />
+    <Content Include="analogy\web_interface\static\jquery-3.1.1.min.js" />
+    <Content Include="analogy\web_interface\static\jquery-ui.css" />
+    <Content Include="analogy\web_interface\static\jquery-ui.js" />
+    <Content Include="analogy\web_interface\templates\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="analogy" />
+    <Folder Include="analogy\core" />
+    <Folder Include="analogy\data files" />
+    <Folder Include="analogy\domainDB\" />
+    <Folder Include="analogy\domainDB\__pycache__\" />
+    <Folder Include="analogy\utils\" />
+    <Folder Include="analogy\utils\__pycache__\" />
+    <Folder Include="analogy\web_interface" />
+    <Folder Include="analogy\web_interface\build\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\lib2to3" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\include\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\include\numpy" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\lib\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\numpy\core\lib\npy-pkg-config" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\pydoc_data" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\io\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\io\matlab\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\io\matlab\tests\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\io\matlab\tests\data" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\misc\tests\data" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\ndimage\tests\data" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\scipy\spatial\tests\data" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\static" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\templates" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\" />
+    <Folder Include="analogy\web_interface\build\exe.win32-3.5\werkzeug\debug\shared" />
+    <Folder Include="analogy\web_interface\static" />
+    <Folder Include="analogy\web_interface\templates" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

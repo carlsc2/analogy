@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Analogy Generator Web Interface</title>
+		<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.css')}}">
+		<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>
+		<script type="text/javascript" src="{{url_for('static', filename='jquery-ui.js')}}"></script>
+	</head>
+	<body>
+		<div id="a1">
+			<h2> Choose two domains for analogy making </h2>
+			<label for="tags">Domain 1: </label>
+			<select id="fselect1" name="option">
+				{% for o in file_list %}
+					<option value="{{ o }}" SELECTED>{{ o }}</option>
+				{% endfor %}
+			</select>
+			</br>
+			<label for="tags">Domain 2: </label>
+			<select id="fselect2" name="option">
+				{% for o in file_list %}
+					<option value="{{ o }}" SELECTED>{{ o }}</option>
+				{% endfor %}
+			</select>
+			</br>
+			<input id="loadbutton" class="button" type="submit" value="Select">
+		</div>
+
+		<div id="a2">
+			<div class="ui-widget">
+			  <label for="tags1">Concept from domain 1: </label>
+			  <input id="tags1">
+			  <input id="fbb1" class="button" type="submit" value="Find best analogy">
+			</div>
+			<div class="ui-widget">
+			  <label for="tags2">Concept from domain 2: </label>
+			  <input id="tags2">
+			  <input id="fbb2" class="button" type="submit" value="Find best analogy">
+			</div>
+			<br>
+			<input id="cbb" class="button" type="submit" value="Compare both">
+		</div>
+		</div>
+			<pre id="result"></pre>
+			<p id="explanation"></p>
+		</div>
+		<div class="modal"></div>
+
+
+
+		
+	</body>
+	
+	<style>
+	
+		.modal {
+			display:    none;
+			position:   fixed;
+			z-index:    1000;
+			top:        0;
+			left:       0;
+			height:     100%;
+			width:      100%;
+			background: rgba( 255, 255, 255, .8 ) 
+						url({{url_for('static', filename='ajax-loader.gif')}})
+						50% 50% 
+						no-repeat;
+		}
+
+		body.loading {
+			overflow: hidden;   
+		}
+
+		body.loading .modal {
+			display: block;
+		}
+	
+	</style>
+	
+	<script type="text/javascript">
+		$body = $("body");
+
+		$(document).on({
+			ajaxStart: function() { $body.addClass("loading");},
+			ajaxStop: function() { $body.removeClass("loading");}    
+		});
+	
+	
+		//override jquery to make autocomplete faster for large lists
+		$.widget("ui.autocomplete", $.extend({}, $.ui.autocomplete.prototype, {
+			_source: function( request, response ){
+				var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+				var select_el = this.element.get(0); // get dom element
+				var rep = new Array(); // response array
+				// simple loop for the options
+				for (var i = 0; i < select_el.length; i++) {
+					var text = select_el.options[i].text;
+					if ( select_el.options[i].value && ( !request.term || matcher.test(text) ) )
+						// add element to result array
+						rep.push({
+							label: text, // no more bold
+							value: text,
+							option: select_el.options[i]
+						});
+				}
+				// send response
+				response( rep );
+			}
+		}));	
+
+		$("#a2").hide();
+		
+		var d1 = undefined;
+		var d2 = undefined;
+		
+		var l1 = [];
+		var l2 = [];
+
+		$("#loadbutton").on("click", function(){
+			$("#a1").hide();
+			d1 = $("#fselect1 option:selected").text();
+			d2 = $("#fselect2 option:selected").text();
+			$("#a2").show();
+			
+			$.ajax({
+				url: '/get_features',
+				data: {file: d1},
+				type: 'POST',
+				success: function(response) {
+					l1 = JSON.parse(response);
+					$( "#tags1" ).autocomplete({
+						minLength: 2,
+						source: l1
+					});
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+			
+			$.ajax({
+				url: '/get_features',
+				data: {file: d2},
+				type: 'POST',
+				success: function(response) {
+					l2 = JSON.parse(response);
+					$( "#tags2" ).autocomplete({
+						minLength: 2,
+						source: l2
+					});
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+			
+			
+		});
+		
+		$("#fbb1").on("click", function(){
+			var feature = $("#tags1").val();
+			if(l1.indexOf(feature) == -1){
+				alert("please select a valid concept for domain 1");
+			}else{
+				$.ajax({
+					url: '/print_best_analogy',
+					data: {
+						file1: d1,
+						file2: d2,
+						feature: feature,
+						sanitize: true
+					},
+					type: 'POST',
+					success: function(response) {
+						data = JSON.parse(response)
+						$( "#result" ).html(data["analogy"]);
+						$( "#explanation" ).html(data["explanation"]);
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			}
+		});
+		
+		$("#fbb2").on("click", function(){
+			var feature = $("#tags2").val();
+			if(l2.indexOf(feature) == -1){
+				alert("please select a valid concept for domain 2");
+			}else{
+				$.ajax({
+					url: '/print_best_analogy',
+					data: {
+						file1: d2,
+						file2: d1,
+						feature: feature,
+						sanitize: true
+					},
+					type: 'POST',
+					success: function(response) {
+						data = JSON.parse(response)
+						$( "#result" ).html(data["analogy"]);
+						$( "#explanation" ).html(data["explanation"]);
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			}
+		});
+		
+		$("#cbb").on("click", function(){
+			var f1 = $("#tags1").val();
+			var f2 = $("#tags2").val();
+			if(l1.indexOf(f1) == -1){
+				alert("please select a valid concept for domain 1");
+				return;
+			}
+			if(l2.indexOf(f2) == -1){
+				alert("please select a valid concept for domain 2");
+				return;
+			}
+			$.ajax({
+					url: '/print_analogy',
+					data: {
+						file1: d1,
+						file2: d2,
+						feature1: f1,
+						feature2: f2,
+						sanitize: true
+					},
+					type: 'POST',
+					success: function(response) {
+						data = JSON.parse(response)
+						$( "#result" ).html(data["analogy"]);
+						$( "#explanation" ).html(data["explanation"]);
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+		});
+		
+		
+		
+  </script>
+</html>

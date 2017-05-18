@@ -12,10 +12,10 @@ import json
 import asyncio
 import random
 
-from domainDB.database import init_db
-from domainDB.models import Concept, Domain, Unknown
-from utils.DBpediaCrawler import keyword_search, generate_graph, get_label, make_uri
-from utils.utils import deserialize
+from .database import init_db
+from .models import Concept, Domain, Unknown
+from ..utils.DBpediaCrawler import keyword_search, generate_graph, get_label, make_uri
+from ..utils.utils import deserialize
 
 KEY_SIZE = 32 #the size of the file names to generate 
 

@@ -6,7 +6,7 @@ import json
 import asyncio
 import random
 import signal, sys
-from utils import Domain, Node
+from .utils import Domain, Node
 from concurrent.futures import ThreadPoolExecutor
 import time
 from math import exp

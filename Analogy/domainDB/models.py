@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, UniqueConstraint, ForeignKey, Table, Boolean, Float, Text
 from sqlalchemy.orm import relationship, backref
-from domainDB.database import Base, db_session, engine
+from .database import Base, db_session, engine
 
 class Domain(Base):
     __tablename__ = 'domains'

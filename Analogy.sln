@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26014.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Analogy", "Analogy\Analogy.pyproj", "{19A1BE1E-7028-4C63-9AC0-0D5571A0145A}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "analogy", "analogy.pyproj", "{E76129CA-715E-41F6-8CAB-CF29F5319E4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,8 +11,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{19A1BE1E-7028-4C63-9AC0-0D5571A0145A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19A1BE1E-7028-4C63-9AC0-0D5571A0145A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E76129CA-715E-41F6-8CAB-CF29F5319E4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E76129CA-715E-41F6-8CAB-CF29F5319E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

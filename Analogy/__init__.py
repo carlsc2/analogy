@@ -1,2 +1,1 @@
-from . import analogy
-from utils import utils
+from .domainDB import DomainManager
