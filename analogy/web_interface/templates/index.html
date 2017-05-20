@@ -1,54 +1,84 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<title>Analogy Generator Web Interface</title>
-		<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.css')}}">
-		<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>
-		<script type="text/javascript" src="{{url_for('static', filename='jquery-ui.js')}}"></script>
-	</head>
-	<body>
-		<div id="a1">
-			<h2> Choose two domains for analogy making </h2>
-			<label for="tags">Domain 1: </label>
-			<select id="fselect1" name="option">
-				{% for o in file_list %}
-					<option value="{{ o }}" SELECTED>{{ o }}</option>
-				{% endfor %}
-			</select>
-			</br>
-			<label for="tags">Domain 2: </label>
-			<select id="fselect2" name="option">
-				{% for o in file_list %}
-					<option value="{{ o }}" SELECTED>{{ o }}</option>
-				{% endfor %}
-			</select>
-			</br>
-			<input id="loadbutton" class="button" type="submit" value="Select">
-		</div>
+	<div class="container">
+		<head>
+			<title>Analogy Generator Web Interface</title>
+			<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui.css')}}">
+			<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>
+			<script type="text/javascript" src="{{url_for('static', filename='jquery-ui.js')}}"></script>
+			<!-- Bootstrap -->
+			<link href="{{url_for('static', filename='bootstrap-3.3.7-dist/css/bootstrap.min.css')}}" rel="stylesheet">
+			<!-- Bootstrap theme -->
+			<link href="{{url_for('static', filename='bootstrap-3.3.7-dist/css/bootstrap-theme.min.css')}}" rel="stylesheet">
 
-		<div id="a2">
-			<div class="ui-widget">
-			  <label for="tags1">Concept from domain 1: </label>
-			  <input id="tags1">
-			  <input id="fbb1" class="button" type="submit" value="Find best analogy">
+		</head>
+		<body>
+			<h1> Analogy Generator Web Interface</h1>
+			
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Choose two domains for analogy making </h3>
+				</div>
+				<div class="panel-body">
+					<label for="tags">Domain 1: </label>
+					<select id="fselect1" name="option" class="dropdown">
+						{% for o in file_list %}
+							<option value="{{ o }}" SELECTED>{{ o }}</option>
+						{% endfor %}
+					</select>
+					</br>
+					<label for="tags">Domain 2: </label>
+					<select id="fselect2" name="option" class="dropdown">
+						{% for o in file_list %}
+							<option value="{{ o }}" SELECTED>{{ o }}</option>
+						{% endfor %}
+					</select>
+					
+					<div class="ui-widget">
+					  <label for="tags1">Concept from domain 1: </label>
+					  <input id="tags1">
+					  <input id="fbb1" class="btn btn btn-default" type="submit" value="Find best analogy">
+					</div>
+					<div class="ui-widget">
+					  <label for="tags2">Concept from domain 2: </label>
+					  <input id="tags2">
+					  <input id="fbb2" class="btn btn btn-default" type="submit" value="Find best analogy">
+					</div>
+					<br>
+					<div class="checkbox">
+						<label><input type="checkbox" id="cmode" value="">Cluster Mode</label>
+					</div>
+					<div class="checkbox">
+						<label><input type="checkbox" id="knn" value="">KNN Mode</label>
+						<div id="knncd">
+							<label for="knnc">K = </label>
+							<input type="number" id="knnc" min="1" required><br>
+						</div>
+					</div>
+					<input id="cbb" class="btn btn btn-default" type="submit" value="Compare both">
+				</div>
 			</div>
-			<div class="ui-widget">
-			  <label for="tags2">Concept from domain 2: </label>
-			  <input id="tags2">
-			  <input id="fbb2" class="button" type="submit" value="Find best analogy">
+			<div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Analogy Data</h3>
+					</div>
+					<div class="panel-body">
+						<pre id="result"></pre>
+					</div>
+				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Explanation</h3>
+					</div>
+					<div class="panel-body">
+						<p id="explanation"></p>
+					</div>
+				</div>
 			</div>
-			<br>
-			<input id="cbb" class="button" type="submit" value="Compare both">
+			
+			<div class="modal"></div>
 		</div>
-		</div>
-			<pre id="result"></pre>
-			<p id="explanation"></p>
-		</div>
-		<div class="modal"></div>
-
-
-
-		
 	</body>
 	
 	<style>
@@ -78,97 +108,92 @@
 	</style>
 	
 	<script type="text/javascript">
-		$body = $("body");
+		$(document).ready(function() {
+			$body = $("body");
+			$('#knncd').hide();
+			$('#knn').change(function(){
+				if($('#knn').is(':checked')){
+					$('#knncd').show();
+				}else{
+					$('#knncd').hide();
+				}
+			});
+		
+		
+			//override jquery to make autocomplete faster for large lists
+			$.widget("ui.autocomplete", $.extend({}, $.ui.autocomplete.prototype, {
+				_source: function( request, response ){
+					var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+					var select_el = this.element.get(0); // get dom element
+					var rep = new Array(); // response array
+					// simple loop for the options
+					for (var i = 0; i < select_el.length; i++) {
+						var text = select_el.options[i].text;
+						if ( select_el.options[i].value && ( !request.term || matcher.test(text) ) )
+							// add element to result array
+							rep.push({
+								label: text, // no more bold
+								value: text,
+								option: select_el.options[i]
+							});
+					}
+					// send response
+					response( rep );
+				}
+			}));	
+			
+			var vars = {
+				d1:undefined,
+				d2:undefined,
+				l1:[],
+				l2:[]
+			}
+			window.vars = vars;
 
-		$(document).on({
-			ajaxStart: function() { $body.addClass("loading");},
-			ajaxStop: function() { $body.removeClass("loading");}    
-		});
-	
-	
-		//override jquery to make autocomplete faster for large lists
-		$.widget("ui.autocomplete", $.extend({}, $.ui.autocomplete.prototype, {
-			_source: function( request, response ){
-				var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-				var select_el = this.element.get(0); // get dom element
-				var rep = new Array(); // response array
-				// simple loop for the options
-				for (var i = 0; i < select_el.length; i++) {
-					var text = select_el.options[i].text;
-					if ( select_el.options[i].value && ( !request.term || matcher.test(text) ) )
-						// add element to result array
-						rep.push({
-							label: text, // no more bold
-							value: text,
-							option: select_el.options[i]
+			function domainload(num){
+
+				vars['d'+num] = $("#fselect"+num+" option:selected").text();
+				
+				$.ajax({
+					url: '/get_concepts',
+					data: {file: vars['d'+num]},
+					type: 'POST',
+					success: function(response) {
+						vars['l'+num] = JSON.parse(response);
+						$( "#tags" + num ).autocomplete({
+							minLength: 2,
+							source: vars['l'+num]
 						});
-				}
-				// send response
-				response( rep );
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
 			}
-		}));	
+			$('#fselect1').change(function(){domainload('1');});
+			$('#fselect2').change(function(){domainload('2');});
 
-		$("#a2").hide();
-		
-		var d1 = undefined;
-		var d2 = undefined;
-		
-		var l1 = [];
-		var l2 = [];
-
-		$("#loadbutton").on("click", function(){
-			$("#a1").hide();
-			d1 = $("#fselect1 option:selected").text();
-			d2 = $("#fselect2 option:selected").text();
-			$("#a2").show();
-			
-			$.ajax({
-				url: '/get_features',
-				data: {file: d1},
-				type: 'POST',
-				success: function(response) {
-					l1 = JSON.parse(response);
-					$( "#tags1" ).autocomplete({
-						minLength: 2,
-						source: l1
-					});
-				},
-				error: function(error) {
-					console.log(error);
+			$("#fbb1").on("click", function(){
+				var concept = $("#tags1").val();
+				if(vars.l1.indexOf(concept) == -1){
+					alert("please select a valid concept for domain 1");
+					return;
 				}
-			});
-			
-			$.ajax({
-				url: '/get_features',
-				data: {file: d2},
-				type: 'POST',
-				success: function(response) {
-					l2 = JSON.parse(response);
-					$( "#tags2" ).autocomplete({
-						minLength: 2,
-						source: l2
-					});
-				},
-				error: function(error) {
-					console.log(error);
+				if($('#knnc').is(':checked')){
+					if(!$('#knnc').is(':valid')){
+						alert("please enter a knn value greater than zero");
+						return;
+					}
 				}
-			});
-			
-			
-		});
-		
-		$("#fbb1").on("click", function(){
-			var feature = $("#tags1").val();
-			if(l1.indexOf(feature) == -1){
-				alert("please select a valid concept for domain 1");
-			}else{
 				$.ajax({
 					url: '/print_best_analogy',
 					data: {
-						file1: d1,
-						file2: d2,
-						feature: feature,
-						sanitize: true
+						file1: vars.d1,
+						file2: vars.d2,
+						concept: concept,
+						sanitize: true,
+						cluster: $('#cmode').is(':checked'),
+						knn: $('#knnc').val() || undefined
 					},
 					type: 'POST',
 					success: function(response) {
@@ -180,21 +205,30 @@
 						console.log(error);
 					}
 				});
-			}
-		});
-		
-		$("#fbb2").on("click", function(){
-			var feature = $("#tags2").val();
-			if(l2.indexOf(feature) == -1){
-				alert("please select a valid concept for domain 2");
-			}else{
+				
+			});
+			
+			$("#fbb2").on("click", function(){
+				var concept = $("#tags2").val();
+				if(vars.l2.indexOf(concept) == -1){
+					alert("please select a valid concept for domain 2");
+					return;
+				}
+				if($('#knnc').is(':checked')){
+					if(!$('#knnc').is(':valid')){
+						alert("please enter a knn value greater than zero");
+						return;
+					}
+				}
 				$.ajax({
 					url: '/print_best_analogy',
 					data: {
-						file1: d2,
-						file2: d1,
-						feature: feature,
-						sanitize: true
+						file1: vars.d2,
+						file2: vars.d1,
+						concept: concept,
+						sanitize: true,
+						cluster: $('#cmode').is(':checked'),
+						knn: $('#knnc').val() || undefined
 					},
 					type: 'POST',
 					success: function(response) {
@@ -206,42 +240,50 @@
 						console.log(error);
 					}
 				});
-			}
+				
+			});
+			
+			$("#cbb").on("click", function(){
+				var f1 = $("#tags1").val();
+				var f2 = $("#tags2").val();
+				if(vars.l1.indexOf(f1) == -1){
+					alert("please select a valid concept for domain 1");
+					return;
+				}
+				if(vars.l2.indexOf(f2) == -1){
+					alert("please select a valid concept for domain 2");
+					return;
+				}
+				$.ajax({
+						url: '/print_analogy',
+						data: {
+							file1: vars.d1,
+							file2: vars.d2,
+							concept1: f1,
+							concept2: f2,
+							sanitize: true,
+							cluster: $('#cmode').is(':checked')
+						},
+						type: 'POST',
+						success: function(response) {
+							data = JSON.parse(response)
+							$( "#result" ).html(data["analogy"]);
+							$( "#explanation" ).html(data["explanation"]);
+						},
+						error: function(error) {
+							console.log(error);
+						}
+					});
+			});
+			
+			domainload('1');
+			domainload('2');
+			
+			$(document).on({
+				ajaxStart: function() { $body.addClass("loading");},
+				ajaxStop: function() { $body.removeClass("loading");},
+			});
 		});
-		
-		$("#cbb").on("click", function(){
-			var f1 = $("#tags1").val();
-			var f2 = $("#tags2").val();
-			if(l1.indexOf(f1) == -1){
-				alert("please select a valid concept for domain 1");
-				return;
-			}
-			if(l2.indexOf(f2) == -1){
-				alert("please select a valid concept for domain 2");
-				return;
-			}
-			$.ajax({
-					url: '/print_analogy',
-					data: {
-						file1: d1,
-						file2: d2,
-						feature1: f1,
-						feature2: f2,
-						sanitize: true
-					},
-					type: 'POST',
-					success: function(response) {
-						data = JSON.parse(response)
-						$( "#result" ).html(data["analogy"]);
-						$( "#explanation" ).html(data["explanation"]);
-					},
-					error: function(error) {
-						console.log(error);
-					}
-				});
-		});
-		
-		
 		
   </script>
 </html>

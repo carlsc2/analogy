@@ -253,9 +253,7 @@ def make_analogy(src_concept, src_domain, target_concept, target_domain,
 def find_best_analogy(src_concept, src_domain, target_domain, filter_list=None,
                       rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100,
                       knn_filter=None):
-    """Makes the best analogy between two concepts in two domains
-
-    Finds the best analogy between a specific concept in the source domain
+    """Finds the best analogy between a specific concept in the source domain 
     and any concept in the target domain.
 
     If filter_list is specified, only the concepts in that list will be

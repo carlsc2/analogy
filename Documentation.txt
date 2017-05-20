@@ -1,0 +1,245 @@
+Analogy Generation Engine
+Author: Craig Carlson
+
+==== Purpose ====
+This is a data exploration tool designed to automatically generate analogies between different domains.
+A domain is simply a collection of data related to a particular topic.
+See the "Data Management" section for details on the file format.
+
+==== Overview ====
+== Package Overview ==
+
+The Analogy package is structured as follows:
+
+analogy/
+	analogy/
+		core/
+			__init__.py
+			analogy.py
+		data files/
+			<assorted data files>
+		domainDB/
+			__init__.py
+			database.py
+			knowledge.py
+			models.py
+		utils/
+			__init__.py
+			DBpediaCrawler.py
+			utils.py
+		web_interface/
+			static/
+				bootstrap-3.3.7-dist/
+					<boostrap things>
+				ajax-loader.gif
+				jquery-3.1.1.min.js
+				jquery-ui.css
+				jquery-ui.js
+			templates/
+				index.html
+			.gitignore
+			__init__.py	
+			webinterface.py
+		__init__.py
+
+		
+	analogytest.py
+	
+	
+The package is not yet fully developed, and as such isn't designed to be installed to the local Python environment.
+Any scripts using this code should just import analogy from the toplevel folder.
+	
+As for the code itself, the main logic for making analogies is contained in "analogy.py".
+For more details about the analogy making process, see the "Algorithm Overview" section.
+
+This package includes a web interface which provides an easy-to-use way of running the analogy functions on the domains in the "data files" folder.
+See the "Web Interface" section for details.
+
+
+
+== Algorithm Overview ==
+
+In this system, analogies are made between two domains.
+All that is required to construct a domain is a list of concepts and their relationships to other concepts.
+Essentially, a domain is just a labeled directed graph; each concept is a node, each relationship is an edge.
+
+Any given analogy can be seen as a mapping between a source concept in a source domain to a target concept in a target domain.
+
+The analogy-making process can be broken down into three main steps:
+1) preprocessing
+
+	The preprocessing step involves taking the graph data and converting it to vector representations.
+	Each type of relationship (each distinct edge label) is assigned a vector.
+	Each node is then assigned a vector based on its relationships.
+	An implementation of this process is provided via the "Domain" class found in "utils.py", though it would be sufficient to use alternate graph embedding methods.
+
+	In addition to computing the vectors, the "Domain" class also computes some other metadata.
+	In general, any one-time computations required for the analogy generation process are computed when the class is instantiated.
+
+2) match hypothesis generation
+
+	For a given analogy, the input consists of: 
+		src_concept
+		src_domain
+		target_concept
+		target_domain
+		
+	Each concept has neighboring concepts, which can be represented as triples i.e. (src, r1, d1).		
+	The algorithm computes all possible matches between triples and scores each match based on their relative similarity.
+	This similarity score is computed based on the vector values of each concept.
+	
+3) one-to-one mapping
+	
+	The last step of the analogy-making process is to construct a one-to-one mapping based on the triples.
+	The highest scoring triples are taken as fact, and any subsequent triples are either ignored (if they conflict with a previous mapping) or added to the list of facts.
+
+== Analogy API ==
+
+There are two main functions for making analogies.
+
+make_analogy(src_concept, src_domain, target_concept, target_domain, rmax=1, vmax=1, cluster_mode=0)
+
+	Makes the best analogy between two concepts in two domains
+
+	src_concept is the concept in the source domain
+    src_domain is the KNOWN domain
+	target_concept is the concept in the target domain
+    target_domain is the NOVEL domain
+
+    This function returns the best analogy that can be made between the two concepts
+	
+    In cluster mode, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes 
+    with a very large number of homogeneous connections as it severely cuts
+    down on the computation time.
+
+    0 = default (no clustering)
+    1 = source domain clustering only
+    2 = target domain clustering only
+    3 = both domains will be clustered
+
+    This function raises an AnalogyException if concept does not exist in domain 
+
+find_best_analogy(src_concept, src_domain, target_domain, filter_list=None, rmax=1, vmax=1, cluster_mode=False, cluster_threshold=100, knn_filter=None)
+    
+    Finds the best analogy between a specific concept in the source domain
+    and any concept in the target domain.
+	
+	This function returns the best analogy that can be made between the source concept and some other concept
+
+    If filter_list is specified, only the concepts in that list will be
+    selected from to make analogies.
+
+    In cluster mode, the analogy will be computed using a single example of 
+    each relationship type, weighted appropriately. This is useful for nodes 
+    with a very large number of homogeneous connections as it severely cuts
+    down on the computation time.
+
+    0 = default (no clustering)
+    1 = source domain clustering only
+    2 = target domain clustering only
+    3 = both domains will be clustered
+    4 = anything with a high enough knowledge level will be clustered. Determined
+    by <cluster_threshold>, default is 100.
+
+    If knn_filter is specified, only concepts from the <knn_filter> nearest
+    neighbors will be selected from to make analogies.
+
+    Note: analogies to self are ignored (if same domain)
+
+    This function raises an AnalogyException if concept does not exist in domain 
+	
+Each analogy object returned by these functions is of the following format:
+
+{
+	"total_score":<number>, <-- the overall score of the analogy
+	"confidence":<float>, <-- the confidence value of the analogy
+	"rating":<float>, <-- the match score of the analogy
+	"src_concept":<string>, <-- name of source concept
+	"target_concept":<string>, <-- name of target concept
+	"asserts":{(<relation>, <bool>): (<relation>, <bool>)}, <-- map of (relation, incoming=true/outgoing=false) matches
+	"mapping":{('IN-IN', <src_relation>, <src_neighbor>): (<target_relation>,<target_neighbor>,<float>)}, <-- matches between neighbors, with individual scores
+	"weight":<int>, <-- how many nodes are affected by the analogy
+	"cluster_mode":<int> <-- cluster mode used
+}
+
+There is also a function to format the analogy into a more human-readable format.
+	
+explain_analogy(analogy, verbose=False, paragraph=True)
+    Takes an analogy and returns an explanation.
+
+    If verbose is True, it will explain everything. Otherwise it
+    will only explain one of each relationship type.
+
+    If paragraph is True, it will return a paragraph. Otherwise it will
+    return the individual logic chunks.
+	
+
+==== Data Management ====
+This package provides utilities to manage data for the purposes of analogy making.
+"utils.py" defines the Domain class, which is the required input for analogy-making functions.
+The Domain class contains metadata about a particular domain.
+This metadata is computed when the domain is loaded from json.
+The format is as follows:
+
+{"idmap":{<node_id>:<node_name>},
+ "nodes":[{"name":<node_name>,
+		   "text":<node_description>,
+		   "neighbors":[["relation",
+						 <relation_type>,
+						 <node_id>],
+						["literal",
+						<literal_type>,
+						<literal_value>]
+					   ]
+		   }
+		 ]        
+}
+
+"idmap" maps the node id to the name of each node
+"nodes" is a list of objects
+	- each object represents a single node
+	- "name" is the name of the node
+	- "text" is a description of the node
+	- "neighbors" is a list of relationship triples
+		- each relationship is either to another node in the domain, or to arbitrary data
+		- for relationships to other nodes in the domain, use "relation"
+		- for arbitrary data, use "literal"
+		
+There is an option to create a cached version of the domain class instance so the metadata doesn't have to be recomputed all the time.
+
+== DBpedia Crawler ==
+This package also provides tools for fetching data from DBpedia.
+"DBpediaCrawler.py" contains some tools to crawl DBpedia.
+The "generate_graph" function takes a list of concepts to use as starting points for generating a domain.
+This script uses a breadth-first search approach, though it can be changed to a best-first search using the "relevance_threshold" argument.
+This function returns a domain object.
+
+== Domain Manager ==
+On top of the DBpedia crawler script, the package provides a standalone domain management system.
+"domainDB/knowledge.py" contains the "DomainManager" class, which maintains a database of domain files.
+
+This database tracks every domain file as well as each concept within each file.
+Thus, one can query for a concept and get a list of domains that contain it.
+If a concept does not exist in any domains, the manager will track this.
+At any time, "DomainManager.reconcile_knowledge" can be called to generate domains for these unknown concepts.
+
+==== Web Interface ====
+To run the web interface, invoke "python3 -m analogy.web_interface.webinterface" from the toplevel directory.
+To see the possible arguments, run "python3 -m analogy.web_interface.webinterface -h"
+
+This interface can also be run as a standalone server for other scripts to access via HTTP requests.
+This is useful if other applications need to use the analogy code without directly importing it.
+
+The interface has dropdowns to select various domains.
+Concepts can then be selected from each domain, and you can either compare two concepts or find the best target concept for a specific source concept in a given domain.
+There is a button to enable clustering for concepts with too many connections (to speed things up).
+
+
+
+
+
+
+
+
+

@@ -38,12 +38,10 @@
     <Compile Include="analogy\web_interface\webinterface.py" />
     <Compile Include="analogy\web_interface\__init__.py" />
     <Compile Include="analogy\__init__.py" />
-    <Compile Include="test.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="analogy\comparisons.txt" />
     <Content Include="analogy\data files\testdump.txt" />
-    <Content Include="analogy\Documentation.txt" />
     <Content Include="analogy\domainDB\__pycache__\database.cpython-35.pyc" />
     <Content Include="analogy\domainDB\__pycache__\database.cpython-36.pyc" />
     <Content Include="analogy\domainDB\__pycache__\knowledge.cpython-35.pyc" />

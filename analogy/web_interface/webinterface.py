@@ -22,7 +22,7 @@ def cache_load(f):
         return cache[f]
     except Exception as e:
         print(e)
-        cache[f] = AIMind(filename=f)
+        cache[f] = AIMind(filename=f, cachefile = f+"_cache.pkl")
         return cache[f]
 
 
@@ -34,37 +34,45 @@ def full_filename(filename):
 app = Flask(__name__)
 app.root_path = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 
+
+def clean(x, form):
+    if x is None:
+        return "No analogy could be made."
+    if form.get('sanitize') == "true":
+        x = x.replace("<","&lt;")
+        x = x.replace(">","&gt;")
+    if form.get('clear') == "true":
+        x = x.replace("<","")
+        x = x.replace(">","")
+    return x
+
+
 @app.route('/')
 def index():
     return render_template('index.html', file_list=list_files())
 
 @app.route('/get_analogy', methods=['POST'])
 def get_analogy():
-    return json.dumps(analogy.make_analogy(request.form['feature1'],
-                                               cache_load(request.form['file1']),
-                                               request.form['feature2'],
-                                               cache_load(request.form['file2'])))
+    cmode = 3 if request.form.get('cluster') == 'true' else 0
+    return json.dumps(analogy.make_analogy(request.form['concept1'],
+                                           cache_load(request.form['file1']),
+                                           request.form['concept2'],
+                                           cache_load(request.form['file2']),
+                                           cluster_mode=cmode))
 
 @app.route('/get_analogy_explain', methods=['POST'])
 def get_analogy_explain():
-    result = analogy.make_analogy(request.form['feature1'],
-                                       cache_load(request.form['file1']),
-                                       request.form['feature2'],
-                                       cache_load(request.form['file2']))
+    cmode = 3 if request.form.get('cluster') == 'true' else 0
+    result = analogy.make_analogy(request.form['concept1'],
+                                  cache_load(request.form['file1']),
+                                  request.form['concept2'],
+                                  cache_load(request.form['file2']),
+                                  cluster_mode=cmode)
 
     explanation = analogy.explain_analogy(result)
     
-    def clean(x):
-        if request.form.get('sanitize') == "true":
-            x = x.replace("<","&lt;")
-            x = x.replace(">","&gt;")
-        if request.form.get('clear') == "true":
-            x = x.replace("<","")
-            x = x.replace(">","")
-        return x
-    
     if result != None:
-        return json.dumps({"explanation":clean(explanation),
+        return json.dumps({"explanation":clean(explanation, request.form),
                            "error":""})
     else:
         return json.dumps({"explanation":"",
@@ -72,28 +80,35 @@ def get_analogy_explain():
 
 @app.route('/find_best_analogy', methods=['POST'])
 def find_best_analogy():
-    return json.dumps(analogy.find_best_analogy(request.form['feature'],
-                                                    cache_load(request.form['file1']),
-                                                    cache_load(request.form['file2'])))
+    cmode = 4 if request.form.get('cluster') == 'true' else 0
+    knn = request.form.get('knn')
+    try:
+        knn = int(knn)
+    except:
+        knn = None
+    return json.dumps(analogy.find_best_analogy(request.form['concept'],
+                                                cache_load(request.form['file1']),
+                                                cache_load(request.form['file2']),
+                                                cluster_mode=cmode,
+                                                knn_filter=knn))
 
 @app.route('/find_best_analogy_explain', methods=['POST'])
 def find_best_analogy_explain():
-    result = analogy.find_best_analogy(request.form['feature'],
-                                            cache_load(request.form['file1']),
-                                            cache_load(request.form['file2']))
+    cmode = 4 if request.form.get('cluster') == 'true' else 0
+    knn = request.form.get('knn')
+    try:
+        knn = int(knn)
+    except:
+        knn = None
+    result = analogy.find_best_analogy(request.form['concept'],
+                                       cache_load(request.form['file1']),
+                                       cache_load(request.form['file2']),
+                                       knn_filter=knn,
+                                       cluster_mode=cmode)
     explanation = analogy.explain_analogy(result)
 
-    def clean(x):
-        if request.form.get('sanitize') == "true":
-            x = x.replace("<","&lt;")
-            x = x.replace(">","&gt;")
-        if request.form.get('clear') == "true":
-            x = x.replace("<","")
-            x = x.replace(">","")
-        return x
-    
     if result != None:
-        return json.dumps({"analogy":clean(explanation),
+        return json.dumps({"analogy":clean(explanation, request.form),
                            "error":""})
     else:
         return json.dumps({"analogy":"",
@@ -101,52 +116,45 @@ def find_best_analogy_explain():
 
 @app.route('/print_analogy', methods=['POST'])
 def print_analogy():
-    result = analogy.make_analogy(request.form['feature1'],
-                                       cache_load(request.form['file1']),
-                                       request.form['feature2'],
-                                       cache_load(request.form['file2']))
+    cmode = 3 if request.form.get('cluster') == 'true' else 0
+    result = analogy.make_analogy(request.form['concept1'],
+                                  cache_load(request.form['file1']),
+                                  request.form['concept2'],
+                                  cache_load(request.form['file2']),
+                                  cluster_mode=cmode)
 
-    def clean(x):
-        if request.form.get('sanitize') == "true":
-            x = x.replace("<","&lt;")
-            x = x.replace(">","&gt;")
-        if request.form.get('clear') == "true":
-            x = x.replace("<","")
-            x = x.replace(">","")
-        return x
-    
     x = {}
-    x["explanation"] = clean(analogy.explain_analogy(result))
-    x["analogy"] = clean(pformat(result, indent=4, width=80))
+    x["explanation"] = clean(analogy.explain_analogy(result), request.form)
+    x["analogy"] = clean(pformat(result, indent=4, width=80), request.form)
     return json.dumps(x)
 
 @app.route('/print_best_analogy', methods=['POST'])
 def print_best_analogy():
-    result = analogy.find_best_analogy(request.form['feature'],
-                                            cache_load(request.form['file1']),
-                                            cache_load(request.form['file2']))
-
-    def clean(x):
-        if request.form.get('sanitize') == "true":
-            x = x.replace("<","&lt;")
-            x = x.replace(">","&gt;")
-        if request.form.get('clear') == "true":
-            x = x.replace("<","")
-            x = x.replace(">","")
-        return x
+    cmode = 4 if request.form.get('cluster') == 'true' else 0
+    knn = request.form.get('knn')
+    try:
+        knn = int(knn)
+    except:
+        knn = None
+    print("knn: ",knn)
+    result = analogy.find_best_analogy(request.form['concept'],
+                                       cache_load(request.form['file1']),
+                                       cache_load(request.form['file2']),
+                                       knn_filter=knn,
+                                       cluster_mode=cmode)
 
     x = {}
-    x["explanation"] = clean(analogy.explain_analogy(result))
-    x["analogy"] = clean(pformat(result, indent=4, width=80))
+    x["explanation"] = clean(analogy.explain_analogy(result), request.form)
+    x["analogy"] = clean(pformat(result, indent=4, width=80), request.form)
     return json.dumps(x)
 
 def list_files():
     return [os.path.basename(f) for f in glob.glob(DATADIR+'/*.xml')]
 
-@app.route('/get_features', methods=['POST'])
-def get_features():
+@app.route('/get_concepts', methods=['POST'])
+def get_concepts():
     f = request.form['file']
-    print("get_features: ", f)
+    print("get_concepts: ", f)
     return json.dumps(list(cache_load(f).nodes.keys()))
 
 @app.route('/check_file', methods=['POST'])
@@ -174,7 +182,7 @@ def add_file():
         with open(filename,"wb+") as f:
             f.write(data["data"].encode("utf-8"))
         try:
-            cache[f] = AIMind(filename=filename)
+            cache[f] = AIMind(filename=filename, cachefile=filename+"_cache.pkl")
         except:
             return "Invalid file format"
         return "File added"
@@ -205,7 +213,7 @@ if __name__ == "__main__":
     for f in list_files():
         fname = full_filename(f)
         try:
-            cache[f] = AIMind(filename=fname).domain
+            cache[f] = AIMind(filename=fname, cachefile=fname+"_cache.pkl").domain
         except Exception as e:
             print(e)
             print("cannot load file %s, ignoring"%fname)
