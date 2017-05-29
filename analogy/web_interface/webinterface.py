@@ -10,7 +10,7 @@ import sys
 import argparse
 from pprint import pformat, pprint
 from ..core import *
-from ..utils.utils import AIMind
+from ..utils.utils import AIMind, DomainLoader
 import os.path
 
 cache = {}
@@ -20,9 +20,16 @@ allow_file_write = False
 def cache_load(f):
     try:
         return cache[f]
-    except Exception as e:
-        print(e)
-        cache[f] = AIMind(filename=f, cachefile = f+"_cache.pkl")
+    except KeyError:
+        try:
+            cache[f] = DomainLoader(filename=f, cachefile=f+"_cache.pkl").domain
+        except:
+            try:
+                cache[f] = AIMind(filename=f, cachefile=f+"_cache.pkl").domain
+            except Exception as e:
+                print(e)
+                print("cannot load file %s, ignoring"%fname)
+
         return cache[f]
 
 
@@ -149,7 +156,8 @@ def print_best_analogy():
     return json.dumps(x)
 
 def list_files():
-    return [os.path.basename(f) for f in glob.glob(DATADIR+'/*.xml')]
+    return [os.path.basename(f) for f in glob.glob(DATADIR+'/*.xml')] + \
+           [os.path.basename(f) for f in glob.glob(DATADIR+'/*.json')]
 
 @app.route('/get_concepts', methods=['POST'])
 def get_concepts():
@@ -182,7 +190,7 @@ def add_file():
         with open(filename,"wb+") as f:
             f.write(data["data"].encode("utf-8"))
         try:
-            cache[f] = AIMind(filename=filename, cachefile=filename+"_cache.pkl")
+            cache_load(filename)
         except:
             return "Invalid file format"
         return "File added"
@@ -212,11 +220,8 @@ if __name__ == "__main__":
     #load files from domain
     for f in list_files():
         fname = full_filename(f)
-        try:
-            cache[f] = AIMind(filename=fname, cachefile=fname+"_cache.pkl").domain
-        except Exception as e:
-            print(e)
-            print("cannot load file %s, ignoring"%fname)
+        print("loading %s..."%fname)
+        cache_load(fname)
             
     print("Files loaded:")
     for key in cache.keys():
