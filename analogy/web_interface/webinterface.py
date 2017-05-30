@@ -16,31 +16,30 @@ import os.path
 cache = {}
 allow_file_write = False
 
+DATADIR = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "../data files/"))
+def full_filename(filename):
+    #add path to filename
+    return os.path.join(DATADIR, filename)
+
 #have to do this because of flask nonsense
 def cache_load(f):
+    fname = full_filename(f)
     try:
         return cache[f]
     except KeyError:
         try:
-            cache[f] = DomainLoader(filename=f, cachefile=f+"_cache.pkl").domain
+            cache[f] = DomainLoader(filename=fname, cachefile=fname+"_cache.pkl").domain
         except:
             try:
-                cache[f] = AIMind(filename=f, cachefile=f+"_cache.pkl").domain
+                cache[f] = AIMind(filename=fname, cachefile=fname+"_cache.pkl").domain
             except Exception as e:
                 print(e)
                 print("cannot load file %s, ignoring"%fname)
 
         return cache[f]
 
-
-DATADIR = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "../data files/"))
-def full_filename(filename):
-    #add path to filename
-    return os.path.join(DATADIR, filename)
-
 app = Flask(__name__)
 app.root_path = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
-
 
 def clean(x, form):
     if x is None:
@@ -221,7 +220,7 @@ if __name__ == "__main__":
     for f in list_files():
         fname = full_filename(f)
         print("loading %s..."%fname)
-        cache_load(fname)
+        cache_load(f)
             
     print("Files loaded:")
     for key in cache.keys():
